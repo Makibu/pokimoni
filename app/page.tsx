@@ -1,103 +1,140 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+import Link from "next/link";
+import {BookMarked, ChartNoAxesCombined, Info, LucideIcon, ShoppingBag, Trophy} from "lucide-react";
+import PokemonBackground2 from "@/public/pokemon-background-2.jpg";
+import Image, {StaticImageData} from "next/image";
+import React, {useState} from "react";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+import BannerYellow from "@/public/banners/banner-yellow.png"
+import BannerRed from "@/public/banners/banner-red.png"
+import BannerGreen from "@/public/banners/banner-green.png"
+import BannerBlue from "@/public/banners/banner-blue.png"
+import IncomeSlots from "@/components/IncomeSlots";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+
+type BannerColor = "yellow" | "red" | "green" | "blue"
+
+const bannerMap: Record<BannerColor, StaticImageData> = {
+    yellow: BannerYellow,
+    red: BannerRed,
+    green: BannerGreen,
+    blue: BannerBlue,
+}
+
+const colorMap: Record<BannerColor, string> = {
+    yellow: "#FFF8B560",
+    red: "#FFB5B560",
+    green: "#B5FFD960",
+    blue: "#B5E0FF60",
+}
+
+type Tab = {
+    name: string,
+    subName: string,
+    href: string,
+    icon: LucideIcon,
+    color: BannerColor,
+}
+
+export default function Card() {
+    const tabs: Tab[] = [
+        {name: "Sklep", subName: "Kupuj i otwieraj", href: "/shop", icon: ShoppingBag, color: "yellow"},
+        {name: "Indeks", subName: "Twoja kolekcja", href: "/index", icon: BookMarked, color: "red"},
+        {name: "Osiągnięcia", subName: "Osiągaj sukcesy", href: "/achievements", icon: Trophy, color: "blue"},
+        {
+            name: "Statystyki",
+            subName: "Twoje wyniki",
+            href: "/statistics",
+            icon: ChartNoAxesCombined,
+            color: "green"
+        },
+    ]
+
+    const [showVersionInfo, setShowVersionInfo] = useState(false)
+
+
+    return (
+        <div className={'pt-12 w-full min-h-[100svh] flex justify-center items-center'}>
+            <Image src={PokemonBackground2} alt="pokemon-background" fill
+                   className="absolute object-cover w-full h-full"
+                   priority/>
+            <div className={'flex flex-col gap-6 px-6 w-full justify-center items-center'}>
+                {tabs.map((tab, index) => {
+                    const Icon = tab.icon
+                    return (
+                        <Link href={tab.href} key={index} style={{backgroundColor: colorMap[tab.color]}}
+                              className={'h-24 w-full max-w-96 border-[1px] border-black/50 rounded-3xl flex justify-center items-center relative backdrop-blur-md bg-opacity-50 shadow-lg transition-transform hover:scale-105'}>
+                            <Icon className={'w-12 h-12 absolute left-6'} strokeWidth={1}/>
+                            <div className="flex flex-col items-center">
+                                <h1 className="text-2xl font-bold tracking-wide drop-shadow-sm">
+                                    {tab.name}
+                                </h1>
+                                <p className="text-xs text-gray-700 opacity-80">
+                                    {tab.subName}
+                                </p>
+                            </div>
+                            <Image src={bannerMap[tab.color]} alt={"Banner-green"} width={90} height={90}
+                                   className={'absolute right-2'}/>
+                        </Link>
+                    )
+                })}
+            </div>
+
+            <IncomeSlots/>
+
+            <div className={'absolute right-24 bottom-6 cursor-pointer'} onClick={() => setShowVersionInfo(true)}>
+                <Info className="h-5 w-5"/>
+            </div>
+
+            <Dialog open={showVersionInfo} onOpenChange={setShowVersionInfo}>
+                <DialogContent className="max-w-md w-full">
+                    <DialogHeader>
+                        <DialogTitle
+                            className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            <Info className="h-5 w-5 text-blue-600"/>
+                            Informacje o aplikacji
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <div className="space-y-6">
+                        <div className="text-center">
+                            <div className="text-3xl font-bold text-gray-800 mb-2">v1.0.0-beta</div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <h3 className="font-semibold text-gray-800 border-b pb-2">Najnowsze zmiany</h3>
+
+                            <div className="space-y-3 text-sm">
+                                <div className="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
+                                    <div className="font-medium text-blue-800 mb-1">✨ Nowe funkcje</div>
+                                    <ul className="text-blue-700 space-y-1">
+                                        <li>• Initial</li>
+                                    </ul>
+                                </div>
+
+                                <div className="bg-green-50 p-3 rounded-lg border-l-4 border-green-400">
+                                    <div className="font-medium text-green-800 mb-1">🔧 Poprawki</div>
+                                    <ul className="text-green-700 space-y-1">
+                                        <li>• Initial</li>
+                                    </ul>
+                                </div>
+
+                                <div className="bg-purple-50 p-3 rounded-lg border-l-4 border-purple-400">
+                                    <div className="font-medium text-purple-800 mb-1">🎨 Design</div>
+                                    <ul className="text-purple-700 space-y-1">
+                                        <li>• Initial</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="text-center pt-4 border-t">
+                            <p className="text-xs text-gray-500">Ostatnia aktualizacja: 29 września 2025</p>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    )
 }
