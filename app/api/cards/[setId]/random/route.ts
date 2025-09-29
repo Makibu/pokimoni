@@ -1,8 +1,9 @@
 import {NextResponse} from "next/server";
 import {supabaseServer} from "@/lib/supabaseServer";
 import {normalizeRarity} from "@/lib/normalizeRarity";
+import {Card} from "@/lib/type";
 
-function pickCardByRarity(cards: any[], rarityWeights: Record<string, number>) {
+function pickCardByRarity(cards: Card[], rarityWeights: Record<string, number>) {
     let weightedCards = cards
         .filter((c) => rarityWeights[normalizeRarity(c.rarity)] > 0)
         .map((c) => ({
@@ -25,7 +26,7 @@ function pickCardByRarity(cards: any[], rarityWeights: Record<string, number>) {
     return weightedCards[weightedCards.length - 1];
 }
 
-function generatePack(cards: any[]) {
+function generatePack(cards: Card[]) {
     const isGodPack = Math.random() < 0.0005;
     const availableRarities = new Set(cards.map((c) => normalizeRarity(c.rarity)));
 
@@ -68,7 +69,7 @@ function generatePack(cards: any[]) {
         "secret rare": availableRarities.has("secret rare") ? 150 : 0,
     };
 
-    const pack: any[] = [];
+    const pack = [];
 
     for (let i = 0; i < 5; i++) {
         let weights: Record<string, number>;
@@ -91,7 +92,6 @@ function generatePack(cards: any[]) {
         pack.push(card);
     }
 
-    // Wymuś Secret Rare, jeśli dostępny
     if (availableRarities.has("secret rare")) {
         const hasSecret = pack.some((c) => normalizeRarity(c.rarity) === "secret rare");
         if (!hasSecret) {
@@ -106,11 +106,15 @@ function generatePack(cards: any[]) {
     return {pack, isGodPack};
 }
 
-export async function GET(
-    req: Request,
-    context: { params: { setId: string } }
-) {
-    const {setId} = await context.params;
+
+export async function GET(req: Request) {
+    const url = new URL(req.url);
+    const pathSegments = url.pathname.split("/").filter(Boolean);
+    const setId = pathSegments[pathSegments.indexOf("cards") + 1];
+
+    if (!setId) {
+        return NextResponse.json({error: "Brak setId w URL"}, {status: 400});
+    }
 
     const {data: cards, error} = await supabaseServer
         .from("cards")

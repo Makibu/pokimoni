@@ -80,8 +80,8 @@ export default function UserMenu() {
 
             toast.success("Konto zostało trwale usunięte");
             signOut();
-        } catch (err: any) {
-            toast.error(err.message);
+        } catch {
+            toast.error("Operacja nie powiodła się.");
         }
     };
 

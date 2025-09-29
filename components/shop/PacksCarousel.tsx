@@ -1,7 +1,7 @@
 "use client";
 
 import {useQuery} from "@tanstack/react-query";
-import {Set} from "@/lib/type";
+import {SetType} from "@/lib/type";
 import {Button} from "@/components/ui/button";
 import Image from "next/image";
 import {CoinsIcon} from "lucide-react";
@@ -13,9 +13,9 @@ import OpenPackDialog from "@/components/shop/OpenPackDialog";
 export default function PacksCarousel({price}: { price: number }) {
     const {coins} = useUserCoins()
     const [open, setOpen] = useState(false);
-    const [selectedSetData, setSelectedSetData] = useState<Set | null>(null);
+    const [selectedSetData, setSelectedSetData] = useState<SetType | null>(null);
 
-    const {data: setList, isLoading} = useQuery({
+    const {data: setList} = useQuery({
         queryKey: ["sets"],
         queryFn: async () => {
             const res = await fetch("/api/sets");
@@ -25,7 +25,7 @@ export default function PacksCarousel({price}: { price: number }) {
     });
 
     const {data: userTotalPerSet} = useUserTotalPerSet();
-    const sets: Set[] = setList?.data || [];
+    const sets: SetType[] = setList?.data || [];
 
     const filteredSets = sets.filter((set) => {
         if (price === 100) return set.class === 1;
@@ -51,7 +51,7 @@ export default function PacksCarousel({price}: { price: number }) {
         return () => el.removeEventListener("wheel", onWheel);
     }, []);
 
-    async function handleOpenPack(set: Set) {
+    async function handleOpenPack(set: SetType) {
         setSelectedSetData(set)
         setOpen(true)
     }
@@ -67,7 +67,7 @@ export default function PacksCarousel({price}: { price: number }) {
                     className="flex overflow-x-auto gap-4 custom-scroll"
                 >
                     <div className="w-[25px]"/>
-                    {filteredSets.map((set: Set, index: number) => (
+                    {filteredSets.map((set: SetType, index: number) => (
                             <div
                                 key={index}
                                 className="w-72 h-72 border-2 shrink-0 rounded-xl p-4 flex flex-col justify-center items-center relative mb-2 overflow-hidden"

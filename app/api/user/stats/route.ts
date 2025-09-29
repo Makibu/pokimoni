@@ -1,5 +1,6 @@
 import {NextResponse} from "next/server";
 import {supabaseServer} from "@/lib/supabaseServer";
+import {PostgrestError} from "@supabase/supabase-js";
 
 interface CardWithRarity {
     id: string;
@@ -37,7 +38,7 @@ export async function GET(req: Request) {
         cards:cards(id, name, rarity, income, images),
         acquired_at
       `)
-            .eq("uid", uid) as { data: UserCardWithRarity[] | null; error: any };
+            .eq("uid", uid) as { data: UserCardWithRarity[] | null; error: PostgrestError | null };
         if (cardError) return NextResponse.json({error: cardError.message}, {status: 500});
 
         const {count: cardsTotal, error: cardsTotalError} = await supabaseServer
@@ -63,7 +64,7 @@ export async function GET(req: Request) {
         allRarity.forEach(r => (rarityStats[r] = 0));
 
         cardStats?.forEach(c => {
-            const card = Array.isArray(c.cards) ? c.cards[0] : (c.cards as any);
+            const card = Array.isArray(c.cards) ? c.cards[0] : (c.cards);
             if (!card) return;
 
             const rarityKey = (card.rarity ?? "Unknown").toString().toLowerCase();
@@ -96,7 +97,7 @@ export async function GET(req: Request) {
 
         let bestCard: CardWithRarity | null = null;
         cardStats?.forEach(c => {
-            const card = Array.isArray(c.cards) ? c.cards[0] : (c.cards as any);
+            const card = Array.isArray(c.cards) ? c.cards[0] : (c.cards);
             if (!card) return;
             const income = Number(card.income ?? 0);
             const bestIncome = Number(bestCard?.income ?? 0);
@@ -157,7 +158,7 @@ export async function GET(req: Request) {
 
         const minRarityValue = rarityOrder["special illustration rare"] ?? 8;
 
-        const recentCardActivities = (recentCards.data ?? []).map((c: any) => {
+        const recentCardActivities = (recentCards.data ?? []).map((c) => {
             const card: CardWithRarity | null = Array.isArray(c.cards) ? c.cards[0] ?? null : (c.cards ?? null);
             if (!card) return null;
             const rarityKey = (card.rarity ?? "Unknown").toString().toLowerCase();
@@ -166,13 +167,13 @@ export async function GET(req: Request) {
             return {action: "Zdobył kartę", item: `${card.name} (${card.rarity})`, time: c.acquired_at};
         }).filter(Boolean);
 
-        const recentAchievementActivities = (recentAchievements.data ?? []).map((a: any) => {
+        const recentAchievementActivities = (recentAchievements.data ?? []).map((a) => {
             const ach = Array.isArray(a.achievements) ? a.achievements[0] ?? null : (a.achievements ?? null);
             if (!ach) return null;
             return {action: "Ukończył osiągnięcie", item: ach.title, time: a.unlocked_at};
         }).filter(Boolean);
 
-        const recentBadgeActivities = (recentBadges.data ?? []).map((b: any) => {
+        const recentBadgeActivities = (recentBadges.data ?? []).map((b) => {
             const badge = Array.isArray(b.badges) ? b.badges[0] ?? null : (b.badges ?? null);
             if (!badge) return null;
             return {action: "Zdobył odznakę", item: badge.name, time: b.acquired_at};
@@ -197,7 +198,9 @@ export async function GET(req: Request) {
                 cardsTotal,
             }
         });
-    } catch (err: any) {
-        return NextResponse.json({error: err.message}, {status: 500});
+    } catch (err: unknown) {
+        let message = 'Nieznany błąd';
+        if (err instanceof Error) message = err.message;
+        return NextResponse.json({error: message}, {status: 500});
     }
 }

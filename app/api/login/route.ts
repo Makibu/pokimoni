@@ -21,18 +21,18 @@ export async function POST(req: Request) {
 
         const user = users[0]
 
-        // checking bcyrpted password from DB
         const valid = await bcrypt.compare(password, user.password)
         if (!valid) {
             return NextResponse.json({error: 'Nieprawidłowy email lub hasło'}, {status: 401})
         }
 
-        // generating JWT
         const token = jwt.sign({uid: user.uid, email: user.email}, JWT_SECRET, {expiresIn: '30d'})
 
         return NextResponse.json({token, user: {uid: user.uid, email: user.email, username: user.username}})
 
-    } catch (err: any) {
-        return NextResponse.json({error: err.message}, {status: 500})
+    } catch (err: unknown) {
+        let message = "Nieznany błąd"
+        if (err instanceof Error) message = err.message;
+        return NextResponse.json({error: message}, {status: 500});
     }
 }

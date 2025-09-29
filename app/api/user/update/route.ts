@@ -2,6 +2,12 @@ import {NextResponse} from 'next/server';
 import {supabaseServer} from '@/lib/supabaseServer';
 import bcrypt from 'bcryptjs';
 
+interface UserUpdatePayload {
+    username?: string;
+    email?: string;
+    password?: string;
+}
+
 export async function PATCH(req: Request) {
     const {searchParams} = new URL(req.url);
     const uid = searchParams.get('uid');
@@ -12,7 +18,7 @@ export async function PATCH(req: Request) {
 
     const {username, email, password} = await req.json();
 
-    const updates: Record<string, any> = {};
+    const updates: UserUpdatePayload = {};
     if (username) updates.username = username;
     if (email) updates.email = email;
     if (password) updates.password = await bcrypt.hash(password, 10);
@@ -46,7 +52,9 @@ export async function DELETE(req: Request) {
         if (error) return NextResponse.json({error: error.message}, {status: 500});
 
         return NextResponse.json({message: "Konto usunięte"});
-    } catch (err: any) {
-        return NextResponse.json({error: err.message}, {status: 500});
+    } catch (err: unknown) {
+        let message = 'Nieznany błąd';
+        if (err instanceof Error) message = err.message;
+        return NextResponse.json({error: message}, {status: 500});
     }
 }

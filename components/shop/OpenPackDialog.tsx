@@ -1,6 +1,6 @@
 "use client";
 
-import {Card, Set} from "@/lib/type";
+import {Card, SetType} from "@/lib/type";
 import {Dialog, DialogContent, DialogTitle,} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {useUserCoins} from "@/hooks/queries/useUserCoins";
@@ -14,9 +14,9 @@ import {checkUserAchievements} from "@/lib/checkUserAchievements";
 
 type OpenPackDialogProps = {
     open: boolean;
-    set: Set | null;
+    set: SetType | null;
     price: number;
-    setSelectedSetData: (set: Set | null) => void;
+    setSelectedSetData: (set: SetType | null) => void;
     setOpen: (open: boolean) => void;
 };
 
@@ -32,7 +32,7 @@ type CardParametersType = {
     rotateY: number,
 }
 
-export default function OpenPackDialog({open, set, price, setSelectedSetData, setOpen}: OpenPackDialogProps) {
+export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDialogProps) {
     const queryClient = useQueryClient();
     const {updateCoins} = useUserCoins();
     const {updateUserCards} = useUserCards();
@@ -70,7 +70,7 @@ export default function OpenPackDialog({open, set, price, setSelectedSetData, se
             setCurrentCards(newCards);
 
             await updateUserCards({
-                cards: newCards.pack.map((c: any) => ({card_id: c.id, quantity: 1})),
+                cards: newCards.pack.map((c: Card) => ({card_id: c.id, quantity: 1})),
                 set_id: set?.id,
             });
 

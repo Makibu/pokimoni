@@ -49,7 +49,9 @@ export async function POST(req: Request) {
             message: 'Użytkownik utworzony',
             user: {uid: newUser.uid, username: newUser.username, email: newUser.email}
         })
-    } catch (err: any) {
-        return NextResponse.json({error: err.message}, {status: 500})
+    } catch (err: unknown) {
+        let message = 'Nieznany błąd';
+        if (err instanceof Error) message = err.message;
+        return NextResponse.json({error: message}, {status: 500});
     }
 }

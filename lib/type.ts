@@ -20,12 +20,12 @@ export interface Card {
     name: string;
     subtypes?: string[]
     set_id?: string
-    rarity?: string
-    images?: { large: string; small: string }
+    rarity: string
+    images: { large: string; small: string }
     income: number | null
 }
 
-export interface Set {
+export interface SetType {
     id: string;
     name: string;
     series?: string

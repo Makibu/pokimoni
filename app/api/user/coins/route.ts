@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
         amount: number;
     };
 
-    if (!uid || !type || typeof amount !== "number") {
+    if (!uid || !type) {
         return NextResponse.json({error: "Missing parameters"}, {status: 400});
     }
 
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({error: "Daily coins already collected"}, {status: 400});
     }
 
-    const updates: any = {coins: userStat.coins + amount};
+    const updates: { coins: number; daily_coins_flag?: boolean } = {coins: userStat.coins + amount};
 
     if (type === "daily") {
         updates.daily_coins_flag = false;

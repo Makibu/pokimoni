@@ -1,7 +1,7 @@
 import {supabaseServer} from "@/lib/supabaseServer";
 import {NextResponse} from "next/server";
 
-export async function GET(reg: Request) {
+export async function GET(req: Request) {
     const {data, error} = await supabaseServer.from("achievements").select("*")
 
     if (error) {

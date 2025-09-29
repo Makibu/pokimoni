@@ -18,9 +18,7 @@ const categoryColors = {
     Special: "bg-pink-50 text-pink-700 border-pink-200",
 }
 
-type AchievementType = "Collection" | "Rarity" | "Time" | "Coin" | "Special";
-
-const typeTranslation: Record<AchievementType, string> = {
+const typeTranslation: Record<string, string> = {
     Collection: "Kolekcja",
     Rarity: "Rzadkość",
     Time: "Czas",
@@ -32,7 +30,7 @@ export default function AchievementTile({title, description, rarity, type, amoun
     title: string,
     description: string,
     rarity: string,
-    type: AchievementType,
+    type: string,
     amount: number,
     reward: string[],
     isCompleted: boolean,

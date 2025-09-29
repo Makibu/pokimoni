@@ -1,4 +1,4 @@
-import {Set} from "@/lib/type"
+import {SetType} from "@/lib/type"
 import Link from "next/link";
 import Image from "next/image";
 
@@ -10,7 +10,7 @@ export default function SetTile({
                                     images,
                                     totalCollected,
                                     className,
-                                }: Set & { totalCollected?: number, className?: string }) {
+                                }: SetType & { totalCollected?: number, className?: string }) {
     return (
         <div
             className={`w-72 h-[400px] border-2 rounded-xl flex flex-col justify-center p-4 relative group bg-white/60 shadow-sm backdrop-blur-lg ${className}`}>

@@ -13,7 +13,17 @@ import LoadingIndicator from "@/components/ui/LoadingIndicator";
 import {Card, CardContent} from "@/components/ui/card";
 import {Package} from "lucide-react";
 import {checkUserBadges} from "@/lib/checkUserBadges";
-import {useUserSlotIncome} from "@/hooks/queries/useUserSlotsIncome";
+
+type CardTileData = {
+    id: string;
+    name: string;
+    rarity: string | null;
+    images: { small?: string; large?: string } | null;
+    isOwned: boolean;
+    income?: number | null;
+    quantity?: number;
+    original: UserCardWithCard;
+};
 
 const rarityOrder: Record<string, number> = {
     "common": 1,
@@ -30,7 +40,6 @@ const rarityOrder: Record<string, number> = {
 
 export default function IncomeSlots({setId}: { setId?: string }) {
     const queryClient = useQueryClient();
-    const {data} = useUserSlotIncome()
 
     const [loading, setLoading] = useState(false);
     const [openSlot, setOpenSlot] = useState<1 | 2 | null>(null);
@@ -68,7 +77,7 @@ export default function IncomeSlots({setId}: { setId?: string }) {
         (a, b) => (rarityOrder[b.rarity?.toLowerCase() ?? "common"] || 0) - (rarityOrder[a.rarity?.toLowerCase() ?? "common"] || 0)
     );
 
-    const handleSelectCard = async (slot: 1 | 2, card: any) => {
+    const handleSelectCard = async (slot: 1 | 2, card: CardTileData) => {
         if (loading) return;
         setLoading(true);
 
@@ -111,7 +120,7 @@ export default function IncomeSlots({setId}: { setId?: string }) {
                 toast.success(`Zdobyłeś nowe odznaki: ${newlyEarned.map(b => b.name).join(", ")}`);
             }
 
-        } catch (err) {
+        } catch {
             setSelectedSlots(selectedSlots);
             toast.error("Nie udało się zaktualizować karty w slocie");
         } finally {

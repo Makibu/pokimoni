@@ -1,5 +1,6 @@
 import {NextResponse} from "next/server";
 import {supabaseServer} from "@/lib/supabaseServer";
+import {PostgrestError} from "@supabase/supabase-js";
 
 interface CardWithRarity {
     rarity: string | null;
@@ -43,10 +44,9 @@ export async function GET(req: Request) {
         quantity,
         cards:card_id(rarity)
       `)
-            .eq("uid", uid) as { data: UserCardWithRarity[] | null; error: any };
+            .eq("uid", uid) as { data: UserCardWithRarity[] | null; error: PostgrestError | null };
 
         if (userCardsError) {
-            console.error("[cards/rarity-stats] userCardsError:", userCardsError);
             return NextResponse.json({error: userCardsError.message}, {status: 500});
         }
 
@@ -67,8 +67,9 @@ export async function GET(req: Request) {
         }));
 
         return NextResponse.json({rarityStats: rarityList});
-    } catch (err: any) {
-        console.error("[cards/rarity-stats] unexpected error:", err);
-        return NextResponse.json({error: err.message}, {status: 500});
+    } catch (err: unknown) {
+        let message = 'Nieznany błąd';
+        if (err instanceof Error) message = err.message;
+        return NextResponse.json({error: message}, {status: 500});
     }
 }
