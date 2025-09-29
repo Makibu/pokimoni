@@ -36,6 +36,8 @@ export default function StatisticsPage() {
 
     const earnedBadgeIds = userStats.userBadges?.map(b => b.badge_id) ?? [];
 
+    console.log(userStats)
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-slate-50 relative overflow-hidden">
             <TabHeader title={"Twoje statystyki"}
@@ -119,13 +121,25 @@ export default function StatisticsPage() {
                                 <Package className="h-5 w-5 text-indigo-600"/>
                                 Ulubiona Paczka
                             </h3>
-                            <img src={userStats.favoritePack.images.logo} alt={userStats.favoritePack.name}
-                                 className={'p-8'}/>
-                            <div className="text-center absolute bottom-4">
-                                <div
-                                    className="text-xl font-bold text-indigo-600 mb-1">{userStats.favoritePack?.name}</div>
-                                <p className="text-sm text-slate-500">Otwarta {userStats.favoritePack?.opened} razy</p>
-                            </div>
+                            {userStats.favoritePack ? (
+                                <>
+                                    <img src={userStats.favoritePack.images.logo} alt={userStats.favoritePack.name}
+                                         className={'p-8'}/>
+                                    <div className="text-center absolute bottom-4">
+                                        <div
+                                            className="text-xl font-bold text-indigo-600 mb-1">{userStats.favoritePack?.name}</div>
+                                        <p className="text-sm text-slate-500">Otwarta {userStats.favoritePack?.opened} razy</p>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="text-center absolute bottom-4">
+                                    <div
+                                        className="text-xl font-bold text-indigo-600 mb-1">Brak
+                                    </div>
+                                    <p className="text-sm text-slate-500 px-12">Otwórz swoją pierwszą paczkę, by ją
+                                        wyświetlić!</p>
+                                </div>
+                            )}
                         </div>
 
                         <div
@@ -134,13 +148,29 @@ export default function StatisticsPage() {
                                 <Crown className="h-5 w-5 text-yellow-600"/>
                                 Najlepszy Pokémon
                             </h3>
-                            <img src={userStats.bestCard.images?.large} alt={userStats.bestCard.name}
-                                 className={"px-16"}/>
-                            <div className="text-center absolute bottom-4">
-                                <div className="text-xl font-bold text-yellow-600 mb-1">{userStats.bestCard.name}</div>
-                                <p className="text-sm text-slate-500">{userStats.bestCard.rarity} - {userStats.bestCard.income}
-                                    <CoinsIcon className={'inline-block w-3 ml-1'}/></p>
-                            </div>
+                            {userStats.bestCard ?
+                                (
+                                    <>
+                                        <img src={userStats.bestCard.images?.large} alt={userStats.bestCard.name}
+                                             className={"px-16"}/>
+                                        <div className="text-center absolute bottom-4">
+                                            <div
+                                                className="text-xl font-bold text-yellow-600 mb-1">{userStats.bestCard.name}</div>
+                                            <p className="text-sm text-slate-500">{userStats.bestCard.rarity} - {userStats.bestCard.income}
+                                                <CoinsIcon className={'inline-block w-3 ml-1'}/></p>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="text-center absolute bottom-4">
+                                        <div
+                                            className="text-xl font-bold text-yellow-600 mb-1">Brak
+                                        </div>
+                                        <div className={'text-sm text-slate-500 px-12'}>
+                                            Otwórz pierwszą paczkę by zdobyć swojego pokemona!
+                                        </div>
+                                    </div>
+                                )
+                            }
                         </div>
                     </div>
 

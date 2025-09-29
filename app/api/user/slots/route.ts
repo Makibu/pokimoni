@@ -26,23 +26,32 @@ export async function PATCH(req: Request) {
 export async function GET(req: Request) {
     const {searchParams} = new URL(req.url);
     const uid = searchParams.get("uid");
-    
+
+    console.log("[API GET /slots] uid:", uid); // debug
+
     if (!uid) {
+        console.warn("[API GET /slots] Brak uid w zapytaniu");
         return NextResponse.json({error: "Brak uid w zapytaniu"}, {status: 400});
     }
 
     const {data, error} = await supabaseServer
         .from("user_stats")
         .select(`
-        slot_1,
-        slot_2,
-        cards_1:slot_1(id, name, rarity, income),
-        cards_2:slot_2(id, name, rarity, income)
-      `)
+            slot_1,
+            slot_2,
+            cards_1:slot_1(id, name, rarity, income),
+            cards_2:slot_2(id, name, rarity, income)
+        `)
         .eq("uid", uid)
         .single();
 
-    if (error) return NextResponse.json({error: error.message}, {status: 500});
+    if (error) {
+        console.error("[API GET /slots] Supabase error:", error); // debug
+        return NextResponse.json({error: error.message}, {status: 500});
+    }
+
+    console.log("[API GET /slots] data:", data); // debug
 
     return NextResponse.json({slots: data});
 }
+

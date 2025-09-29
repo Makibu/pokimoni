@@ -37,15 +37,15 @@ export async function POST(req: NextRequest) {
         .from("user_stats")
         .select("coins, daily_coins_flag")
         .eq("uid", uid)
-        .single();
+        .maybeSingle();
 
     if (fetchError) return NextResponse.json({error: fetchError.message}, {status: 500});
 
-    if (type === "daily" && !userStat.daily_coins_flag) {
+    if (type === "daily" && !userStat?.daily_coins_flag) {
         return NextResponse.json({error: "Daily coins already collected"}, {status: 400});
     }
 
-    const updates: { coins: number; daily_coins_flag?: boolean } = {coins: userStat.coins + amount};
+    const updates: { coins: number; daily_coins_flag?: boolean } = {coins: userStat?.coins + amount};
 
     if (type === "daily") {
         updates.daily_coins_flag = false;

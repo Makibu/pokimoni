@@ -25,7 +25,6 @@ export const useUserMinigames = () => {
         enabled: !!uid,
     });
 
-    console.log(data)
 
     const mutation = useMutation<SudokuData, Error>({
         mutationFn: async () => {

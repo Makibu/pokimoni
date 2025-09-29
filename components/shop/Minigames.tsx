@@ -9,7 +9,6 @@ export default function Minigames({className}: { className: string }) {
     const [open, setOpen] = useState(false)
 
     const {sudokuAvailable} = useUserMinigames()
-    console.log(sudokuAvailable)
 
     function handleOpenSudoku() {
         if (sudokuAvailable) return
@@ -24,7 +23,7 @@ export default function Minigames({className}: { className: string }) {
                     <h2 className={'text-xl font-semibold'}>Sudoku</h2>
                     <h4 className={'text-sm text-gray-500'}>Zagraj i zdobądź 300 coinsów!</h4>
                 </div>
-                <Button variant={"default"} className={'bg-blue-500 hover:bg-blue-600'} disabled={sudokuAvailable}
+                <Button variant={"default"} className={'bg-blue-500 hover:bg-blue-600'} disabled={!sudokuAvailable}
                         onClick={handleOpenSudoku}>Zagraj</Button>
             </div>
             <SudokuDialog open={open} setOpen={setOpen}/>
