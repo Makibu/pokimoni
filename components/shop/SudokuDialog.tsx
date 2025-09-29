@@ -1,3 +1,5 @@
+"use client"
+
 import {useEffect, useMemo, useState} from "react";
 import {Dialog, DialogContent, DialogTitle} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
@@ -23,11 +25,17 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
     const [message, setMessage] = useState<string>("");
     const [difficulty, setDifficulty] = useState<string>("");
     const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
+    const [saved, setSaved] = useState<string | null>(null);
 
     const {updateCoins} = useUserCoins();
     const {updateSudokuFlag} = useUserMinigames();
 
     const STORAGE_KEY = "daily_sudoku_state";
+
+    useEffect(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        setSaved(saved)
+    }, []);
 
     async function getSudoku() {
         const data = await fetch("/api/daily-sudoku");
@@ -38,9 +46,8 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
         setSolution(sudoku.solution);
         setDifficulty(sudoku.difficulty);
 
-        const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+        const today = new Date().toISOString().split("T")[0];
 
-        const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
             const parsed: SavedSudokuState = JSON.parse(saved);
             if (parsed.date === today) {

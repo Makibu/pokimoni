@@ -1,3 +1,5 @@
+'use client'
+
 export default function TabHeader({title, description}: { title: string, description: string }) {
     return (
         <div

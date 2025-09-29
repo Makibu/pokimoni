@@ -38,6 +38,13 @@ export default function UserMenu() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    const [uid, setUid] = useState<string | null>(null)
+
+    useEffect(() => {
+        const uid = JSON.parse(localStorage.getItem('user') || '{}').uid;
+        setUid(uid);
+    }, []);
+
     useEffect(() => {
         setUsername(user?.username || "");
         setEmail(user?.email || "");
@@ -71,10 +78,7 @@ export default function UserMenu() {
 
     const handleDeleteConfirm = async () => {
         try {
-            const user = JSON.parse(localStorage.getItem('user') || '{}')
-            const storedUid = user.uid
-
-            await fetch(`/api/user/update?uid=${storedUid}`, {
+            await fetch(`/api/user/update?uid=${uid}`, {
                 method: "DELETE",
             });
 

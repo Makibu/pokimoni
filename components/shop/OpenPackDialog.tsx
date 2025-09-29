@@ -5,7 +5,7 @@ import {Dialog, DialogContent, DialogTitle,} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {useUserCoins} from "@/hooks/queries/useUserCoins";
 import {toast} from "sonner";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {useUserCards} from "@/hooks/queries/useUserCards";
 import {checkUserBadges} from "@/lib/checkUserBadges";
@@ -41,6 +41,8 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
     const [currentCards, setCurrentCards] = useState<RandomPacks | null>(null);
     const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
 
+    const [uid, setUid] = useState<string>("");
+
     const [parameters, setParameters] = useState<CardParametersType[]>(
         Array(5).fill({
             left: 0,
@@ -52,6 +54,11 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
 
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [finalLayout, setFinalLayout] = useState<boolean>(false);
+
+    useEffect(() => {
+        const uid = JSON.parse(localStorage.getItem('user') || '{}').uid;
+        setUid(uid);
+    }, []);
 
     const {refetch} = useQuery({
         queryKey: ["generatedCards", set?.id],
@@ -76,7 +83,6 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
 
             queryClient.invalidateQueries({queryKey: ["userSetStats"]});
 
-            const uid = JSON.parse(localStorage.getItem('user') || '{}').uid;
             const freshStatsRes = await fetch(`/api/user/stats?uid=${uid}`);
             const freshStats = await freshStatsRes.json();
 

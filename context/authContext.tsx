@@ -31,14 +31,18 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null)
     const [token, setToken] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
+    const [uid, setUid] = useState<string | null>(null)
 
-    const [settings, setSettings] = useState<UserSettings>(() => {
-        if (typeof window !== "undefined") {
-            const saved = localStorage.getItem("user_settings")
-            return saved ? JSON.parse(saved) : defaultSettings
+    const [settings, setSettings] = useState<UserSettings>(defaultSettings)
+
+    useEffect(() => {
+        const saved = localStorage.getItem("user_settings");
+        if (saved) {
+            setSettings(JSON.parse(saved));
         }
-        return defaultSettings
-    })
+        const user = JSON.parse(localStorage.getItem('user') || '{}')
+        setUid(user.uid)
+    }, []);
 
     useEffect(() => {
         localStorage.setItem('user_settings', JSON.stringify(settings));
@@ -89,10 +93,7 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
     }
 
     const updateUser = async (data: { username?: string; email?: string; password?: string }) => {
-        const user = JSON.parse(localStorage.getItem('user') || '{}')
-        const storedUid = user.uid
-
-        const res = await fetch(`/api/user/update?uid=${storedUid}`, {
+        const res = await fetch(`/api/user/update?uid=${uid}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

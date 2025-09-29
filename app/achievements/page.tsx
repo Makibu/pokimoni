@@ -6,7 +6,7 @@ import {useQuery} from "@tanstack/react-query";
 import {Achievement} from "@/lib/type";
 
 export default function AchievementsPage() {
-    const {data: achievements} = useQuery<Achievement[]>({
+    const {data: achievements, isLoading, error} = useQuery<Achievement[]>({
         queryKey: ["achievements"],
         queryFn: async () => {
             const res = await fetch("/api/achievements");
@@ -22,6 +22,9 @@ export default function AchievementsPage() {
             );
         }
     });
+
+    if (isLoading) return <p>Ładowanie...</p>;
+    if (error instanceof Error) return <p>Błąd: {error.message}</p>;
 
     return (
         <div

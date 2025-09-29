@@ -41,6 +41,8 @@ const rarityOrder: Record<string, number> = {
 export default function IncomeSlots({setId}: { setId?: string }) {
     const queryClient = useQueryClient();
 
+    const [uid, setUid] = useState<string | null>(null);
+
     const [loading, setLoading] = useState(false);
     const [openSlot, setOpenSlot] = useState<1 | 2 | null>(null);
     const [selectedSlots, setSelectedSlots] = useState<Record<1 | 2, UserCardWithCard | null>>({
@@ -61,6 +63,11 @@ export default function IncomeSlots({setId}: { setId?: string }) {
             });
         }
     }, [userStats, userCards])
+
+    useEffect(() => {
+        const uid = JSON.parse(localStorage.getItem('user') || '{}').uid;
+        setUid(uid);
+    }, []);
 
     const cardsForTile = userCards?.map((uc) => ({
         id: uc.cards.id,
@@ -92,7 +99,6 @@ export default function IncomeSlots({setId}: { setId?: string }) {
         setOpenSlot(null);
 
         try {
-            const uid = JSON.parse(localStorage.getItem('user') || '{}').uid;
             if (!uid) return;
 
             const res = await fetch('/api/user/slots?uid=' + uid, {
