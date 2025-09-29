@@ -83,7 +83,7 @@ export default function Card() {
 
             <IncomeSlots/>
 
-            <div className={'absolute right-24 bottom-6 cursor-pointer'} onClick={() => setShowVersionInfo(true)}>
+            <div className={'absolute right-6 bottom-6 cursor-pointer'} onClick={() => setShowVersionInfo(true)}>
                 <Info className="h-5 w-5"/>
             </div>
 

@@ -2,9 +2,9 @@
 
 import ReactQueryClientProvider from "@/components/providers/ReactQueryClientProvider";
 import {AuthProvider} from "@/context/authContext";
-import {Sidebar} from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import {Toaster} from "sonner";
+import Sidebar from "@/components/layout/Sidebar";
 
 export default function ClientLayout({children}: { children: React.ReactNode }) {
     return (

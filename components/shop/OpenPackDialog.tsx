@@ -1,7 +1,7 @@
 "use client";
 
 import {Card, SetType} from "@/lib/type";
-import {Dialog, DialogContent, DialogTitle,} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogTitle} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {useUserCoins} from "@/hooks/queries/useUserCoins";
 import {toast} from "sonner";
@@ -22,15 +22,15 @@ type OpenPackDialogProps = {
 
 type RandomPacks = {
     isGodPack: boolean;
-    pack: Card[]
-}
+    pack: Card[];
+};
 
 type CardParametersType = {
-    scale: number,
-    x: number,
-    left: number | string,
-    rotateY: number,
-}
+    scale: number;
+    x: number;
+    left: number | string;
+    rotateY: number;
+};
 
 export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDialogProps) {
     const queryClient = useQueryClient();
@@ -40,23 +40,17 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
     const [step, setStep] = useState<"start" | "revealing" | "final">("start");
     const [currentCards, setCurrentCards] = useState<RandomPacks | null>(null);
     const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
-
     const [uid, setUid] = useState<string>("");
+    const [loading, setLoading] = useState(false);
 
     const [parameters, setParameters] = useState<CardParametersType[]>(
-        Array(5).fill({
-            left: 0,
-            x: 0,
-            scale: 1,
-            rotateY: 0,
-        })
+        Array(5).fill({left: 0, x: 0, scale: 1, rotateY: 0})
     );
-
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [finalLayout, setFinalLayout] = useState<boolean>(false);
 
     useEffect(() => {
-        const uid = JSON.parse(localStorage.getItem('user') || '{}').uid;
+        const uid = JSON.parse(localStorage.getItem("user") || "{}").uid;
         setUid(uid);
     }, []);
 
@@ -67,42 +61,43 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
             const data = await response.json();
             return data;
         },
-        enabled: false
+        enabled: false,
     });
 
     async function handleOpenPack() {
+        if (!set) return;
+        setLoading(true);
+        toast.success("Zakupiono paczkę!");
+
         try {
             await updateCoins({type: "purchase", amount: -price});
+            setStep("revealing");
+
             const {data: newCards} = await refetch();
             setCurrentCards(newCards);
 
-            await updateUserCards({
+            updateUserCards({
                 cards: newCards.pack.map((c: Card) => ({card_id: c.id, quantity: 1})),
                 set_id: set?.id,
             });
-
             queryClient.invalidateQueries({queryKey: ["userSetStats"]});
 
             const freshStatsRes = await fetch(`/api/user/stats?uid=${uid}`);
             const freshStats = await freshStatsRes.json();
 
-            const newlyEarnedBadges = await checkUserBadges(uid, freshStats!.userStats, 0, "all");
-
+            const newlyEarnedBadges = await checkUserBadges(uid, freshStats.userStats, 0, "all");
             if (newlyEarnedBadges && newlyEarnedBadges.length > 0) {
                 toast.success(`Zdobyłeś nowe odznaki: ${newlyEarnedBadges.map(b => b.name).join(", ")}`);
             }
 
-            const newlyEarnedAchievements = await checkUserAchievements(uid, freshStats!.userStats);
-
+            const newlyEarnedAchievements = await checkUserAchievements(uid, freshStats.userStats);
             if (newlyEarnedAchievements && newlyEarnedAchievements.length > 0) {
-                toast.success(`Zdobyłeś nowe osiągnięcia: ${newlyEarnedAchievements.map(a => a.title).join(", ")}`)
+                toast.success(`Zdobyłeś nowe osiągnięcia: ${newlyEarnedAchievements.map(a => a.title).join(", ")}`);
             }
-
-            toast.success("Zakupiono paczkę!");
-            setStep("revealing");
-        } catch (err) {
-            console.error("Błąd przy handleOpenPack:", err);
+        } catch {
             toast.error("Coś poszło nie tak :O Spróbuj ponownie później");
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -180,19 +175,15 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
         setActiveIndex(null);
         setFinalLayout(false);
         setSelectedCardIndex(null);
-        setParameters(Array(5).fill({
-            left: 0,
-            x: 0,
-            scale: 1,
-            rotateY: 0,
-        }));
+        setParameters(Array(5).fill({left: 0, x: 0, scale: 1, rotateY: 0}));
     }
 
     return (
         <Dialog open={open} onOpenChange={resetPack}>
-            <DialogContent className='p-12 flex justify-center items-center flex-col'
-                           onInteractOutside={(e) => e.preventDefault()}
-                           onEscapeKeyDown={(e) => e.preventDefault()}
+            <DialogContent
+                className="p-12 flex justify-center items-center flex-col"
+                onInteractOutside={(e) => e.preventDefault()}
+                onEscapeKeyDown={(e) => e.preventDefault()}
             >
                 <DialogTitle/>
 
@@ -200,22 +191,28 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
                     <div className="flex flex-col items-center justify-center gap-4 w-[900px] h-[500px] relative">
                         <h2 className="text-xl font-bold absolute top-0">Otwórz paczkę</h2>
                         <img src={set?.images?.logo} alt={set?.name}/>
-                        <Button onClick={handleNext} className={'absolute bottom-0'}>{price} monet</Button>
+                        <Button
+                            onClick={handleNext}
+                            className="absolute bottom-0"
+                            disabled={loading}
+                        >
+                            {loading ? "Ładowanie..." : `${price} monet`}
+                        </Button>
                     </div>
                 )}
 
                 {(step === "revealing" || step === "final") && (
-                    <div className={'w-[900px] h-[500px] flex relative justify-center items-center'}>
+                    <div className="w-[900px] h-[500px] flex relative justify-center items-center">
                         {parameters.map((param, i) => {
                             const isSelected = finalLayout && selectedCardIndex === i;
-                            const zIndex = finalLayout
-                                ? parameters.length - 1 + i
-                                : i;
+                            const zIndex = finalLayout ? parameters.length - 1 + i : i;
 
                             return (
                                 <motion.div
                                     key={i}
-                                    className={`absolute aspect-[300/418] w-48 perspective-1000 transform-style-preserve-3d ${finalLayout ? 'cursor-pointer' : ''}`}
+                                    className={`absolute aspect-[300/418] w-48 perspective-1000 transform-style-preserve-3d ${
+                                        finalLayout ? "cursor-pointer" : ""
+                                    }`}
                                     style={{
                                         top: `calc(50% + ${i * 10}px)`,
                                         translateY: "-50%",
@@ -223,7 +220,7 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
                                     }}
                                     animate={{
                                         left: param.left,
-                                        x: param.left === "50%" ? (param.x - 50) : param.x,
+                                        x: param.left === "50%" ? param.x - 50 : param.x,
                                         y: isSelected ? -20 : 0,
                                         scale: isSelected ? 1.3 : param.scale,
                                         zIndex: isSelected ? 20 : 1,
@@ -231,14 +228,14 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
                                     }}
                                     onClick={() => {
                                         if (!finalLayout) return;
-                                        setSelectedCardIndex(prev => (prev === i ? null : i));
+                                        setSelectedCardIndex((prev) => (prev === i ? null : i));
                                     }}
                                     transition={{type: "spring", stiffness: 500, damping: 30}}
                                 >
                                     {/* awers */}
                                     <div
                                         className="absolute w-full h-full backface-hidden rounded-md bg-green-500 border-2"/>
-                                    {/* rewers - obrazek karty */}
+                                    {/* rewers */}
                                     <div
                                         className="absolute w-full h-full backface-hidden rotate-y-180 rounded-md border-2 overflow-hidden">
                                         {currentCards?.pack[i]?.images?.large && (
