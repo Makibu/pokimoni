@@ -1,7 +1,5 @@
 "use client";
 
-export const dynamic = 'force-dynamic';
-
 import ReactQueryClientProvider from "@/components/providers/ReactQueryClientProvider";
 import {AuthProvider} from "@/context/authContext";
 import Navbar from "@/components/layout/Navbar";

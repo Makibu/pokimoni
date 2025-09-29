@@ -11,7 +11,7 @@ export default function Minigames({className}: { className: string }) {
     const {sudokuAvailable} = useUserMinigames()
 
     function handleOpenSudoku() {
-        if (sudokuAvailable) return
+        if (!sudokuAvailable) return
         setOpen(true)
     }
 

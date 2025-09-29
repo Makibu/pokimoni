@@ -1,6 +1,4 @@
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-export const runtime = 'nodejs';
 
 import type {Metadata} from "next";
 import {Sora} from "next/font/google";
