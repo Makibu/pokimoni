@@ -12,8 +12,7 @@ export async function GET(req: Request) {
     const {data, error} = await supabaseServer
         .from("user_achievements")
         .select(`
-                achievement_id,
-                unlocked_at
+                *
               `)
         .eq("uid", uid);
 

@@ -18,13 +18,11 @@ export async function POST(req: Request) {
             .limit(1)
 
         if (existingUser && existingUser.length > 0) {
-            return NextResponse.json({error: 'Użytkownik o podanym emailu lub username już istnieje'}, {status: 400})
+            return NextResponse.json({error: 'Użytkownik o podanym emailu lub nazwie użytkownika już istnieje'}, {status: 400})
         }
 
-        // hashing password
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        // creating user
         const {data: newUser, error: userError} = await supabaseServer
             .from('users')
             .insert([

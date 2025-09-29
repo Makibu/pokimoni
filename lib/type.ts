@@ -43,6 +43,11 @@ export interface UserAchievement {
     unlocked_at?: string
 }
 
+export interface AchievementWithUserData extends Achievement {
+    claimed_flag: boolean
+    isCompleted: boolean
+}
+
 export interface UserBadge {
     user_id: string;
     badge_id: number;

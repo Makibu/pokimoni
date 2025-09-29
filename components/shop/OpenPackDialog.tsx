@@ -80,23 +80,24 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
                 cards: newCards.pack.map((c: Card) => ({card_id: c.id, quantity: 1})),
                 set_id: set?.id,
             });
-            queryClient.invalidateQueries({queryKey: ["userSetStats"]});
 
             const freshStatsRes = await fetch(`/api/user/stats?uid=${uid}`);
             const freshStats = await freshStatsRes.json();
 
             const newlyEarnedBadges = await checkUserBadges(uid, freshStats.userStats, 0, "all");
             if (newlyEarnedBadges && newlyEarnedBadges.length > 0) {
-                toast.success(`Zdobyłeś nowe odznaki: ${newlyEarnedBadges.map(b => b.name).join(", ")}`);
+                toast.info(`Zdobyłeś nowe odznaki: ${newlyEarnedBadges.map(b => b.name).join(", ")}`);
             }
 
             const newlyEarnedAchievements = await checkUserAchievements(uid, freshStats.userStats);
             if (newlyEarnedAchievements && newlyEarnedAchievements.length > 0) {
-                toast.success(`Zdobyłeś nowe osiągnięcia: ${newlyEarnedAchievements.map(a => a.title).join(", ")}`);
+                toast.info(`Zdobyłeś nowe osiągnięcia: ${newlyEarnedAchievements.map(a => a.title).join(", ")}`);
             }
         } catch {
             toast.error("Coś poszło nie tak :O Spróbuj ponownie później");
         } finally {
+            queryClient.invalidateQueries({queryKey: ["userSetStats"]});
+            queryClient.invalidateQueries({queryKey: ["userAchievements"]});
             setLoading(false);
         }
     }
