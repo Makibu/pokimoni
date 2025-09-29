@@ -128,7 +128,8 @@ export default function UserMenu() {
                                 <div className="flex items-center space-x-4">
                                     <Avatar className="h-20 w-20">
                                         <AvatarImage alt="Avatar użytkownika"/>
-                                        <AvatarFallback className="bg-blue-500 text-white text-xl">PU</AvatarFallback>
+                                        <AvatarFallback
+                                            className="bg-blue-500 text-white text-xl">{user?.username?.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                     <div>
                                         <h3 className="text-lg font-semibold">{user?.username}</h3>
