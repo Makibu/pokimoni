@@ -27,10 +27,7 @@ export async function GET(req: Request) {
     const {searchParams} = new URL(req.url);
     const uid = searchParams.get("uid");
 
-    console.log("[API GET /slots] uid:", uid); // debug
-
     if (!uid) {
-        console.warn("[API GET /slots] Brak uid w zapytaniu");
         return NextResponse.json({error: "Brak uid w zapytaniu"}, {status: 400});
     }
 
@@ -46,11 +43,8 @@ export async function GET(req: Request) {
         .single();
 
     if (error) {
-        console.error("[API GET /slots] Supabase error:", error); // debug
         return NextResponse.json({error: error.message}, {status: 500});
     }
-
-    console.log("[API GET /slots] data:", data); // debug
 
     return NextResponse.json({slots: data});
 }

@@ -36,8 +36,6 @@ export default function StatisticsPage() {
 
     const earnedBadgeIds = userStats.userBadges?.map(b => b.badge_id) ?? [];
 
-    console.log(userStats)
-
     return (
         <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-slate-50 relative overflow-hidden">
             <TabHeader title={"Twoje statystyki"}
