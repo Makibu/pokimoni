@@ -36,8 +36,6 @@ export default function StatisticsPage() {
 
     const earnedBadgeIds = userStats.userBadges?.map(b => b.badge_id) ?? [];
 
-    console.log(userStats.recentActivity)
-
     return (
         <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-slate-50 relative overflow-hidden">
             <TabHeader title={"Twoje statystyki"}
@@ -79,8 +77,9 @@ export default function StatisticsPage() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-8">
-                    <div className="bg-white/90 backdrop-blur-sm border-2 border-blue-100 rounded-lg p-6">
+                <div className="flex flex-col lg:grid lg:grid-cols-2 gap-x-4 gap-y-8">
+                    <div
+                        className="bg-white/90 backdrop-blur-sm border-2 border-blue-100 rounded-lg p-6 w-full">
                         <h3 className="flex items-center gap-2 text-lg font-semibold mb-4">
                             <BarChart3 className="h-5 w-5 text-blue-600"/>
                             Rozkład Rzadkości
@@ -114,9 +113,9 @@ export default function StatisticsPage() {
                         </div>
                     </div>
 
-                    <div className="gap-4 grid grid-cols-2">
+                    <div className="gap-4 grid md:grid-cols-2">
                         <div
-                            className="bg-white/90 backdrop-blur-sm border-2 border-blue-100 rounded-lg p-6 relative flex flex-col items-center">
+                            className="bg-white/90 backdrop-blur-sm border-2 border-blue-100 rounded-lg px-2 py-5 md:p-6 relative flex flex-col items-center justify-between">
                             <h3 className="flex items-center gap-2 text-lg font-semibold mb-4">
                                 <Package className="h-5 w-5 text-indigo-600"/>
                                 Ulubiona Paczka
@@ -124,8 +123,8 @@ export default function StatisticsPage() {
                             {userStats.favoritePack ? (
                                 <>
                                     <img src={userStats.favoritePack.images.logo} alt={userStats.favoritePack.name}
-                                         className={'p-8'}/>
-                                    <div className="text-center absolute bottom-4">
+                                         className={'py-2'}/>
+                                    <div className="text-center">
                                         <div
                                             className="text-xl font-bold text-indigo-600 mb-1">{userStats.favoritePack?.name}</div>
                                         <p className="text-sm text-slate-500">Otwarta {userStats.favoritePack?.opened} razy</p>
@@ -143,7 +142,7 @@ export default function StatisticsPage() {
                         </div>
 
                         <div
-                            className="bg-white/90 backdrop-blur-sm border-2 border-blue-100 rounded-lg p-6 relative flex flex-col items-center">
+                            className="bg-white/90 backdrop-blur-sm border-2 border-blue-100 rounded-lg p-6 relative flex flex-col items-center justify-between">
                             <h3 className="flex items-center gap-2 text-lg font-semibold mb-4">
                                 <Crown className="h-5 w-5 text-yellow-600"/>
                                 Najlepszy Pokémon
@@ -152,8 +151,8 @@ export default function StatisticsPage() {
                                 (
                                     <>
                                         <img src={userStats.bestCard.images?.large} alt={userStats.bestCard.name}
-                                             className={"px-16"}/>
-                                        <div className="text-center absolute bottom-4">
+                                             className={"px-16 py-2"}/>
+                                        <div className="text-center">
                                             <div
                                                 className="text-xl font-bold text-yellow-600 mb-1">{userStats.bestCard.name}</div>
                                             <p className="text-sm text-slate-500">{userStats.bestCard.rarity} - {userStats.bestCard.income}
@@ -197,7 +196,7 @@ export default function StatisticsPage() {
                                         <Tooltip>
                                             <TooltipTrigger asChild>
                                                 <CircleQuestionMark
-                                                    className={`absolute top-2 right-2 ${isEarned ? "text-orange-600" : "text-slate-400"}`}/>
+                                                    className={`absolute top-2 right-2 w-4 h-4 md:w-6 md:h-6 ${isEarned ? "text-orange-600" : "text-slate-400"}`}/>
                                             </TooltipTrigger>
                                             <TooltipContent>
                                                 <p>{badge.description}</p>
@@ -224,9 +223,10 @@ export default function StatisticsPage() {
                                         </div>
                                         <div className="flex-1">
                                             <p className="text-sm font-medium">
-                                                {activity.action} <span
-                                                className="text-indigo-600">{activity.item}</span>
+                                                {activity.action}
                                             </p>
+                                            <span
+                                                className="text-indigo-600">{activity.item}</span>
                                             <p className="text-xs text-slate-500">
                                                 {formatDistanceToNow(new Date(activity.time), {
                                                     addSuffix: true,

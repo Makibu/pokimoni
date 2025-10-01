@@ -58,7 +58,7 @@ export default function PacksCarousel({price}: { price: number }) {
 
     return (
         <div className="flex flex-col gap-4">
-            <h1 className="text-3xl font-semibold text-blue-500">
+            <h1 className="text-xl md:text-3xl font-semibold text-blue-500">
                 Paczki po {price} coinsów:
             </h1>
             <div className="py-[25px] shop-card-border gap-4">
@@ -70,7 +70,7 @@ export default function PacksCarousel({price}: { price: number }) {
                     {filteredSets.map((set: SetType, index: number) => (
                             <div
                                 key={index}
-                                className="w-72 h-72 border-2 shrink-0 rounded-xl p-4 flex flex-col justify-center items-center relative mb-2 overflow-hidden"
+                                className="w-52 h-52 md:w-72 md:h-72 border-2 shrink-0 rounded-xl p-4 flex flex-col justify-center items-center relative mb-2 overflow-hidden"
                             >
                                 <Image
                                     src={set.images!.logo as string}

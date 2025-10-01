@@ -135,7 +135,8 @@ export default function IncomeSlots({setId}: { setId?: string }) {
     };
 
     return (
-        <div className="absolute top-1/2 right-6 flex gap-2 -translate-y-1/2">
+        <div
+            className="md:absolute md:top-1/2 md:right-6 flex gap-2 md:-translate-y-1/2 z-10 mt-12 md:mt-0 scale-90 md:scale-100">
             {[1, 2].map(slotNum => {
                 const selectedCard = selectedSlots[slotNum as 1 | 2];
 
@@ -156,12 +157,12 @@ export default function IncomeSlots({setId}: { setId?: string }) {
                 return (
                     <div key={`slot-${slotNum}`} className="flex flex-col items-center">
                         {statsLoading ? (
-                            <div className="w-[150px] h-[210px] flex items-center justify-center">
+                            <div className="w-[150px] md:w-[200px] aspect-[300/418] flex items-center justify-center">
                                 <LoadingIndicator/>
                             </div>
                         ) : selectedCard ? (
                             <div
-                                className={`w-[150px] h-[210px] rounded-md cursor-pointer flex items-center justify-center hover:shadow-md hover:scale-105 transition-all duration-300`}
+                                className={`w-[150px] md:w-[200px] rounded-md cursor-pointer flex items-center justify-center hover:shadow-md hover:scale-105 transition-all duration-300`}
                                 style={{aspectRatio: "300/418"}}
                                 onClick={() => setOpenSlot(slotNum as 1 | 2)}
                             >
@@ -205,7 +206,7 @@ export default function IncomeSlots({setId}: { setId?: string }) {
                                 ) : (
                                     <div className="px-8 pt-5 overflow-y-scroll">
                                         <div
-                                            className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6 max-w-full">
+                                            className="grid grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6 max-w-full">
                                             {uniqueCards.map((card, index) => (
                                                 <div
                                                     key={`${card.id}-${index}`}

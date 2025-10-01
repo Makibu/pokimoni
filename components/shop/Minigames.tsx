@@ -20,8 +20,8 @@ export default function Minigames({className}: { className: string }) {
             <div
                 className={'absolute h-16 items-center justify-between px-6 w-full bottom-0 flex border-t-[1px] bg-white'}>
                 <div className={'flex flex-col'}>
-                    <h2 className={'text-xl font-semibold'}>Sudoku</h2>
-                    <h4 className={'text-sm text-gray-500'}>Zagraj i zdobądź 300 coinsów!</h4>
+                    <h2 className={'text-base md:text-xl font-semibold'}>Sudoku</h2>
+                    <h4 className={'text-[12px] md:text-sm text-gray-500'}>Zagraj i zdobądź 300 coinsów!</h4>
                 </div>
                 <Button variant={"default"} className={'bg-blue-500 hover:bg-blue-600'} disabled={!sudokuAvailable}
                         onClick={handleOpenSudoku}>Zagraj</Button>

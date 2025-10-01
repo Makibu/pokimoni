@@ -14,13 +14,15 @@ export default function CardTile({
         <div
             className={`rounded-xl flex flex-col justify-center relative group shadow-sm ${className}`}>
             {isOwned ? (
-                <Image src={images!.large as string} alt={name || "card"} width={300} height={300}/>
+                <div className={'w-[150px] md:w-[300px] aspect-[300/418]'}>
+                    <Image src={images!.large as string} alt={name || "card"} width={300} height={300}/>
+                </div>
             ) : (
                 <div
-                    className={'w-[300px] h-[418px] bg-gray-700 flex items-center justify-center rounded-xl border-12 border-gray-400 relative'}>
+                    className={'w-[150px] md:w-[300px] aspect-[300/418] bg-gray-700 flex items-center justify-center rounded-xl border-12 border-gray-400 relative'}>
                     <span
-                        className={`text-gray-400 text-center ${visibleNames ? "text-3xl" : "text-5xl"}`}>{visibleNames ? name : "???"}</span>
-                    <span className={'absolute bottom-6 text-gray-400 text-xl'}>{rarity}</span>
+                        className={`text-gray-400 text-center ${visibleNames ? "text-xl md:text-3xl" : "text-2xl md:text-5xl"}`}>{visibleNames ? name : "???"}</span>
+                    <span className={'absolute bottom-6 text-gray-400 text-base md:text-xl text-center'}>{rarity}</span>
                 </div>
             )}
             <div className="absolute w-full bottom-0 left-0 z-10 overflow-hidden rounded-b-md">

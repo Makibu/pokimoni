@@ -101,7 +101,7 @@ export default function IndexPage() {
 
     return (
         <div
-            className={'overflow-x-hidden flex flex-col px-32 pb-32 bg-gradient-to-br from-white via-blue-50/30 to-slate-50'}>
+            className={'overflow-x-hidden flex flex-col px-6 md:px-16 lg:px-32 pb-32 bg-gradient-to-br from-white via-blue-50/30 to-slate-50'}>
             <div className={'flex mt-32 mb-6 z-10 items-center gap-4'}>
                 <SearchFilter onSearch={setSearch}/>
                 <CardFilter

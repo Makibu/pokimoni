@@ -10,8 +10,8 @@ import BannerYellow from "@/public/banners/banner-yellow.png"
 import BannerRed from "@/public/banners/banner-red.png"
 import BannerGreen from "@/public/banners/banner-green.png"
 import BannerBlue from "@/public/banners/banner-blue.png"
-import IncomeSlots from "@/components/IncomeSlots";
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import IncomeSlots from "@/components/IncomeSlots";
 
 type BannerColor = "yellow" | "red" | "green" | "blue"
 
@@ -55,16 +55,16 @@ export default function Card() {
 
 
     return (
-        <div className={'pt-12 w-full min-h-[100svh] flex justify-center items-center'}>
+        <div className={'py-20 md:pt-12 w-full min-h-[100svh] flex flex-col md:justify-center items-center'}>
             <Image src={PokemonBackground2} alt="pokemon-background" fill
                    className="absolute object-cover w-full h-full"
                    priority/>
-            <div className={'flex flex-col gap-6 px-6 w-full justify-center items-center'}>
+            <div className={'flex flex-col md:gap-6 px-6 w-full justify-start md:justify-center items-center'}>
                 {tabs.map((tab, index) => {
                     const Icon = tab.icon
                     return (
                         <Link href={tab.href} key={index} style={{backgroundColor: colorMap[tab.color]}}
-                              className={'h-24 w-full max-w-96 border-[1px] border-black/50 rounded-3xl flex justify-center items-center relative backdrop-blur-md bg-opacity-50 shadow-lg transition-transform hover:scale-105'}>
+                              className={'scale-75 md:scale-100 h-16 overflow-hidden md:h-24 w-full max-w-96 border-[1px] border-black/50 rounded-3xl flex justify-center items-center relative backdrop-blur-md bg-opacity-50 shadow-lg transition-transform hover:scale-[0.8] md:hover:scale-105'}>
                             <Icon className={'w-12 h-12 absolute left-6'} strokeWidth={1}/>
                             <div className="flex flex-col items-center">
                                 <h1 className="text-2xl font-bold tracking-wide drop-shadow-sm">
@@ -88,7 +88,7 @@ export default function Card() {
             </div>
 
             <Dialog open={showVersionInfo} onOpenChange={setShowVersionInfo}>
-                <DialogContent className="max-w-md w-full">
+                <DialogContent className="max-w-[95%] md:max-w-md w-full">
                     <DialogHeader>
                         <DialogTitle
                             className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">

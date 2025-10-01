@@ -189,7 +189,8 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
                 <DialogTitle/>
 
                 {step === "start" && (
-                    <div className="flex flex-col items-center justify-center gap-4 w-[900px] h-[500px] relative">
+                    <div
+                        className="flex flex-col items-center justify-center gap-4 w-[900px] h-[500px] relative">
                         <h2 className="text-xl font-bold absolute top-0">Otwórz paczkę</h2>
                         <img src={set?.images?.logo} alt={set?.name}/>
                         <Button
@@ -234,11 +235,11 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
                                     transition={{type: "spring", stiffness: 500, damping: 30}}
                                 >
                                     {/* awers */}
-                                    <div
-                                        className="absolute w-full h-full backface-hidden rounded-md bg-green-500 border-2"/>
+                                    <img src={"/card_backside.png"}
+                                         alt="Card Backside" className={"absolute backface-hidden"}/>
                                     {/* rewers */}
                                     <div
-                                        className="absolute w-full h-full backface-hidden rotate-y-180 rounded-md border-2 overflow-hidden">
+                                        className="absolute w-full h-full backface-hidden rotate-y-180 rounded-md overflow-hidden">
                                         {currentCards?.pack[i]?.images?.large && (
                                             <img
                                                 src={currentCards.pack[i].images.large}

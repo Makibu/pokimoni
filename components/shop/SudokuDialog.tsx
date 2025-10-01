@@ -152,7 +152,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="max-w-3xl flex flex-col">
+            <DialogContent className="w-full md:w-[unset] flex flex-col">
                 <DialogTitle className="mb-4"></DialogTitle>
 
                 <div className="flex space-x-6 items-start">
@@ -183,10 +183,10 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
 
                                     const borderClasses = `
                     border 
-                    ${r % 3 === 0 ? "border-t-4" : "border-t"}
-                    ${c % 3 === 0 ? "border-l-4" : "border-l"}
-                    ${r === 8 ? "border-b-4" : ""}
-                    ${c === 8 ? "border-r-4" : ""}
+                    ${r % 3 === 0 ? "border-t-2 md:border-t-4" : "border-t"}
+                    ${c % 3 === 0 ? "border-l-2 md:border-l-4" : "border-l"}
+                    ${r === 8 ? "border-b-2 md:border-b-4" : ""}
+                    ${c === 8 ? "border-r-2 md:border-r-4" : ""}
                   `;
 
                                     return (
@@ -195,7 +195,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
                                             value={val}
                                             disabled={isPrefilled}
                                             onChange={(e) => handleChange(r, c, e.target.value)}
-                                            className={`w-10 h-10 text-center text-lg ${borderClasses} 
+                                            className={`w-8 md:w-10 h-8 md:h-10 text-center text-lg ${borderClasses} 
                         ${isPrefilled ? "bg-gray-100 font-bold" : "bg-white"}
                         ${isHighlighted ? "bg-yellow-200" : ""}
                       `}
