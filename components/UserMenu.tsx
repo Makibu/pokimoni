@@ -275,7 +275,8 @@ export default function UserMenu() {
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
                                             <div className="space-y-0.5">
-                                                <Label className="text-base">Widoczne nazwy nieodkrytych Pokémon</Label>
+                                                <Label className="text-base">Widoczne nazwy nieodkrytych
+                                                    Pokémon</Label>
                                                 <p className="text-sm text-muted-foreground">
                                                     Pokazuj nazwy Pokémon, których jeszcze nie złapałeś
                                                 </p>
@@ -297,7 +298,8 @@ export default function UserMenu() {
                                         <div className="flex items-center justify-between">
                                             <div className="space-y-0.5">
                                                 <Label className="text-base">Tryb ciemny</Label>
-                                                <p className="text-sm text-muted-foreground">Przełącz na ciemny motyw
+                                                <p className="text-sm text-muted-foreground">Przełącz na ciemny
+                                                    motyw
                                                     interfejsu</p>
                                             </div>
                                             <Switch checked={settings.darkMode}

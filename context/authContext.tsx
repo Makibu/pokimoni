@@ -44,9 +44,9 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
         const saved = localStorage.getItem("user_settings");
         if (saved) {
             setSettings(JSON.parse(saved));
+            const user = JSON.parse(localStorage.getItem('user') || '{}')
+            setUid(user.uid)
         }
-        const user = JSON.parse(localStorage.getItem('user') || '{}')
-        setUid(user.uid)
     }, []);
 
     useEffect(() => {
@@ -103,6 +103,8 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
         password?: string;
         avatar?: number | null
     }) => {
+        console.log(uid)
+
         const res = await fetch(`/api/user/update?uid=${uid}`, {
             method: "PATCH",
             headers: {
