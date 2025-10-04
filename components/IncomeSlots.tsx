@@ -174,7 +174,7 @@ export default function IncomeSlots({setId}: { setId?: string }) {
                             </div>
                         ) : (
                             <Card
-                                className="w-[150px] h-[210px] bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 hover:border-blue-400 hover:bg-gradient-to-br hover:from-blue-50 hover:to-blue-100 transition-all duration-300 hover:scale-[1.03] cursor-pointer group"
+                                className="w-[150px] md:w-[200px] aspect-[300/418] bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 hover:border-blue-400 hover:bg-gradient-to-br hover:from-blue-50 hover:to-blue-100 transition-all duration-300 hover:scale-[1.03] cursor-pointer group"
                                 onClick={() => setOpenSlot(slotNum as 1 | 2)}
                             >
                                 <CardContent className="flex flex-col items-center justify-center h-full p-1">
