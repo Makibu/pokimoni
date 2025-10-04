@@ -10,7 +10,7 @@ export default function Sidebar() {
     const linkMap = [
         {name: "Home", href: "/", icon: HomeIcon},
         {name: "Shop", href: "/shop", icon: ShoppingBag},
-        {name: "Index", href: "/index", icon: BookMarked},
+        {name: "Collection", href: "/collection", icon: BookMarked},
         {name: "Achievements", href: "/achievements", icon: Trophy},
         {name: "Statistics", href: "/statistics", icon: ChartNoAxesCombined}
     ]

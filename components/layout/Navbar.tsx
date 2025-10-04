@@ -50,7 +50,6 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", handleScroll)
     }, [])
 
-    // blokowanie scrolla w tle
     useEffect(() => {
         if (isMenuOpenned) {
             document.body.style.overflow = "hidden";
@@ -67,7 +66,7 @@ export default function Navbar() {
 
     const tabs: Tab[] = [
         {name: "Sklep", subName: "Kupuj i otwieraj", href: "/shop", icon: ShoppingBag, color: "yellow"},
-        {name: "Indeks", subName: "Twoja kolekcja", href: "/index", icon: BookMarked, color: "red"},
+        {name: "Kolekcja", subName: "Twoja kolekcja", href: "/collection", icon: BookMarked, color: "red"},
         {name: "Osiągnięcia", subName: "Osiągaj sukcesy", href: "/achievements", icon: Trophy, color: "blue"},
         {
             name: "Statystyki",

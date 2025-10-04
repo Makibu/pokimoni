@@ -31,7 +31,7 @@ export default function SetTile({
 
             <div
                 className="absolute inset-0 rounded-xl bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity z-0">
-                <Link href={`/index/${id}`}
+                <Link href={`/collection2/${id}`}
                       className="px-4 py-2 bg-white text-black font-semibold rounded-lg shadow hover:bg-gray-200 transition-colors">
                     Zobacz karty
                 </Link>

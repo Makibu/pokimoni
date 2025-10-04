@@ -103,10 +103,19 @@ export async function POST(req: Request) {
 
     if (packError) throw new Error(packError.message);
 
+    const {data: newStats, error: newStatsError} = await supabaseServer
+        .from("user_stats")
+        .select("*")
+        .eq("uid", uid)
+        .single();
+
+    if (newStatsError) throw new Error(newStatsError.message);
+
     return NextResponse.json({
         success: true,
         totalCardsAdded,
         uniqueCardsAdded,
+        userStats: newStats,
     });
 }
 

@@ -76,13 +76,12 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
             const {data: newCards} = await refetch();
             setCurrentCards(newCards);
 
-            updateUserCards({
+            const result = await updateUserCards({
                 cards: newCards.pack.map((c: Card) => ({card_id: c.id, quantity: 1})),
                 set_id: set?.id,
             });
 
-            const freshStatsRes = await fetch(`/api/user/stats?uid=${uid}`);
-            const freshStats = await freshStatsRes.json();
+            const freshStats = result.userStats
 
             const newlyEarnedBadges = await checkUserBadges(uid, freshStats.userStats, 0, "all");
             if (newlyEarnedBadges && newlyEarnedBadges.length > 0) {
