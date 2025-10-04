@@ -31,13 +31,13 @@ export interface Card {
 export interface SetType {
     id: string;
     name: string;
-    series?: string
+    series: string
     printed_total?: number
-    total?: number
-    ptcgo_code?: string
-    release_date?: string
-    images?: SetImages
-    class?: 1 | 2 | 3 | 0;
+    total: number
+    ptcgo_code: string
+    release_date: string
+    images: SetImages
+    class: 1 | 2 | 3 | 0;
 }
 
 export interface UserAchievement {
@@ -137,12 +137,5 @@ export interface SlotCard {
 
 export type DailyPack = {
     date: string;
-    set: {
-        id: string;
-        name: string;
-        series: string | null;
-        release_date: string | null;
-        class: number;
-        images: SetImages;
-    };
+    set: SetType;
 };

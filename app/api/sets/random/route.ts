@@ -17,7 +17,7 @@ export async function GET() {
 
     const {data: setRow, error: setError} = await supabaseServer
         .from("sets")
-        .select("id, name, series, release_date, class, images")
+        .select("*")
         .eq("id", dailyPack.chosen_set_id)
         .single();
 

@@ -83,16 +83,17 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
 
             const freshStats = result.userStats
 
-            const newlyEarnedBadges = await checkUserBadges(uid, freshStats.userStats, 0, "all");
+            const newlyEarnedBadges = await checkUserBadges(uid, freshStats, 0, "all");
             if (newlyEarnedBadges && newlyEarnedBadges.length > 0) {
                 toast.info(`Zdobyłeś nowe odznaki: ${newlyEarnedBadges.map(b => b.name).join(", ")}`);
             }
 
-            const newlyEarnedAchievements = await checkUserAchievements(uid, freshStats.userStats);
+            const newlyEarnedAchievements = await checkUserAchievements(uid, freshStats);
             if (newlyEarnedAchievements && newlyEarnedAchievements.length > 0) {
                 toast.info(`Zdobyłeś nowe osiągnięcia: ${newlyEarnedAchievements.map(a => a.title).join(", ")}`);
             }
-        } catch {
+        } catch (err) {
+            console.error(err);
             toast.error("Coś poszło nie tak :O Spróbuj ponownie później");
         } finally {
             queryClient.invalidateQueries({queryKey: ["userSetStats"]});

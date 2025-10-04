@@ -13,6 +13,8 @@ import BannerBlue from "@/public/banners/banner-blue.png"
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import IncomeSlots from "@/components/IncomeSlots";
 
+import {changeDate, changesData, version} from "@/lib/changesData";
+
 type BannerColor = "yellow" | "red" | "green" | "blue"
 
 const bannerMap: Record<BannerColor, StaticImageData> = {
@@ -36,6 +38,12 @@ type Tab = {
     icon: LucideIcon,
     color: BannerColor,
 }
+
+const typeColorMap = {
+    Added: ["border-blue-400", "text-blue-800", "text-blue-700", "bg-blue-50"],
+    Fixed: ["border-green-400", "text-green-800", "text-green-700", "bg-green-50"],
+    Design: ["border-purple-400", "text-purple-800", "text-purple-700", "bg-purple-50"],
+} as const;
 
 export default function Card() {
     const tabs: Tab[] = [
@@ -99,38 +107,33 @@ export default function Card() {
 
                     <div className="space-y-6">
                         <div className="text-center">
-                            <div className="text-3xl font-bold text-gray-800 mb-2">v1.0.0-beta</div>
+                            <div className="text-3xl font-bold text-gray-800 mb-2">{version}</div>
                         </div>
 
                         <div className="space-y-4">
                             <h3 className="font-semibold text-gray-800 border-b pb-2">Najnowsze zmiany</h3>
 
                             <div className="space-y-3 text-sm">
-                                <div className="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
-                                    <div className="font-medium text-blue-800 mb-1">✨ Nowe funkcje</div>
-                                    <ul className="text-blue-700 space-y-1">
-                                        <li>• Initial</li>
-                                    </ul>
-                                </div>
+                                {changesData.map((change, index) => {
+                                    const classesArr = typeColorMap[change.type] || ["border-gray-300", "text-gray-800", "text-gray-700", "bg-gray-50"];
 
-                                <div className="bg-green-50 p-3 rounded-lg border-l-4 border-green-400">
-                                    <div className="font-medium text-green-800 mb-1">🔧 Poprawki</div>
-                                    <ul className="text-green-700 space-y-1">
-                                        <li>• Initial</li>
-                                    </ul>
-                                </div>
-
-                                <div className="bg-purple-50 p-3 rounded-lg border-l-4 border-purple-400">
-                                    <div className="font-medium text-purple-800 mb-1">🎨 Design</div>
-                                    <ul className="text-purple-700 space-y-1">
-                                        <li>• Initial</li>
-                                    </ul>
-                                </div>
+                                    return (
+                                        <div key={index}
+                                             className={`${classesArr[0]} ${classesArr[3]} p-3 rounded-lg border-l-4`}>
+                                            <div className={`font-medium ${classesArr[1]} mb-1`}>{change.title}</div>
+                                            <ul className={`${classesArr[2]} space-y-1`}>
+                                                {change.options.map((option, index) => (
+                                                    <li key={index}>• {option}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )
+                                })}
                             </div>
                         </div>
 
                         <div className="text-center pt-4 border-t">
-                            <p className="text-xs text-gray-500">Ostatnia aktualizacja: 29 września 2025</p>
+                            <p className="text-xs text-gray-500">Ostatnia aktualizacja: {changeDate}</p>
                         </div>
                     </div>
                 </DialogContent>

@@ -34,6 +34,8 @@ export async function checkUserBadges(
     const res = await fetch(`/api/user/badges?uid=${uid}`);
     if (!res.ok) return null;
 
+    console.log(stats)
+
     const json = await res.json();
     const userBadges: UserBadge[] = json.userBadges || [];
     const earnedIds = userBadges.map((b) => b.badge_id);
