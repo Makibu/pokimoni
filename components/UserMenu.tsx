@@ -48,6 +48,23 @@ export default function UserMenu() {
     }, []);
 
     useEffect(() => {
+        if (!uid) return;
+
+        const fetchAvatar = async () => {
+
+            const res = await fetch(`/api/user/avatar?uid=${uid}`);
+            if (!res.ok) return null
+            const data = await res.json();
+            if (data.avatar) {
+                setCurrentAvatar(data.avatar);
+                setSelectedAvatar(data.avatar);
+            }
+        };
+
+        fetchAvatar();
+    }, [uid]);
+
+    useEffect(() => {
         setUsername(user?.username || "");
         setEmail(user?.email || "");
         setCurrentAvatar(user?.avatar || null)
