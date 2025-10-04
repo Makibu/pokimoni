@@ -1,4 +1,4 @@
-import {Card} from "@/lib/type"
+import {Card} from "@/lib/types"
 import Image from "next/image";
 
 export default function CardTile({

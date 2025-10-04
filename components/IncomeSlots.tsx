@@ -5,7 +5,7 @@ import {Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger} from "@
 import CardTile from "@/components/data-display/CardTile";
 import {Button} from "@/components/ui/button";
 import {useUserCards} from "@/hooks/queries/useUserCards";
-import {UserCardWithCard, UserStats} from "@/lib/type";
+import {UserCardWithCard, UserStats} from "@/lib/types";
 import {useUserStats} from "@/hooks/queries/useUserStats";
 import {useQueryClient} from "@tanstack/react-query";
 import {toast} from "sonner";

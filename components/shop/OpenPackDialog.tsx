@@ -1,6 +1,6 @@
 "use client";
 
-import {Card, SetType} from "@/lib/type";
+import {Card, SetType} from "@/lib/types";
 import {Dialog, DialogContent, DialogTitle} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {useUserCoins} from "@/hooks/queries/useUserCoins";

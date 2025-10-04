@@ -1,4 +1,4 @@
-import {SetType} from "@/lib/type"
+import {SetType} from "@/lib/types"
 import Link from "next/link";
 import Image from "next/image";
 
@@ -31,7 +31,7 @@ export default function SetTile({
 
             <div
                 className="absolute inset-0 rounded-xl bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity z-0">
-                <Link href={`/collection2/${id}`}
+                <Link href={`/collection/${id}`}
                       className="px-4 py-2 bg-white text-black font-semibold rounded-lg shadow hover:bg-gray-200 transition-colors">
                     Zobacz karty
                 </Link>

@@ -1,7 +1,7 @@
 "use client"
 
 import {useQuery} from "@tanstack/react-query";
-import {Card} from "@/lib/type";
+import {Card} from "@/lib/types";
 import {useParams} from "next/navigation";
 import CardTile from "@/components/data-display/CardTile";
 import ScrollButton from "@/components/ui/ScrollButton";

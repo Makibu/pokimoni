@@ -1,7 +1,7 @@
 'use client'
 
 import {createContext, useContext, useEffect, useState} from 'react'
-import {User} from "@/lib/type";
+import {User} from "@/lib/types";
 
 type UserSettings = {
     showHiddenPokemonNames: boolean

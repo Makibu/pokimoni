@@ -1,7 +1,7 @@
 "use client"
 
 import SetTile from "@/components/data-display/SetTile";
-import {SetType} from "@/lib/type";
+import {SetType} from "@/lib/types";
 import {useUserTotalPerSet} from "@/hooks/queries/useUserTotalPerSet";
 import TabHeader from "@/components/layout/TabHeader";
 import useSets from "@/hooks/queries/useSets";

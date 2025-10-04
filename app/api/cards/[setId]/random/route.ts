@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {supabaseServer} from "@/lib/supabaseServer";
 import {normalizeRarity} from "@/lib/normalizeRarity";
-import {Card} from "@/lib/type";
+import {Card} from "@/lib/types";
 
 function pickCardByRarity(cards: Card[], rarityWeights: Record<string, number>) {
     let weightedCards = cards

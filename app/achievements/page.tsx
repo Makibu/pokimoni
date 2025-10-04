@@ -3,7 +3,7 @@
 import TabHeader from "@/components/layout/TabHeader";
 import AchievementTile from "@/components/data-display/AchievementTile";
 import {useQuery} from "@tanstack/react-query";
-import {Achievement, AchievementWithUserData} from "@/lib/type";
+import {Achievement, AchievementWithUserData} from "@/lib/types";
 import {useEffect, useState} from "react";
 
 export default function AchievementsPage() {

@@ -2,14 +2,18 @@
 
 import TabHeader from "@/components/layout/TabHeader";
 import Minigames from "@/components/shop/Minigames";
-import {CoinsIcon} from "lucide-react";
+import {CoinsIcon, GalleryHorizontalEnd} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import PacksCarousel from "@/components/shop/PacksCarousel";
 import {useUserCoins} from "@/hooks/queries/useUserCoins";
 import {toast} from "sonner";
+import {useUserStats} from "@/hooks/queries/useUserStats";
+import {useDailyPack} from "@/hooks/queries/useDailyPack";
 
 export default function ShopPage() {
     const {dailyAvailable, updateCoins} = useUserCoins()
+    const {data: userStats, isLoading: statsLoading} = useUserStats()
+    const {data: dailyPack, isLoading: dailyPackLoading} = useDailyPack();
 
     async function handleDailyCoins() {
         try {
@@ -20,6 +24,10 @@ export default function ShopPage() {
         }
     }
 
+    if (statsLoading || dailyPackLoading || !dailyPack || !userStats) return null
+
+    const dailyPackPrice = (dailyPack.set.class * 100) / 2
+
     return (
         <div className={'overflow-x-hidden pb-32 bg-gradient-to-br from-white via-blue-50/30 to-slate-50'}>
             <TabHeader title={"Sklep"}
@@ -28,7 +36,16 @@ export default function ShopPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 grid-rows-4 md:grid-rows-2 gap-5 mt-12">
                     <Minigames
                         className="md:col-span-2 md:row-span-1 h-72 shop-card-border"/>
-                    <div className="md:row-span-2 md:col-span-1 bg-purple-300">div2</div>
+                    <div
+                        className="md:row-span-2 md:col-span-1 shop-card-border flex flex-col justify-center items-center px-24 lg:px-6 relative">
+                        <h1 className={'absolute top-6 text-2xl font-semibold'}>{dailyPack.set.name}</h1>
+                        <img src={dailyPack.set.images.logo} alt={dailyPack.set.name}/>
+                        <div className={'absolute bottom-6 flex flex-col items-center gap-2'}>
+                            <h3 className={'text-xl font-semibold'}>Kup na przecenie 50%!</h3>
+                            <Button className={"bg-blue-500 hover:bg-blue-600"} size={"sm"}
+                                    disabled={userStats.coins < dailyPackPrice}>{dailyPackPrice} <CoinsIcon/></Button>
+                        </div>
+                    </div>
                     <div className={'flex flex-col shop-card-border items-center justify-center px-2'}>
                         <div className={'w-16 h-16 bg-blue-500 p-3 rounded-full'}>
                             <CoinsIcon className={'text-white w-full h-full'}/>
@@ -38,7 +55,15 @@ export default function ShopPage() {
                         <Button className={'bg-blue-500 hover:bg-blue-600 mt-6'} onClick={handleDailyCoins}
                                 disabled={!dailyAvailable}>{dailyAvailable ? "Odbierz 300 monet" : "Odebrano!"}</Button>
                     </div>
-                    <div className="bg-yellow-300 row-span-1 col-span-1">div4</div>
+                    <div className={'flex flex-col shop-card-border items-center justify-center px-2'}>
+                        <div className={'w-16 h-16 bg-blue-500 p-3 rounded-full'}>
+                            <GalleryHorizontalEnd className={'text-white w-full h-full'}/>
+                        </div>
+                        <h1 className={'text-lg font-semibold mt-3'}>Twoje karty!</h1>
+                        <h4 className={'text-gray-500 text-sm text-center'}>Czy dasz rade zdobyć je wszystkie?</h4>
+                        <span
+                            className={'text-blue-500 font-semibold text-xl mt-4'}>{userStats.total_cards}/{userStats.cardsTotal}</span>
+                    </div>
                 </div>
                 <div className={'mt-12'}>
                     <PacksCarousel price={100}/>

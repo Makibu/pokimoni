@@ -8,6 +8,9 @@ export interface Achievement {
     amount: number
 }
 
+export type CardImages = { large: string; small: string }
+export type SetImages = { logo: string; symbol: string }
+
 export interface BadgeType {
     id: number;
     name: string;
@@ -21,7 +24,7 @@ export interface Card {
     subtypes?: string[]
     set_id?: string
     rarity: string
-    images: { large: string; small: string }
+    images: CardImages
     income: number | null
 }
 
@@ -33,7 +36,7 @@ export interface SetType {
     total?: number
     ptcgo_code?: string
     release_date?: string
-    images?: { logo: string; symbol: string }
+    images?: SetImages
     class?: 1 | 2 | 3 | 0;
 }
 
@@ -94,7 +97,7 @@ export interface UserStats {
     favoritePack: {
         name: string;
         opened: number;
-        images: { logo: string; symbol: string };
+        images: SetImages;
     };
     total_duplicates: number;
     daily_coins_flag: boolean;
@@ -131,3 +134,15 @@ export interface SlotCard {
     rarity?: string;
     income?: number;
 }
+
+export type DailyPack = {
+    date: string;
+    set: {
+        id: string;
+        name: string;
+        series: string | null;
+        release_date: string | null;
+        class: number;
+        images: SetImages;
+    };
+};

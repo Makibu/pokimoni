@@ -1,5 +1,5 @@
 import {badges} from "@/lib/badgesData";
-import {UserBadge, UserStats} from "@/lib/type";
+import {UserBadge, UserStats} from "@/lib/types";
 
 const checkers: Record<
     string,

@@ -1,6 +1,6 @@
 import {useQuery} from '@tanstack/react-query'
 import {useEffect, useState} from 'react'
-import {UserStats} from '@/lib/type'
+import {UserStats} from '@/lib/types'
 
 export const useUserStats = () => {
     const [uid, setUid] = useState<string | null>(null)

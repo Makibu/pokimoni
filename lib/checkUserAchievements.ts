@@ -1,4 +1,4 @@
-import {Achievement, UserStats} from "@/lib/type";
+import {Achievement, UserStats} from "@/lib/types";
 
 export type UserAchievement = {
     achievement_id: number;

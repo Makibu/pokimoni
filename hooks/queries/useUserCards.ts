@@ -1,6 +1,6 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {useEffect, useState} from "react";
-import {UserCardWithCard} from "@/lib/type";
+import {UserCardWithCard} from "@/lib/types";
 
 export const useUserCards = (setId?: string) => {
     const [uid, setUid] = useState<string | null>(null);

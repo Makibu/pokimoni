@@ -1,7 +1,7 @@
 "use client";
 
 import {useQuery} from "@tanstack/react-query";
-import {SetType} from "@/lib/type";
+import {SetType} from "@/lib/types";
 import {Button} from "@/components/ui/button";
 import Image from "next/image";
 import {CoinsIcon} from "lucide-react";
