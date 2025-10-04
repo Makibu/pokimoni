@@ -92,8 +92,7 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
             if (newlyEarnedAchievements && newlyEarnedAchievements.length > 0) {
                 toast.info(`Zdobyłeś nowe osiągnięcia: ${newlyEarnedAchievements.map(a => a.title).join(", ")}`);
             }
-        } catch (err) {
-            console.error(err);
+        } catch {
             toast.error("Coś poszło nie tak :O Spróbuj ponownie później");
         } finally {
             queryClient.invalidateQueries({queryKey: ["userSetStats"]});

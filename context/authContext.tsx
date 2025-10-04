@@ -103,7 +103,6 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
         password?: string;
         avatar?: number | null
     }) => {
-        console.log(uid)
 
         const res = await fetch(`/api/user/update?uid=${uid}`, {
             method: "PATCH",

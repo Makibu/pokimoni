@@ -5,7 +5,6 @@ export async function GET() {
     const {data, error} = await supabaseServer.rpc("choose_daily_pack_for_today");
 
     if (error) {
-        console.error("Supabase RPC error:", error);
         return NextResponse.json({error: "Błąd po stronie bazy danych."}, {status: 500});
     }
 
