@@ -39,6 +39,8 @@ export default function UserMenu() {
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const [uid, setUid] = useState<string | null>(null)
+    const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null)
+    const [currentAvatar, setCurrentAvatar] = useState<number | null>(null)
 
     useEffect(() => {
         const uid = JSON.parse(localStorage.getItem('user') || '{}').uid;
@@ -48,6 +50,8 @@ export default function UserMenu() {
     useEffect(() => {
         setUsername(user?.username || "");
         setEmail(user?.email || "");
+        setCurrentAvatar(user?.avatar || null)
+        setSelectedAvatar(user?.avatar || null)
     }, [user]);
 
     const handleProfileClick = () => {
@@ -67,7 +71,13 @@ export default function UserMenu() {
         }
 
         try {
-            await updateUser({username, email, password: password || undefined});
+            await updateUser({
+                username,
+                email,
+                password: password || undefined,
+                avatar: selectedAvatar ?? currentAvatar
+            })
+            setCurrentAvatar(selectedAvatar)
             toast.success("Profil zaktualizowany pomyślnie!");
             setPassword("");
             setConfirmPassword("");
@@ -95,8 +105,13 @@ export default function UserMenu() {
             <DropdownMenu>
                 <DropdownMenuTrigger className={'rounded-full cursor-pointer'}>
                     <Avatar>
-                        <AvatarImage/>
-                        <AvatarFallback>{user?.username?.charAt(0)}</AvatarFallback>
+                        {(selectedAvatar || currentAvatar) ? (
+                            <AvatarImage src={`/avatars/avatar-${selectedAvatar ?? currentAvatar}.webp`}/>
+                        ) : (
+                            <AvatarFallback className="bg-blue-500 text-white text-xl">
+                                {user?.username?.charAt(0)}
+                            </AvatarFallback>
+                        )}
                     </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className={'mr-6'}>
@@ -111,7 +126,19 @@ export default function UserMenu() {
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <Dialog
+                open={isDialogOpen}
+                onOpenChange={(open) => {
+                    setIsDialogOpen(open);
+                    if (!open) {
+                        setSelectedAvatar(currentAvatar);
+                        setUsername(user?.username || "");
+                        setEmail(user?.email || "");
+                        setPassword("");
+                        setConfirmPassword("");
+                    }
+                }}
+            >
                 <DialogContent className="sm:max-w-[600px] w-full">
                     <DialogHeader>
                         <DialogTitle>{activeTab === "profile" ? "Profil użytkownika" : "Ustawienia"}</DialogTitle>
@@ -127,9 +154,14 @@ export default function UserMenu() {
                             <div className="space-y-4">
                                 <div className="flex items-center space-x-4">
                                     <Avatar className="h-20 w-20">
-                                        <AvatarImage alt="Avatar użytkownika"/>
-                                        <AvatarFallback
-                                            className="bg-blue-500 text-white text-xl">{user?.username?.charAt(0)}</AvatarFallback>
+                                        {(selectedAvatar || currentAvatar) ? (
+                                            <AvatarImage
+                                                src={`/avatars/avatar-${selectedAvatar ?? currentAvatar}.webp`}/>
+                                        ) : (
+                                            <AvatarFallback className="bg-blue-500 text-white text-xl">
+                                                {user?.username?.charAt(0)}
+                                            </AvatarFallback>
+                                        )}
                                     </Avatar>
                                     <div>
                                         <h3 className="text-lg font-semibold">{user?.username}</h3>
@@ -137,8 +169,33 @@ export default function UserMenu() {
                                     </div>
                                 </div>
 
+
                                 <Separator/>
 
+                                <div className="flex flex-col gap-3 items-start">
+                                    <Label className="text-base">Avatar</Label>
+                                    <div className="grid grid-cols-7 gap-3">
+                                        {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                                            <button
+                                                key={num}
+                                                onClick={() => setSelectedAvatar(num)}
+                                                className={`rounded-full border-2 transition-all hover:scale-110 cursor-pointer ${
+                                                    selectedAvatar === num
+                                                        ? "border-blue-500 ring-2 ring-blue-300"
+                                                        : "border-transparent"
+                                                }`}
+                                            >
+                                                <img
+                                                    src={`/avatars/avatar-${num}.webp`}
+                                                    alt={`Avatar ${num}`}
+                                                    className="w-12 h-12 rounded-full object-cover"
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <Separator/>
                                 <div className="grid gap-4">
                                     <div className="grid gap-2">
                                         <Label htmlFor="username">Nazwa użytkownika</Label>

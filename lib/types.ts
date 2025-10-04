@@ -119,6 +119,7 @@ export interface User {
     email: string;
     password: string;
     created_at?: string
+    avatar?: number
 }
 
 export interface SlotsData {

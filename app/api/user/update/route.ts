@@ -6,6 +6,7 @@ interface UserUpdatePayload {
     username?: string;
     email?: string;
     password?: string;
+    avatar?: number;
 }
 
 export async function PATCH(req: Request) {
@@ -16,11 +17,12 @@ export async function PATCH(req: Request) {
         return NextResponse.json({error: "Brak uid w zapytaniu"}, {status: 400});
     }
 
-    const {username, email, password} = await req.json();
+    const {username, email, password, avatar} = await req.json();
 
     const updates: UserUpdatePayload = {};
     if (username) updates.username = username;
     if (email) updates.email = email;
+    if (typeof avatar === 'number') updates.avatar = avatar;
     if (password) updates.password = await bcrypt.hash(password, 10);
 
     const {data, error} = await supabaseServer
@@ -30,9 +32,15 @@ export async function PATCH(req: Request) {
         .select()
         .single();
 
-    if (error) return NextResponse.json({error: error.message}, {status: 500});
+    if (error)
+        return NextResponse.json({error: error.message}, {status: 500});
 
-    return NextResponse.json({uid: data.uid, email: data.email, username: data.username});
+    return NextResponse.json({
+        uid: data.uid,
+        email: data.email,
+        username: data.username,
+        avatar: data.avatar,
+    });
 }
 
 export async function DELETE(req: Request) {
@@ -49,7 +57,8 @@ export async function DELETE(req: Request) {
             .delete()
             .eq("uid", uid);
 
-        if (error) return NextResponse.json({error: error.message}, {status: 500});
+        if (error)
+            return NextResponse.json({error: error.message}, {status: 500});
 
         return NextResponse.json({message: "Konto usunięte"});
     } catch (err: unknown) {

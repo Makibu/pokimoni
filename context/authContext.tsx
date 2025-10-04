@@ -16,7 +16,12 @@ type AuthContextType = {
     signIn: (email: string, password: string) => Promise<void>
     signUp: (username: string, email: string, password: string) => Promise<void>
     signOut: () => void
-    updateUser: (data: { username?: string; email?: string; password?: string }) => Promise<void>
+    updateUser: (data: {
+        username?: string;
+        email?: string;
+        password?: string;
+        avatar?: number | null
+    }) => Promise<void>
     loading: boolean
 }
 
@@ -92,7 +97,12 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
         window.location.href = "/login"
     }
 
-    const updateUser = async (data: { username?: string; email?: string; password?: string }) => {
+    const updateUser = async (data: {
+        username?: string;
+        email?: string;
+        password?: string;
+        avatar?: number | null
+    }) => {
         const res = await fetch(`/api/user/update?uid=${uid}`, {
             method: "PATCH",
             headers: {

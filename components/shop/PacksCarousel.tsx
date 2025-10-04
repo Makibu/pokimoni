@@ -59,7 +59,7 @@ export default function PacksCarousel({price}: { price: number }) {
     return (
         <div className="flex flex-col gap-4">
             <h1 className="text-xl md:text-3xl font-semibold text-blue-500">
-                Paczki po {price} coinsów:
+                Paczki po {price} monet:
             </h1>
             <div className="py-[25px] shop-card-border gap-4">
                 <div

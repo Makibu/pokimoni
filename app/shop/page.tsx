@@ -64,7 +64,7 @@ export default function ShopPage() {
                         <div className={'w-16 h-16 bg-blue-500 p-3 rounded-full'}>
                             <CoinsIcon className={'text-white w-full h-full'}/>
                         </div>
-                        <h1 className={'text-lg font-semibold mt-3'}>Codzienne coinsy!</h1>
+                        <h1 className={'text-lg font-semibold mt-3'}>Codzienne monety!</h1>
                         <h4 className={'text-gray-500 text-sm text-center'}>Odbierz darmowe monety każdego dnia</h4>
                         <Button className={'bg-blue-500 hover:bg-blue-600 mt-6'} onClick={handleDailyCoins}
                                 disabled={!dailyAvailable}>{dailyAvailable ? "Odbierz 300 monet" : "Odebrano!"}</Button>

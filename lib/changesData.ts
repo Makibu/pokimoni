@@ -11,6 +11,7 @@ export const changesData: Change = [
         options: [
             "Dodano codzienną paczkę",
             "Dodano śledzenie postępu na stronie sklepu",
+            "Dodano avatary!"
         ]
     },
     {
