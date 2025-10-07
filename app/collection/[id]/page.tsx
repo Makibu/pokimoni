@@ -29,6 +29,7 @@ export default function IndexPage() {
     const [search, setSearch] = useState<string>("");
     const [sort, setSort] = useState<string>("rarity-asc");
     const [activeFilters, setActiveFilters] = useState<string[]>(rarityList);
+    const [showOwnedOnly, setShowOwnedOnly] = useState<boolean>(false);
     const {settings} = useAuth()
 
     const {id} = useParams<{ id: string }>();
@@ -80,6 +81,7 @@ export default function IndexPage() {
     const filteredCards = sortedCards
         .filter(card => activeFilters.includes(card.rarity?.toLowerCase() || ""))
         .filter(card => card.name?.toLowerCase().includes(search.toLowerCase()) || search === "")
+        .filter(card => !showOwnedOnly || card.isOwned)
         .sort((a, b) => {
             switch (sort) {
                 case "rarity-asc":
@@ -111,6 +113,8 @@ export default function IndexPage() {
                     sort={sort}
                     setSort={setSort}
                     resetFilters={resetFilters}
+                    showOwnedOnly={showOwnedOnly}
+                    setShowOwnedOnly={setShowOwnedOnly}
                 />
             </div>
             <div className={'flex gap-8 flex-wrap justify-center'}>
