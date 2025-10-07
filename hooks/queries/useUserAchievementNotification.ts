@@ -18,10 +18,11 @@ export default function useUserAchievementNotification() {
             const json = await res.json();
             return json.has_unclaimed_achievements
         },
-        enabled: !!uid
+        enabled: !!uid,
+        staleTime: 0
     });
 
     return {
-        has_unclaimed_achievements: data ?? false
+        has_unclaimed_achievements: data ?? false,
     };
 }

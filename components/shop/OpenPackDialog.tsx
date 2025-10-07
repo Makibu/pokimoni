@@ -11,7 +11,6 @@ import {useUserCards} from "@/hooks/queries/useUserCards";
 import {checkUserBadges} from "@/lib/checkUserBadges";
 import {motion} from "framer-motion";
 import {checkUserAchievements} from "@/lib/checkUserAchievements";
-import {useUserStats} from "@/hooks/queries/useUserStats"; // ✅ dodane
 
 type OpenPackDialogProps = {
     open: boolean;
@@ -50,8 +49,6 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [finalLayout, setFinalLayout] = useState<boolean>(false);
 
-    const {data: userStats, refetch: refetchUserStats} = useUserStats();
-
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user") || "{}");
         if (user.uid) setUid(user.uid);
@@ -86,15 +83,18 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
 
             const freshStats = result.userStats;
 
-            await refetchUserStats();
-
             const newlyEarnedBadges = await checkUserBadges(uid, freshStats, 0, "all");
             if (newlyEarnedBadges?.length) {
                 toast.info(`Zdobyłeś nowe odznaki: ${newlyEarnedBadges.map(b => b.name).join(", ")}`);
             }
 
-            const currentStats = userStats || freshStats;
-            const newlyEarnedAchievements = await checkUserAchievements(uid, currentStats);
+            const res = await fetch(`/api/user/cards/rarity-stats?uid=${uid}`);
+            const rarityData = await res.json();
+            const statsWithRarity = {...freshStats, rarityStats: rarityData.rarityStats};
+
+            const newlyEarnedAchievements = await checkUserAchievements(uid, statsWithRarity);
+
+            await queryClient.invalidateQueries({queryKey: ["achievementsNotification", uid]});
 
             if (newlyEarnedAchievements?.length) {
                 toast.info(`Zdobyłeś nowe osiągnięcia: ${newlyEarnedAchievements.map(a => a.title).join(", ")}`);
@@ -102,11 +102,11 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
         } catch {
             toast.error("Coś poszło nie tak :O Spróbuj ponownie później");
         } finally {
-            queryClient.invalidateQueries({queryKey: ["userSetStats"]});
-            queryClient.invalidateQueries({queryKey: ["userAchievements"]});
-            queryClient.invalidateQueries({queryKey: ["achievements", uid]});
-            queryClient.invalidateQueries({queryKey: ["achievementsNotification", uid],});
-            queryClient.invalidateQueries({queryKey: ["userStats", uid]});
+            await queryClient.invalidateQueries({queryKey: ["userSetStats"]});
+            await queryClient.invalidateQueries({queryKey: ["userAchievements"]});
+            await queryClient.invalidateQueries({queryKey: ["achievements", uid]});
+            await queryClient.invalidateQueries({queryKey: ["userStats", uid]});
+            await queryClient.invalidateQueries({queryKey: ["achievementsNotification", uid]});
 
             setLoading(false);
         }
