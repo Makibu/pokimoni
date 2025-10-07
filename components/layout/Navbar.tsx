@@ -10,7 +10,7 @@ import BannerYellow from "@/public/banners/banner-yellow.png";
 import BannerRed from "@/public/banners/banner-red.png";
 import BannerGreen from "@/public/banners/banner-green.png";
 import BannerBlue from "@/public/banners/banner-blue.png";
-import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {HybridTooltip, HybridTooltipContent, HybridTooltipTrigger} from "@/components/ui/hybrid-tooltip";
 
 
 type BannerColor = "yellow" | "red" | "green" | "blue"
@@ -60,16 +60,16 @@ export default function Navbar() {
             `}
             >
                 <div className={' absolute left-6 text-red-500 flex gap-2 items-center'}>
-                    <Tooltip>
-                        <TooltipTrigger>
+                    <HybridTooltip>
+                        <HybridTooltipTrigger>
                             <CircleAlert/>
-                        </TooltipTrigger>
-                        <TooltipContent className={'max-w-96'}>
+                        </HybridTooltipTrigger>
+                        <HybridTooltipContent className={'max-w-96'}>
                             Otwieranie paczek na mniejszych ekranach jest obecnie znacznie utrudnione. Zalecane jest
                             korzystanie z
                             aplikacji na urządzeniach z większą rozdzielczością.
-                        </TooltipContent>
-                    </Tooltip>
+                        </HybridTooltipContent>
+                    </HybridTooltip>
                 </div>
                 <Balance/>
                 <div className="absolute right-6 h-12 flex items-center gap-2">
