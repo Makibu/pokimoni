@@ -11,6 +11,7 @@ import {useUserCards} from "@/hooks/queries/useUserCards";
 import {checkUserBadges} from "@/lib/checkUserBadges";
 import {motion} from "framer-motion";
 import {checkUserAchievements} from "@/lib/checkUserAchievements";
+import {useIsMobile} from "@/hooks/useIsMobile";
 
 type OpenPackDialogProps = {
     open: boolean;
@@ -36,6 +37,7 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
     const queryClient = useQueryClient();
     const {updateCoins} = useUserCoins();
     const {updateUserCards} = useUserCards();
+    const isMobile = useIsMobile()
 
     const [step, setStep] = useState<"start" | "revealing" | "final">("start");
     const [currentCards, setCurrentCards] = useState<RandomPacks | null>(null);
@@ -202,9 +204,10 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
                 <DialogTitle/>
 
                 {step === "start" && (
-                    <div className="flex flex-col items-center justify-center gap-4 w-[900px] h-[500px] relative">
+                    <div
+                        className={`flex flex-col items-center justify-center gap-4 ${isMobile ? "w-full max-w-[900px]" : "w-[900px]"} h-[500px] relative`}>
                         <h2 className="text-xl font-bold absolute top-0">Otwórz paczkę</h2>
-                        <img src={set?.images?.logo} alt={set?.name}/>
+                        <img src={set?.images?.logo} alt={set?.name} className={`${isMobile && "w-[90vw] max-w-96"}`}/>
                         <Button
                             onClick={handleNext}
                             className="absolute bottom-0"
