@@ -36,6 +36,8 @@ export default function StatisticsPage() {
 
     const earnedBadgeIds = userStats.userBadges?.map(b => b.badge_id) ?? [];
 
+    console.log(userStats)
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-slate-50 relative overflow-hidden">
             <TabHeader title={"Twoje statystyki"}
@@ -46,7 +48,7 @@ export default function StatisticsPage() {
                     <div
                         className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-2 border-blue-200 backdrop-blur-sm rounded-lg p-4 text-center">
                         <div
-                            className="text-2xl font-bold text-blue-600">{userStats.total_cards}
+                            className="text-2xl font-bold text-blue-600">{userStats.total_unique_cards}
                             <span className={'text-blue-500 text-base font-normal'}>/{userStats.cardsTotal}</span>
                         </div>
                         <p className="text-sm text-slate-600">Karty</p>
@@ -73,7 +75,7 @@ export default function StatisticsPage() {
                         <div className="text-2xl font-bold text-yellow-600">{userStats.userBadges.length}
                             <span className={'text-yellow-500 text-base font-normal'}>/{badges.length}</span>
                         </div>
-                        <p className="text-sm text-slate-600">Odznak</p>
+                        <p className="text-sm text-slate-600">Odznaki</p>
                     </div>
                 </div>
 
@@ -150,7 +152,7 @@ export default function StatisticsPage() {
                             {userStats.bestCard ?
                                 (
                                     <>
-                                        <img src={userStats.bestCard.images?.large} alt={userStats.bestCard.name}
+                                        <img src={userStats.bestCard.images?.small} alt={userStats.bestCard.name}
                                              className={"px-16 py-2"}/>
                                         <div className="text-center">
                                             <div

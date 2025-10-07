@@ -21,12 +21,11 @@ const achievementCheckers: Record<
     string,
     (stats: UserStats, ach: Achievement) => boolean
 > = {
-    cards_overall: (stats, ach) => stats.total_cards >= (ach.amount ?? Infinity),
+    cards_overall: (stats, ach) => stats.total_unique_cards >= (ach.amount ?? Infinity),
+
+    cards_duplicates: (stats, ach) => stats.total_cards >= (ach.amount ?? Infinity),
 
     packs_overall: (stats, ach) => stats.total_packs >= (ach.amount ?? Infinity),
-
-    cards_duplicates: (stats, ach) =>
-        (stats.total_duplicates ?? 0) >= (ach.amount ?? Infinity),
 };
 
 function checkCardsRarity(stats: UserStats, ach: Achievement): boolean {

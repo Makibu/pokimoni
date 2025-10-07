@@ -9,7 +9,6 @@ import {useEffect, useState} from "react";
 export default function AchievementsPage() {
     const [uid, setUid] = useState<string | null>(null)
 
-    // Pobranie wszystkich achievementów
     const {data: achievements, isLoading, error} = useQuery<Achievement[]>({
         queryKey: ["achievements"],
         queryFn: async () => {
@@ -27,13 +26,11 @@ export default function AchievementsPage() {
         }
     });
 
-    // Pobranie UID użytkownika
     useEffect(() => {
         const storedUid = JSON.parse(localStorage.getItem('user') || '{}').uid;
         if (storedUid) setUid(storedUid);
     }, [])
 
-    // Pobranie achievementów użytkownika
     const {data: userAchievements} = useQuery({
         queryKey: ["achievements", uid],
         queryFn: async () => {

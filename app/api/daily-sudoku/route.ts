@@ -1,6 +1,10 @@
 import {NextResponse} from "next/server";
 import {supabaseServer} from "@/lib/supabaseServer";
 
+function replaceNullsWithZero(board: (number | null)[][]): number[][] {
+    return board.map(row => row.map(cell => cell === null ? 0 : cell));
+}
+
 export async function GET() {
     const {data, error} = await supabaseServer
         .from("daily_sudoku")
@@ -15,17 +19,48 @@ export async function GET() {
         return NextResponse.json({sudoku: data});
     }
 
-    const response = await fetch("https://sudoku-api.vercel.app/api/dosuku");
+    const difficulties = ["easy", "medium", "hard"];
+    const randomDifficulty =
+        difficulties[Math.floor(Math.random() * difficulties.length)];
+
+    const apiKey = process.env.API_NINJAS_KEY;
+
+    if (!apiKey) {
+        return NextResponse.json(
+            {error: "Missing API_NINJAS_KEY environment variable"},
+            {status: 500}
+        );
+    }
+
+    const url = `https://api.api-ninjas.com/v1/sudokugenerate?width=3&height=3&difficulty=${randomDifficulty}`;
+
+    const response = await fetch(url, {
+        headers: {
+            "X-Api-Key": apiKey,
+        },
+    });
+
+    if (!response.ok) {
+        return NextResponse.json(
+            {error: `Sudoku API error: ${response.statusText}`},
+            {status: response.status}
+        );
+    }
+
     const json = await response.json();
-    const grid = json.newboard.grids[0];
+
+    const {puzzle, solution} = json;
+
+    const cleanedPuzzle = replaceNullsWithZero(puzzle);
+    const cleanedSolution = replaceNullsWithZero(solution);
 
     const {data: inserted, error: insertError} = await supabaseServer
         .from("daily_sudoku")
         .insert([
             {
-                board: grid.value,
-                solution: grid.solution,
-                difficulty: grid.difficulty,
+                board: cleanedPuzzle,
+                solution: cleanedSolution,
+                difficulty: randomDifficulty,
             },
         ])
         .select()

@@ -101,9 +101,9 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
 
         if (correct) {
             let reward = 0;
-            if (difficulty === "Easy") reward = 200;
-            if (difficulty === "Medium") reward = 300;
-            if (difficulty === "Hard") reward = 400;
+            if (difficulty === "easy") reward = 100;
+            if (difficulty === "medium") reward = 250;
+            if (difficulty === "hard") reward = 400;
 
             await updateCoins({type: "minigame", amount: reward});
             await updateSudokuFlag();

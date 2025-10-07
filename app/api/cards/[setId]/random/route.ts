@@ -4,25 +4,28 @@ import {normalizeRarity} from "@/lib/normalizeRarity";
 import {Card} from "@/lib/types";
 
 function pickCardByRarity(cards: Card[], rarityWeights: Record<string, number>) {
-    let weightedCards = cards
+    const weightedCards = cards
         .filter((c) => rarityWeights[normalizeRarity(c.rarity)] > 0)
-        .map((c) => ({
-            ...c,
-            weight: rarityWeights[normalizeRarity(c.rarity)],
-        }));
+        .map((c) => ({...c, weight: rarityWeights[normalizeRarity(c.rarity)]}));
 
     if (weightedCards.length === 0) {
-        weightedCards = cards.map((c) => ({...c, weight: 1}));
+        // fallback - wszystkie karty mają równą wagę
+        const fallback = cards.map((c) => ({...c, weight: 1}));
+        const totalWeight = fallback.reduce((sum, c) => sum + c.weight, 0);
+        let rnd = Math.random() * totalWeight;
+        for (const card of fallback) {
+            rnd -= card.weight;
+            if (rnd <= 0) return card;
+        }
+        return fallback[fallback.length - 1];
     }
 
     const totalWeight = weightedCards.reduce((sum, c) => sum + c.weight, 0);
     let rnd = Math.random() * totalWeight;
-
     for (const card of weightedCards) {
         rnd -= card.weight;
         if (rnd <= 0) return card;
     }
-
     return weightedCards[weightedCards.length - 1];
 }
 
@@ -30,49 +33,74 @@ function generatePack(cards: Card[]) {
     const isGodPack = Math.random() < 0.0005;
     const availableRarities = new Set(cards.map((c) => normalizeRarity(c.rarity)));
 
-    const firstThreeWeights: Record<string, number> = {
-        common: availableRarities.has("common") ? 90 : 0,
-        uncommon: availableRarities.has("uncommon") ? 10 : 0,
-        rare: 0,
-        "double rare": 0,
-        "ultra rare": 0,
-        "ace spec rare": 0,
-        "illustration rare": 0,
-        "special illustration rare": 0,
-        "hyper rare": 0,
-        "secret rare": 0,
+    const weightsPerPosition: Record<number, Record<string, number>> = {
+        0: {
+            common: 80,
+            uncommon: 15,
+            rare: 4,
+            "double rare": 0.5,
+            "ultra rare": 0.3,
+            "ace spec rare": 0.1,
+            "illustration rare": 0.05,
+            "special illustration rare": 0.05,
+            "hyper rare": 0.01,
+            "secret rare": 0.01,
+        },
+        1: {
+            common: 80,
+            uncommon: 15,
+            rare: 4,
+            "double rare": 0.5,
+            "ultra rare": 0.3,
+            "ace spec rare": 0.1,
+            "illustration rare": 0.05,
+            "special illustration rare": 0.05,
+            "hyper rare": 0.01,
+            "secret rare": 0.01,
+        },
+        2: {
+            common: 80,
+            uncommon: 15,
+            rare: 4,
+            "double rare": 0.5,
+            "ultra rare": 0.3,
+            "ace spec rare": 0.1,
+            "illustration rare": 0.05,
+            "special illustration rare": 0.05,
+            "hyper rare": 0.01,
+            "secret rare": 0.01,
+        },
+        3: {
+            common: 0,
+            uncommon: 20,
+            rare: 40,
+            "double rare": 20,
+            "ultra rare": 10,
+            "ace spec rare": 5,
+            "illustration rare": 3,
+            "special illustration rare": 2,
+            "hyper rare": 0.5,
+            "secret rare": 0.5,
+        },
+        4: {
+            common: 0,
+            uncommon: 0,
+            rare: 40,
+            "double rare": 30,
+            "ultra rare": 15,
+            "ace spec rare": 5,
+            "illustration rare": 4.5,
+            "special illustration rare": 3,
+            "hyper rare": 2,
+            "secret rare": 0.5,
+        },
     };
 
-    const fourthCardWeights: Record<string, number> = {
-        common: 0,
-        uncommon: availableRarities.has("uncommon") ? 20 : 0,
-        rare: availableRarities.has("rare") ? 40 : 0,
-        "double rare": availableRarities.has("double rare") ? 20 : 0,
-        "ultra rare": availableRarities.has("ultra rare") ? 10 : 0,
-        "ace spec rare": availableRarities.has("ace spec rare") ? 5 : 0,
-        "illustration rare": availableRarities.has("illustration rare") ? 3 : 0,
-        "special illustration rare": availableRarities.has("special illustration rare") ? 2 : 0,
-        "hyper rare": availableRarities.has("hyper rare") ? 0.5 : 0,
-        "secret rare": availableRarities.has("secret rare") ? 0.5 : 0,
-    };
-
-    const fifthCardWeights: Record<string, number> = {
-        common: 0,
-        uncommon: 0,
-        rare: availableRarities.has("rare") ? 1 : 0,
-        "double rare": availableRarities.has("double rare") ? 1 : 0,
-        "ultra rare": availableRarities.has("ultra rare") ? 1 : 0,
-        "ace spec rare": availableRarities.has("ace spec rare") ? 1 : 0,
-        "illustration rare": availableRarities.has("illustration rare") ? 1 : 0,
-        "special illustration rare": availableRarities.has("special illustration rare") ? 5 : 0,
-        "hyper rare": availableRarities.has("hyper rare") ? 1 : 0,
-        "secret rare": availableRarities.has("secret rare") ? 150 : 0,
-    };
-
-    const pack = [];
+    const pack: Card[] = [];
 
     for (let i = 0; i < 5; i++) {
         let weights: Record<string, number>;
+
         if (isGodPack) {
             weights = {
                 "illustration rare": availableRarities.has("illustration rare") ? 1 : 0,
@@ -80,32 +108,20 @@ function generatePack(cards: Card[]) {
                 "hyper rare": availableRarities.has("hyper rare") ? 1 : 0,
                 "secret rare": availableRarities.has("secret rare") ? 1 : 0,
             };
-        } else if (i < 3) {
-            weights = firstThreeWeights;
-        } else if (i === 3) {
-            weights = fourthCardWeights;
         } else {
-            weights = fifthCardWeights;
+            weights = {};
+            const baseWeights = weightsPerPosition[i];
+            for (const rarity in baseWeights) {
+                weights[rarity] = availableRarities.has(rarity) ? baseWeights[rarity] : 0;
+            }
         }
 
         const card = pickCardByRarity(cards, weights);
         pack.push(card);
     }
 
-    if (availableRarities.has("secret rare")) {
-        const hasSecret = pack.some((c) => normalizeRarity(c.rarity) === "secret rare");
-        if (!hasSecret) {
-            const secretCards = cards.filter((c) => normalizeRarity(c.rarity) === "secret rare");
-            if (secretCards.length > 0) {
-                pack[pack.length - 1] =
-                    secretCards[Math.floor(Math.random() * secretCards.length)];
-            }
-        }
-    }
-
     return {pack, isGodPack};
 }
-
 
 export async function GET(req: Request) {
     const url = new URL(req.url);
@@ -126,10 +142,7 @@ export async function GET(req: Request) {
     }
 
     if (!cards || cards.length === 0) {
-        return NextResponse.json(
-            {error: "No cards found for this set."},
-            {status: 404}
-        );
+        return NextResponse.json({error: "No cards found for this set."}, {status: 404});
     }
 
     const {pack, isGodPack} = generatePack(cards);

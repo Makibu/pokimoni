@@ -115,7 +115,7 @@ export default function IndexPage() {
             </div>
             <div className={'flex gap-8 flex-wrap justify-center'}>
                 {filteredCards.map((card, index) => (
-                    <CardTile key={index} {...card} visibleNames={settings.showHiddenPokemonNames}/>
+                    <CardTile key={index} {...card} visibleNames={settings.showHiddenPokemonNames} isInIndex/>
                 ))}
             </div>
             <ScrollButton/>

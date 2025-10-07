@@ -123,7 +123,7 @@ export default function IncomeSlots({setId}: { setId?: string }) {
             const newlyEarned = await checkUserBadges(uid, updatedStats!, incomePerHour, "coins_income");
 
             if (newlyEarned && newlyEarned.length > 0) {
-                toast.success(`Zdobyłeś nowe odznaki: ${newlyEarned.map(b => b.name).join(", ")}`);
+                toast.info(`Zdobyłeś nowe odznaki: ${newlyEarned.map(b => b.name).join(", ")}`);
             }
 
         } catch {
@@ -136,7 +136,7 @@ export default function IncomeSlots({setId}: { setId?: string }) {
 
     return (
         <div
-            className="md:absolute md:top-1/2 md:right-6 flex gap-2 md:-translate-y-1/2 z-10 mt-12 md:mt-0 scale-90 md:scale-100">
+            className="xl:absolute xl:top-1/2 xl:right-6 flex gap-2 xl:-translate-y-1/2 z-10 mt-12 xl:mt-0 scale-90 xl:scale-100">
             {[1, 2].map(slotNum => {
                 const selectedCard = selectedSlots[slotNum as 1 | 2];
 
@@ -157,12 +157,13 @@ export default function IncomeSlots({setId}: { setId?: string }) {
                 return (
                     <div key={`slot-${slotNum}`} className="flex flex-col items-center">
                         {statsLoading ? (
-                            <div className="w-[150px] md:w-[200px] aspect-[300/418] flex items-center justify-center">
+                            <div
+                                className="w-[150px] md:w-[170px] lg:w-[200px] aspect-[245/342] flex items-center justify-center">
                                 <LoadingIndicator/>
                             </div>
                         ) : selectedCard ? (
                             <div
-                                className={`w-[150px] md:w-[200px] rounded-md cursor-pointer flex items-center justify-center hover:shadow-md hover:scale-105 transition-all duration-300`}
+                                className={`w-[150px] md:w-[170px] lg:w-[200px] rounded-md cursor-pointer flex items-center justify-center hover:shadow-md hover:scale-105 transition-all duration-300`}
                                 style={{aspectRatio: "300/418"}}
                                 onClick={() => setOpenSlot(slotNum as 1 | 2)}
                             >
@@ -174,7 +175,7 @@ export default function IncomeSlots({setId}: { setId?: string }) {
                             </div>
                         ) : (
                             <Card
-                                className="w-[150px] md:w-[200px] aspect-[300/418] bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 hover:border-blue-400 hover:bg-gradient-to-br hover:from-blue-50 hover:to-blue-100 transition-all duration-300 hover:scale-[1.03] cursor-pointer group"
+                                className="w-[150px] md:w-[200px] aspect-[245/342] bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 hover:border-blue-400 hover:bg-gradient-to-br hover:from-blue-50 hover:to-blue-100 transition-all duration-300 hover:scale-[1.03] cursor-pointer group"
                                 onClick={() => setOpenSlot(slotNum as 1 | 2)}
                             >
                                 <CardContent className="flex flex-col items-center justify-center h-full p-1">

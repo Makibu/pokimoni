@@ -45,6 +45,7 @@ export const useUserMinigames = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ["minigames", uid]});
+            queryClient.refetchQueries({queryKey: ["minigames", uid]});
         },
     });
 

@@ -8,20 +8,26 @@ export default function CardTile({
                                      isOwned,
                                      visibleNames,
                                      income,
-                                     className
-                                 }: Card & { isOwned?: boolean, visibleNames?: boolean, className?: string }) {
+                                     className,
+                                     isInIndex,
+                                 }: Card & {
+    isOwned?: boolean,
+    visibleNames?: boolean,
+    className?: string,
+    isInIndex?: boolean
+}) {
     return (
         <div
             className={`rounded-xl flex flex-col justify-center relative group shadow-sm ${className}`}>
             {isOwned ? (
-                <div className={'w-[150px] md:w-[200px] aspect-[300/418]'}>
-                    <Image src={images!.large as string} alt={name || "card"} width={300} height={300}/>
+                <div className={`aspect-[245/342] ${isInIndex && "w-[150px] md:w-[200px]"}`}>
+                    <Image src={images!.small as string} alt={name || "card"} width={300} height={300}/>
                 </div>
             ) : (
                 <div
-                    className={'w-[150px] md:w-[200px] aspect-[300/418] bg-gray-700 flex items-center justify-center rounded-xl border-12 border-gray-400 relative'}>
+                    className={`aspect-[245/342] ${isInIndex && "w-[150px] md:w-[200px]"} bg-gray-700 flex items-center justify-center rounded-xl px-2 border-12 border-gray-400 relative`}>
                     <span
-                        className={`text-gray-400 text-center ${visibleNames ? "text-xl md:text-3xl" : "text-2xl md:text-5xl"}`}>{visibleNames ? name : "???"}</span>
+                        className={`text-gray-400 break-all text-center ${visibleNames ? "text-xl md:text-2xl" : "text-2xl md:text-5xl"}`}>{visibleNames ? name : "???"}</span>
                     <span className={'absolute bottom-6 text-gray-400 text-base md:text-xl text-center'}>{rarity}</span>
                 </div>
             )}

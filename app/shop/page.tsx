@@ -36,7 +36,22 @@ export default function ShopPage() {
 
     if (statsLoading || dailyPackLoading || !dailyPack || !userStats) return null
 
-    const dailyPackPrice = (dailyPack.set?.class * 100) / 2
+    function getDailyPackPrice(packClass: number | undefined) {
+        if (!packClass) return 0;
+
+        switch (packClass) {
+            case 1:
+                return packClass * 100 - 25;
+            case 2:
+                return packClass * 100 - 75;
+            case 3:
+                return packClass * 100 - 100;
+            default:
+                return packClass * 100;
+        }
+    }
+
+    const dailyPackPrice = getDailyPackPrice(dailyPack.set?.class);
 
     return (
         <div className={'overflow-x-hidden pb-32 bg-gradient-to-br from-white via-blue-50/30 to-slate-50'}>
@@ -51,7 +66,7 @@ export default function ShopPage() {
                         <h1 className={'absolute top-6 text-2xl font-semibold'}>{dailyPack.set.name}</h1>
                         <img src={dailyPack.set.images.logo} alt={dailyPack.set.name}/>
                         <div className={'absolute bottom-6 flex flex-col items-center gap-2'}>
-                            <h3 className={'text-xl font-semibold'}>Kup na przecenie 50%!</h3>
+                            <h3 className={'text-xl font-semibold'}>Kup na przecenie!</h3>
                             <Button className={"bg-blue-500 hover:bg-blue-600"} size={"sm"}
                                     disabled={userStats.coins < dailyPackPrice}
                                     onClick={() => handleOpenPack(dailyPack.set)}><span
@@ -74,7 +89,7 @@ export default function ShopPage() {
                             <GalleryHorizontalEnd className={'text-white w-full h-full'}/>
                         </div>
                         <h1 className={'text-lg font-semibold mt-3'}>Twoje karty!</h1>
-                        <h4 className={'text-gray-500 text-sm text-center'}>Czy dasz rade zdobyć je wszystkie?</h4>
+                        <h4 className={'text-gray-500 text-sm text-center'}>Czy dasz radę zdobyć je wszystkie?</h4>
                         <span
                             className={'text-blue-500 font-semibold text-xl mt-4'}>{userStats.total_cards}/{userStats.cardsTotal}</span>
                     </div>

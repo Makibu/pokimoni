@@ -3,9 +3,11 @@
 import Link from "next/link";
 import {BookMarked, ChartNoAxesCombined, HomeIcon, ShoppingBag, Trophy} from "lucide-react";
 import {usePathname} from "next/navigation";
+import useUserAchievementNotification from "@/hooks/queries/useUserAchievementNotification";
 
 export default function Sidebar() {
     const pathname = usePathname()
+    const {has_unclaimed_achievements} = useUserAchievementNotification()
 
     const linkMap = [
         {name: "Home", href: "/", icon: HomeIcon},
@@ -18,9 +20,10 @@ export default function Sidebar() {
     if (pathname === '/login') return null
 
     return (
-        <div className="fixed left-6 top-1/2 -translate-y-1/2 z-50 hidden lg:block">
-            <nav className="bg-white border border-gray-200 rounded-2xl shadow-xl backdrop-blur-sm p-3">
-                <div className="flex flex-col gap-2">
+        <div
+            className="w-full lg:w-[unset] fixed bottom-0 lg:bottom-[unset] lg:left-6 lg:top-1/2 lg:-translate-y-1/2 z-50">
+            <nav className="bg-white border border-gray-200 lg:rounded-2xl shadow-xl backdrop-blur-sm p-3">
+                <div className="flex justify-center lg:flex-col gap-2">
                     {linkMap.map((item) => {
                         const isActive = pathname === item.href
                         const Icon = item.icon
@@ -41,27 +44,10 @@ export default function Sidebar() {
                                 title={item.name}
                             >
                                 <Icon size={20} className="transition-transform duration-200"/>
-
-                                <div
-                                    className="select-none absolute left-full ml-3 px-3 py-2 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-2xl"
-                                    style={{
-                                        backgroundColor: "#ffffff",
-                                        color: "#374151",
-                                        border: "1px solid #e5e7eb",
-                                        zIndex: 9999,
-                                        position: "fixed",
-                                    }}
-                                >
-                                    {item.name}
+                                {item.name === "Achievements" && has_unclaimed_achievements && (
                                     <div
-                                        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
-                                        style={{
-                                            backgroundColor: "#ffffff",
-                                            borderLeft: "1px solid #e5e7eb",
-                                            borderBottom: "1px solid #e5e7eb",
-                                        }}
-                                    ></div>
-                                </div>
+                                        className={'w-4 grid place-items-center text-white absolute top-0 right-0 aspect-square rounded-full bg-red-400 text-[10px]'}>!</div>
+                                )}
                             </Link>
                         )
                     })}

@@ -314,12 +314,13 @@ export default function UserMenu() {
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
                                             <div className="space-y-0.5">
-                                                <Label className="text-base">Tryb ciemny</Label>
+                                                <Label className="text-base">Tryb ciemny <sup
+                                                    className={'text-red-400'}>Tymczasowo wyłączone</sup></Label>
                                                 <p className="text-sm text-muted-foreground">Przełącz na ciemny
                                                     motyw
                                                     interfejsu</p>
                                             </div>
-                                            <Switch checked={settings.darkMode}
+                                            <Switch checked={settings.darkMode} disabled
                                                     onCheckedChange={(value) => setSettings(prev => ({
                                                         ...prev,
                                                         darkMode: value

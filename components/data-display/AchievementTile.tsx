@@ -9,9 +9,9 @@ import {toast} from "sonner";
 import {useQueryClient} from "@tanstack/react-query";
 
 const rarityColors = {
-    Common: "bg-slate-100 text-slate-700 border-slate-300",
-    Rare: "bg-blue-100 text-blue-700 border-blue-300",
-    Epic: "bg-gradient-to-r from-blue-400 to-indigo-500 text-white border-blue-400",
+    common: "bg-slate-100 text-slate-700 border-slate-300",
+    rare: "bg-blue-100 text-blue-700 border-blue-300",
+    epic: "bg-gradient-to-r from-blue-400 to-indigo-500 text-white border-blue-400",
 }
 
 export default function AchievementTile({title, id, description, rarity, reward, isCompleted, claimed}: {
@@ -63,6 +63,7 @@ export default function AchievementTile({title, id, description, rarity, reward,
             toast.error("Coś poszło nie tak przy odbiorze")
         } finally {
             queryClient.invalidateQueries({queryKey: ["achievements", uid]})
+            queryClient.invalidateQueries({queryKey: ["achievementsNotification", uid]})
             setClaimLoading(false)
         }
 
@@ -70,11 +71,12 @@ export default function AchievementTile({title, id, description, rarity, reward,
 
     return (
         <div
-            className={`group transition-all duration-300 hover:shadow-xl border-2 bg-white/90 backdrop-blur-sm overflow-hidden px-6 py-4 rounded-xl w-[400px] ${
-                isCompleted
-                    ? "border-blue-300 hover:border-blue-400 bg-blue-50/30"
-                    : "border-slate-200 hover:border-blue-300"
-            }`}
+            className={`group transition-all duration-500 border-2 rounded-xl w-[400px] px-6 py-4
+  ${isCompleted
+                ? "border-blue-400 bg-gradient-to-br from-blue-50 to-blue-100 shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+                : "border-slate-200 bg-white/90 hover:border-blue-200"}
+  ${claimed ? "opacity-70 grayscale" : ""}
+  `}
         >
             <div className="pb-4">
                 <div className="flex items-start justify-between">
@@ -90,7 +92,7 @@ export default function AchievementTile({title, id, description, rarity, reward,
                             <h3 className="text-lg font-bold text-slate-800">{title}</h3>
                             <div className="flex gap-2 mt-1">
                                 <Badge
-                                    className={`text-xs ${rarityColors[rarity as keyof typeof rarityColors]}`}>
+                                    className={`text-xs capitalize ${rarityColors[rarity as keyof typeof rarityColors]}`}>
                                     {rarity}
                                 </Badge>
                             </div>
