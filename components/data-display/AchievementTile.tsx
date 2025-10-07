@@ -28,6 +28,7 @@ export default function AchievementTile({title, id, description, rarity, reward,
     const queryClient = useQueryClient()
 
     const [claimLoading, setClaimLoading] = useState(false)
+    const [hasClaimed, setHasClaimed] = useState(claimed);
 
     const {updateCoins} = useUserCoins()
 
@@ -40,33 +41,31 @@ export default function AchievementTile({title, id, description, rarity, reward,
         if (storedUid) setUid(storedUid)
     }, [])
 
+    useEffect(() => {
+        setHasClaimed(claimed);
+    }, [claimed]);
+
     async function claimAchievement() {
-        if (claimLoading) return
-        setClaimLoading(true)
+        if (claimLoading) return;
+        setClaimLoading(true);
         try {
             await fetch(`/api/user/achievements/claim`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    uid: uid,
-                    achievement_id: Number(id),
-                }),
-            })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({uid, achievement_id: Number(id)}),
+            });
 
-            await updateCoins({type: "achievement", amount: amount})
+            await updateCoins({type: "achievement", amount: amount});
+            setHasClaimed(true);
 
-
-            toast.success("Nagroda odebrana!")
+            toast.success("Nagroda odebrana!");
         } catch {
-            toast.error("Coś poszło nie tak przy odbiorze")
+            toast.error("Coś poszło nie tak przy odbiorze");
         } finally {
-            queryClient.invalidateQueries({queryKey: ["achievements", uid]})
-            queryClient.invalidateQueries({queryKey: ["achievementsNotification", uid]})
-            setClaimLoading(false)
+            queryClient.invalidateQueries({queryKey: ["achievements", uid]});
+            queryClient.invalidateQueries({queryKey: ["achievementsNotification", uid]});
+            setClaimLoading(false);
         }
-
     }
 
     return (
@@ -129,7 +128,7 @@ export default function AchievementTile({title, id, description, rarity, reward,
                     <p className="text-sm text-slate-600">{...reward}</p>
                 </div>
 
-                {isCompleted && !claimed ? (
+                {isCompleted && !hasClaimed ? (
                     <Button
                         className="w-full bg-blue-500 hover:bg-blue-600 text-white"
                         onClick={claimAchievement}
@@ -139,7 +138,7 @@ export default function AchievementTile({title, id, description, rarity, reward,
                     </Button>
                 ) : (
                     <Button disabled className="w-full bg-gray-200 text-gray-500">
-                        {claimed ? "Odebrane" : "W trakcie..."}
+                        {hasClaimed ? "Odebrane" : "W trakcie..."}
                     </Button>
                 )}
             </div>
