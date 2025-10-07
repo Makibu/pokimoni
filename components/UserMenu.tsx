@@ -156,7 +156,7 @@ export default function UserMenu() {
                     }
                 }}
             >
-                <DialogContent className="sm:max-w-[600px] w-full">
+                <DialogContent className="sm:max-w-[600px] w-full max-h-[90svh] overflow-y-scroll">
                     <DialogHeader>
                         <DialogTitle>{activeTab === "profile" ? "Profil użytkownika" : "Ustawienia"}</DialogTitle>
                     </DialogHeader>
