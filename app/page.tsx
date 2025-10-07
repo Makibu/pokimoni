@@ -127,13 +127,14 @@ export default function Card() {
 
             <IncomeSlots/>
 
-            <div className={'fixed right-6 bottom-20 lg:bottom-6 flex gap-4'}>
-                <BugIcon className={'w-5 h-5 cursor-pointer'} onClick={() => setShowFeedbackDialog(true)}/>
-                <Info className="h-5 w-5 cursor-pointer" onClick={() => setShowVersionInfo(true)}/>
+            <div className={'fixed right-6 bottom-20 lg:bottom-6 flex gap-2 md:gap-4 flex-col md:flex-row'}>
+                <BugIcon className={'w-4 md:w-5 aspect-square cursor-pointer'}
+                         onClick={() => setShowFeedbackDialog(true)}/>
+                <Info className="aspect-square w-4 md:w-5 cursor-pointer" onClick={() => setShowVersionInfo(true)}/>
             </div>
 
             <Dialog open={showVersionInfo} onOpenChange={setShowVersionInfo}>
-                <DialogContent className="max-w-[95%] md:max-w-md w-full">
+                <DialogContent className="max-w-[95%] md:max-w-md w-full max-h-[90svh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle
                             className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
