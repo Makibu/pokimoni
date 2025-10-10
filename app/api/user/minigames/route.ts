@@ -11,27 +11,41 @@ export async function GET(req: Request) {
 
     const {data, error} = await supabaseServer
         .from("user_stats")
-        .select("sudoku_flag")
+        .select("sudoku_flag, minesweeper_flag")
         .eq("uid", uid)
         .single();
 
     if (error) return NextResponse.json({error: error.message}, {status: 500});
 
-    return NextResponse.json(data);
+    return NextResponse.json({
+        sudoku_flag: data.sudoku_flag ?? false,
+        minesweeper_flag: data.minesweeper_flag ?? false,
+    });
 }
-
 
 export async function POST(req: Request) {
     const body = await req.json();
-    const {uid} = body;
+    const {uid, gameName} = body;
 
-    if (!uid) {
-        return NextResponse.json({error: "Brak uid w body"}, {status: 400});
+    if (!uid || !gameName) {
+        return NextResponse.json(
+            {error: "Brak uid lub gameName w body"},
+            {status: 400}
+        );
     }
+
+    const validColumns = ["sudoku_flag", "minesweeper_flag"];
+
+    if (!validColumns.includes(gameName)) {
+        return NextResponse.json({error: "Niepoprawna nazwa gry"}, {status: 400});
+    }
+
+    const updateObj: Record<string, boolean> = {};
+    updateObj[gameName] = true;
 
     const {error} = await supabaseServer
         .from("user_stats")
-        .update({sudoku_flag: true})
+        .update(updateObj)
         .eq("uid", uid);
 
     if (error) return NextResponse.json({error: error.message}, {status: 500});

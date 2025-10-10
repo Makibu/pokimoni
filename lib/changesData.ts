@@ -10,7 +10,7 @@ export const changesData: Change = [
         title: "✨ Nowe funkcje",
         options: [
             "Dodano pole 'wszystkie karty' w statystykach",
-
+            "Nowa gra 'Saper' !!! 💥💥💥"
         ]
     },
     {
@@ -33,4 +33,4 @@ export const changesData: Change = [
 ]
 
 export const changeDate: string = "10 października 2025"
-export const version: string = "v1.0.1"
+export const version: string = "v1.0.2"

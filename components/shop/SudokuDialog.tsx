@@ -28,7 +28,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
     const [saved, setSaved] = useState<string | null>(null);
 
     const {updateCoins} = useUserCoins();
-    const {updateSudokuFlag} = useUserMinigames();
+    const {updateGameFlag} = useUserMinigames();
 
     const STORAGE_KEY = "daily_sudoku_state";
 
@@ -106,7 +106,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
             if (difficulty === "hard") reward = 400;
 
             await updateCoins({type: "minigame", amount: reward});
-            await updateSudokuFlag();
+            await updateGameFlag("sudoku_flag");
             toast.success(`Gratulacje! Otrzymano ${reward} monet!`);
             setOpen(false)
         } else {
@@ -153,7 +153,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="w-full md:w-[unset] flex flex-col">
-                <DialogTitle className="mb-4"></DialogTitle>
+                <DialogTitle></DialogTitle>
 
                 <div className="flex space-x-6 items-start">
                     <div className="flex flex-col items-center space-y-4">
