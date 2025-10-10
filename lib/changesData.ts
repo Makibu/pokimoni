@@ -9,32 +9,28 @@ export const changesData: Change = [
         type: "Added",
         title: "✨ Nowe funkcje",
         options: [
-            "Powiadomienie o nieodebranych nagrodach za osiągnięcia",
-            "Formularz do zgłaszania błędów/pomysłów w prawym dolnym rogu ekranu na stronie głównej",
-            "34 osiągnięcia"
+            "Dodano pole 'wszystkie karty' w statystykach",
+
         ]
     },
     {
         type: "Fixed",
         title: "🔧 Poprawki",
         options: [
-            "Rebalans zniżek codziennych paczek, z 50% na (25->75->100) monet w zależności od ceny początkowej",
-            "Rebalans szans we wszystkich paczkach",
-            "Sudoku od teraz ma tylko jedno rozwiązanie, oraz poziomy trudności znacząco uległy zmianie",
-            "Tymczasowo wyłączona opcja włączenia trybu ciemnego w ustawieniach"
+            "Zmienione szanse na trudności sudoku, większe szanse na medium i hard",
+            "Teraz w sklepie wyświetla się unikatowa ilość kart w postępie",
+            "Postęp osiągnięć jest teraz liczony poprawnie w statystykach"
+
         ]
     },
     {
         type: "Design",
         title: "🎨 Design",
         options: [
-            "Zmienione ułożenie strony głównej na mniejsze urządzenia",
-            "Dodany pasek na dole ekranu do prostej nawigacji",
-            "Usunięte rozwijane 'burger menu' z górnego paska nawigacji",
-            "Zwiększony kontrast ukończonych osiągnięć oraz tych nieodebranych"
+            "Loga paczek już nie nachodzą na napisy"
         ]
     }
 ]
 
-export const changeDate: string = "7 października 2025"
-export const version: string = "v1.0.0"
+export const changeDate: string = "10 października 2025"
+export const version: string = "v1.0.1"

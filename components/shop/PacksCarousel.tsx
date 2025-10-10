@@ -3,12 +3,12 @@
 import {useQuery} from "@tanstack/react-query";
 import {SetType} from "@/lib/types";
 import {Button} from "@/components/ui/button";
-import Image from "next/image";
 import {CoinsIcon} from "lucide-react";
 import {useUserTotalPerSet} from "@/hooks/queries/useUserTotalPerSet";
 import {useEffect, useRef, useState} from "react";
 import {useUserCoins} from "@/hooks/queries/useUserCoins";
 import OpenPackDialog from "@/components/shop/OpenPackDialog";
+import Image from "next/image";
 
 export default function PacksCarousel({price}: { price: number }) {
     const {coins} = useUserCoins()
@@ -72,18 +72,19 @@ export default function PacksCarousel({price}: { price: number }) {
                                 key={index}
                                 className="w-52 h-52 md:w-72 md:h-72 border-2 shrink-0 rounded-xl p-4 flex flex-col justify-center items-center relative mb-2 overflow-hidden"
                             >
-                                <Image
-                                    src={set.images!.logo as string}
-                                    alt={set.name}
-                                    width={180}
-                                    height={180}
-                                    className="mb-12"
-                                />
+                                <div className={"w-full h-full grid place-items-center pb-2"}>
+                                    <Image
+                                        src={set.images!.logo as string}
+                                        alt={set.name}
+                                        width={180}
+                                        height={180}
+                                    />
+                                </div>
                                 <h5 className="text-sm text-gray-500 absolute bottom-4 right-4">
                                     {userTotalPerSet?.[set.id] ?? 0}/{set.total}
                                 </h5>
-                                <div className="absolute bottom-4 flex flex-col items-center gap-1 ">
-                                    <h3 className="text-lg font-semibold whitespace-nowrap">
+                                <div className="flex flex-col items-center gap-1 ">
+                                    <h3 className="text-base md:text-lg font-semibold whitespace-nowrap">
                                         {set.name}
                                     </h3>
                                     <Button size="sm" className="bg-blue-500 hover:bg-blue-600"

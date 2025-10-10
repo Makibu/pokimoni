@@ -24,6 +24,15 @@ export async function GET(req: Request) {
             return NextResponse.json({error: "Brak uid w zapytaniu"}, {status: 400});
         }
 
+        const {count: totalAchievements, error: totalAchievementsError} = await supabaseServer
+            .from("user_achievements")
+            .select("*", {count: "exact", head: true})
+            .eq("uid", uid);
+
+        if (totalAchievementsError) {
+            return NextResponse.json({error: totalAchievementsError.message}, {status: 500});
+        }
+
         const {data: statsData, error: statsError} = await supabaseServer
             .from("user_stats")
             .select("*")
@@ -196,6 +205,7 @@ export async function GET(req: Request) {
                 recentActivity,
                 bestCard,
                 cardsTotal,
+                total_achievements: totalAchievements
             }
         });
     } catch (err: unknown) {

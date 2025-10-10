@@ -183,10 +183,10 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
 
                                     const borderClasses = `
                     border 
-                    ${r % 3 === 0 ? "border-t-2 md:border-t-4" : "border-t"}
-                    ${c % 3 === 0 ? "border-l-2 md:border-l-4" : "border-l"}
-                    ${r === 8 ? "border-b-2 md:border-b-4" : ""}
-                    ${c === 8 ? "border-r-2 md:border-r-4" : ""}
+                    ${r % 3 === 0 ? "border-t-2 md:border-t-4 border-t-gray-400" : "border-t"}
+                    ${c % 3 === 0 ? "border-l-2 md:border-l-4 border-l-gray-400" : "border-l"}
+                    ${r === 8 ? "border-b-2 md:border-b-4 border-b-gray-400" : ""}
+                    ${c === 8 ? "border-r-2 md:border-r-4 border-r-gray-400" : ""}
                   `;
 
                                     return (

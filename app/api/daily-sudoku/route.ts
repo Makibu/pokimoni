@@ -19,7 +19,7 @@ export async function GET() {
         return NextResponse.json({sudoku: data});
     }
 
-    const difficulties = ["easy", "medium", "hard"];
+    const difficulties = ["easy", "medium", "medium", "medium", "hard", "hard"];
     const randomDifficulty =
         difficulties[Math.floor(Math.random() * difficulties.length)];
 

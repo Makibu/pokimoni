@@ -42,14 +42,22 @@ export default function StatisticsPage() {
                        description={"Przegląd Twoich postępów i osiągnięć w kolekcjonowaniu"}/>
 
             <main className="container mx-auto px-4 py-8 relative z-10">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
                     <div
                         className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-2 border-blue-200 backdrop-blur-sm rounded-lg p-4 text-center">
                         <div
                             className="text-2xl font-bold text-blue-600">{userStats.total_unique_cards}
                             <span className={'text-blue-500 text-base font-normal'}>/{userStats.cardsTotal}</span>
                         </div>
-                        <p className="text-sm text-slate-600">Karty</p>
+                        <p className="text-sm text-slate-600">Unikatowe Karty</p>
+                    </div>
+
+                    <div
+                        className="bg-gradient-to-br from-cyan-50 to-cyan-100/50 border-2 border-cyan-200 backdrop-blur-sm rounded-lg p-4 text-center">
+                        <div
+                            className="text-2xl font-bold text-cyan-600">{userStats.total_cards}
+                        </div>
+                        <p className="text-sm text-slate-600">Wszystkie Karty</p>
                     </div>
 
                     <div

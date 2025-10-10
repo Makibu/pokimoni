@@ -9,7 +9,6 @@ function pickCardByRarity(cards: Card[], rarityWeights: Record<string, number>) 
         .map((c) => ({...c, weight: rarityWeights[normalizeRarity(c.rarity)]}));
 
     if (weightedCards.length === 0) {
-        // fallback - wszystkie karty mają równą wagę
         const fallback = cards.map((c) => ({...c, weight: 1}));
         const totalWeight = fallback.reduce((sum, c) => sum + c.weight, 0);
         let rnd = Math.random() * totalWeight;

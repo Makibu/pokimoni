@@ -62,10 +62,12 @@ export default function ShopPage() {
                     <Minigames
                         className="md:col-span-2 md:row-span-1 h-72 shop-card-border"/>
                     <div
-                        className="md:row-span-2 md:col-span-1 shop-card-border flex flex-col justify-center items-center px-24 lg:px-6 relative">
-                        <h1 className={'absolute top-6 text-2xl font-semibold'}>{dailyPack.set.name}</h1>
-                        <img src={dailyPack.set.images.logo} alt={dailyPack.set.name}/>
-                        <div className={'absolute bottom-6 flex flex-col items-center gap-2'}>
+                        className="md:row-span-2 md:col-span-1 shop-card-border flex flex-col justify-center items-center px-20 md:px-2 lg:px-6 relative py-4 md:py-6">
+                        <h1 className={'text-2xl font-semibold'}>{dailyPack.set.name}</h1>
+                        <div className={'w-full h-full pb-2 grid place-items-center'}>
+                            <img src={dailyPack.set.images.logo} alt={dailyPack.set.name}/>
+                        </div>
+                        <div className={'flex flex-col items-center gap-2'}>
                             <h3 className={'text-xl font-semibold'}>Kup na przecenie!</h3>
                             <Button className={"bg-blue-500 hover:bg-blue-600"} size={"sm"}
                                     disabled={userStats.coins < dailyPackPrice}
@@ -91,7 +93,7 @@ export default function ShopPage() {
                         <h1 className={'text-lg font-semibold mt-3'}>Twoje karty!</h1>
                         <h4 className={'text-gray-500 text-sm text-center'}>Czy dasz radę zdobyć je wszystkie?</h4>
                         <span
-                            className={'text-blue-500 font-semibold text-xl mt-4'}>{userStats.total_cards}/{userStats.cardsTotal}</span>
+                            className={'text-blue-500 font-semibold text-xl mt-4'}>{userStats.total_unique_cards}/{userStats.cardsTotal}</span>
                     </div>
                 </div>
                 <div className={'mt-12'}>
