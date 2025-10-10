@@ -96,7 +96,7 @@ export default function MinesweeperDialog({open, setOpen}: MinesweeperDialogProp
                 } else {
                     setLives(0);
                     setGameOver(true);
-                    await updateGameFlag("minesweeper_flag")
+                    updateGameFlag("minesweeper_flag")
                     toast.error("💥 Koniec gry!");
                     for (let i = 0; i < newBoard.length; i++) {
                         for (let j = 0; j < newBoard[i].length; j++) {
