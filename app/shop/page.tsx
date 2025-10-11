@@ -62,7 +62,7 @@ export default function ShopPage() {
                     <Minigames
                         className="md:col-span-2 md:row-span-1 h-72 shop-card-border"/>
                     <div
-                        className="md:row-span-2 md:col-span-1 shop-card-border flex flex-col justify-center items-center px-20 md:px-2 lg:px-6 relative py-4 md:py-6">
+                        className="md:row-span-2 md:col-span-1 shop-card-border flex flex-col justify-center items-center px-12 md:px-2 lg:px-6 relative py-4 md:py-6 text-center">
                         <h1 className={'text-2xl font-semibold'}>{dailyPack.set.name}</h1>
                         <div className={'w-full h-full pb-2 grid place-items-center'}>
                             <img src={dailyPack.set.images.logo} alt={dailyPack.set.name}/>

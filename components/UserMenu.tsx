@@ -191,7 +191,7 @@ export default function UserMenu() {
 
                                 <div className="flex flex-col gap-3 items-start">
                                     <Label className="text-base">Avatar</Label>
-                                    <div className="grid grid-cols-7 gap-3">
+                                    <div className="flex flex-wrap gap-3">
                                         {[1, 2, 3, 4, 5, 6, 7].map((num) => (
                                             <button
                                                 key={num}
