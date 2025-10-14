@@ -1,8 +1,13 @@
 import {NextResponse} from "next/server";
 import {supabaseServer} from "@/lib/supabaseServer";
 
-function replaceNullsWithZero(board: (number | null)[][]): number[][] {
-    return board.map(row => row.map(cell => cell === null ? 0 : cell));
+function stringToBoard(str: string): number[][] {
+    const numbers = str.split("").map(ch => parseInt(ch, 10));
+    const board: number[][] = [];
+    for (let i = 0; i < 9; i++) {
+        board.push(numbers.slice(i * 9, (i + 1) * 9));
+    }
+    return board;
 }
 
 export async function GET() {
@@ -19,25 +24,16 @@ export async function GET() {
         return NextResponse.json({sudoku: data});
     }
 
-    const difficulties = ["easy", "medium", "medium", "medium"];
+    const difficulties = ["easy", "medium", "medium"];
     const randomDifficulty =
         difficulties[Math.floor(Math.random() * difficulties.length)];
 
-    const apiKey = process.env.API_NINJAS_KEY;
-
-    if (!apiKey) {
-        return NextResponse.json(
-            {error: "Missing API_NINJAS_KEY environment variable"},
-            {status: 500}
-        );
-    }
-
-    const url = `https://api.api-ninjas.com/v1/sudokugenerate?width=3&height=3&difficulty=${randomDifficulty}`;
+    const url = "https://youdosudoku.com/api/";
 
     const response = await fetch(url, {
-        headers: {
-            "X-Api-Key": apiKey,
-        },
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({difficulty: randomDifficulty}),
     });
 
     if (!response.ok) {
@@ -49,18 +45,18 @@ export async function GET() {
 
     const json = await response.json();
 
-    const {puzzle, solution} = json;
+    const {puzzle, solution, difficulty} = json;
 
-    const cleanedPuzzle = replaceNullsWithZero(puzzle);
-    const cleanedSolution = replaceNullsWithZero(solution);
+    const puzzleBoard = stringToBoard(puzzle);
+    const solutionBoard = stringToBoard(solution);
 
     const {data: inserted, error: insertError} = await supabaseServer
         .from("daily_sudoku")
         .insert([
             {
-                board: cleanedPuzzle,
-                solution: cleanedSolution,
-                difficulty: randomDifficulty,
+                board: puzzleBoard,
+                solution: solutionBoard,
+                difficulty: difficulty || randomDifficulty,
             },
         ])
         .select()
