@@ -14,7 +14,7 @@ import {SetType} from "@/lib/types";
 import OpenPackDialog from "@/components/shop/OpenPackDialog";
 
 export default function ShopPage() {
-    const {dailyAvailable, updateCoins} = useUserCoins()
+    const {dailyAvailable, updateCoins, coins} = useUserCoins()
     const {data: userStats, isLoading: statsLoading} = useUserStats()
     const {data: dailyPack, isLoading: dailyPackLoading} = useDailyPack();
     const [open, setOpen] = useState(false);
@@ -56,7 +56,7 @@ export default function ShopPage() {
     return (
         <div className={'overflow-x-hidden pb-32 bg-gradient-to-br from-white via-blue-50/30 to-slate-50'}>
             <TabHeader title={"Sklep"}
-                       description={"Kupuj nowe paczki lub zdobywaj nagrody grając w minigry!"}/>
+                       description={"Kupuj nowe paczki i wypełniaj swój indeks kart!"}/>
             <div className={'px-6 md:px-12 lg:px-32 xl:px-48 2xl:px-96'}>
                 <div className="grid grid-cols-1 md:grid-cols-3 grid-rows-4 md:grid-rows-2 gap-5 mt-12">
                     <Minigames
@@ -70,7 +70,7 @@ export default function ShopPage() {
                         <div className={'flex flex-col items-center gap-2'}>
                             <h3 className={'text-xl font-semibold'}>Kup na przecenie!</h3>
                             <Button className={"bg-blue-500 hover:bg-blue-600"} size={"sm"}
-                                    disabled={userStats.coins < dailyPackPrice}
+                                    disabled={coins < dailyPackPrice}
                                     onClick={() => handleOpenPack(dailyPack.set)}><span
                                 className={'line-through text-gray-200'}>{dailyPack.set.class * 100}</span><span
                                 className={'font-semibold'}>{dailyPackPrice}</span>

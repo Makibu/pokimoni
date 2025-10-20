@@ -6,9 +6,9 @@ import {useUserStats} from "@/hooks/queries/useUserStats";
 import LoadingIndicator from "@/components/ui/LoadingIndicator";
 import {Badge} from "@/components/ui/badge";
 import {badges} from "@/lib/badgesData";
-import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {formatDistanceToNow} from "date-fns";
 import {pl} from "date-fns/locale";
+import {HybridTooltip, HybridTooltipContent, HybridTooltipTrigger} from "@/components/ui/hybrid-tooltip";
 
 const rarityColors = {
     common: "#d1d5db",
@@ -202,15 +202,15 @@ export default function StatisticsPage() {
                                             className={`h-6 w-6 mx-auto mb-1 ${isEarned ? "text-orange-600" : "text-slate-400"}`}
                                         />
                                         <p className="text-xs font-medium">{badge.name}</p>
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
+                                        <HybridTooltip>
+                                            <HybridTooltipTrigger asChild>
                                                 <CircleQuestionMark
                                                     className={`absolute top-2 right-2 w-4 h-4 md:w-6 md:h-6 ${isEarned ? "text-orange-600" : "text-slate-400"}`}/>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
+                                            </HybridTooltipTrigger>
+                                            <HybridTooltipContent>
                                                 <p>{badge.description}</p>
-                                            </TooltipContent>
-                                        </Tooltip>
+                                            </HybridTooltipContent>
+                                        </HybridTooltip>
                                     </div>
                                 )
                             })}

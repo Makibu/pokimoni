@@ -6,6 +6,7 @@ import {Button} from "@/components/ui/button";
 import {useUserCoins} from "@/hooks/queries/useUserCoins";
 import {useUserMinigames} from "@/hooks/queries/useUserMinigames";
 import {toast} from "sonner";
+import {useQueryClient} from "@tanstack/react-query";
 
 type SudokuDialogProps = {
     open: boolean;
@@ -26,6 +27,8 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
     const [difficulty, setDifficulty] = useState<string>("");
     const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
     const [saved, setSaved] = useState<string | null>(null);
+
+    const queryClient = useQueryClient();
 
     const {updateCoins} = useUserCoins();
     const {updateGameFlag} = useUserMinigames();
@@ -108,6 +111,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
             await updateCoins({type: "minigame", amount: reward});
             await updateGameFlag("sudoku_flag");
             toast.success(`Gratulacje! Otrzymano ${reward} monet!`);
+            await queryClient.invalidateQueries({queryKey: ["coins"]});
             setOpen(false)
         } else {
             setMessage("❌ Niestety, coś się nie zgadza.");
