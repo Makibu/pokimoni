@@ -26,7 +26,6 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
     const [message, setMessage] = useState<string>("");
     const [difficulty, setDifficulty] = useState<string>("");
     const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
-    const [saved, setSaved] = useState<string | null>(null);
 
     const queryClient = useQueryClient();
 
@@ -36,9 +35,8 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
     const STORAGE_KEY = "daily_sudoku_state";
 
     useEffect(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        setSaved(saved)
-    }, []);
+        if (open) getSudoku();
+    }, [open]);
 
     async function getSudoku() {
         const data = await fetch("/api/daily-sudoku");
@@ -50,51 +48,52 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
         setDifficulty(sudoku.difficulty);
 
         const today = new Date().toISOString().split("T")[0];
+        const saved = localStorage.getItem(STORAGE_KEY);
 
         if (saved) {
-            const parsed: SavedSudokuState = JSON.parse(saved);
-            if (parsed.date === today) {
-                setUserBoard(parsed.userBoard);
-                setSelectedNumber(parsed.selectedNumber);
-            } else {
-                setUserBoard(
-                    sudoku.board.map((row: number[]) =>
-                        row.map((cell: number) => (cell === 0 ? "" : cell.toString()))
-                    )
-                );
-                setSelectedNumber(null);
+            try {
+                const parsed: SavedSudokuState = JSON.parse(saved);
+                if (parsed.date === today && parsed.userBoard?.length) {
+                    setUserBoard(parsed.userBoard);
+                    setSelectedNumber(parsed.selectedNumber);
+                    setMessage("");
+                    return; // zatrzymujemy tu — nie nadpisujemy planszy
+                }
+            } catch {
+                // ignorujemy błędne dane
             }
-        } else {
-            setUserBoard(
-                sudoku.board.map((row: number[]) =>
-                    row.map((cell: number) => (cell === 0 ? "" : cell.toString()))
-                )
-            );
-            setSelectedNumber(null);
         }
 
+        // brak zapisanego lub stare dane
+        setUserBoard(
+            sudoku.board.map((row: number[]) =>
+                row.map((cell: number) => (cell === 0 ? "" : cell.toString()))
+            )
+        );
+        setSelectedNumber(null);
         setMessage("");
     }
 
     useEffect(() => {
-        if (userBoard.length === 0) return;
-
+        if (!userBoard.length) return;
         const today = new Date().toISOString().split("T")[0];
-        const saveState: SavedSudokuState = {
-            date: today,
-            userBoard,
-            selectedNumber,
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(saveState));
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify({date: today, userBoard, selectedNumber})
+        );
     }, [userBoard, selectedNumber]);
 
-    function handleChange(row: number, col: number, value: string) {
-        if (/^[1-9]?$/.test(value)) {
-            const updated = userBoard.map((r, rIdx) =>
-                rIdx === row ? r.map((c, cIdx) => (cIdx === col ? value : c)) : r
-            );
-            setUserBoard(updated);
-        }
+    function handleCellClick(row: number, col: number) {
+        if (board[row][col] !== 0) return; // predefiniowane pola zablokowane
+        if (selectedNumber === null) return;
+
+        setUserBoard(prev => {
+            const newBoard = prev.map(r => [...r]);
+            const currentVal = newBoard[row][col];
+            const newVal = currentVal === selectedNumber.toString() ? "" : selectedNumber.toString();
+            newBoard[row][col] = newVal;
+            return newBoard;
+        });
     }
 
     async function checkSudoku() {
@@ -112,7 +111,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
             await updateGameFlag("sudoku_flag");
             toast.success(`Gratulacje! Otrzymano ${reward} monet!`);
             await queryClient.invalidateQueries({queryKey: ["coins"]});
-            setOpen(false)
+            setOpen(false);
         } else {
             setMessage("❌ Niestety, coś się nie zgadza.");
         }
@@ -129,17 +128,11 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
         setSelectedNumber(null);
 
         const today = new Date().toISOString().split("T")[0];
-        const saveState = {
-            date: today,
-            userBoard: clearedBoard,
-            selectedNumber: null,
-        };
-        localStorage.setItem("daily_sudoku_state", JSON.stringify(saveState));
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify({date: today, userBoard: clearedBoard, selectedNumber: null})
+        );
     }
-
-    useEffect(() => {
-        if (open) getSudoku();
-    }, [open]);
 
     const remainingCount = useMemo(() => {
         const counts: Record<number, number> = {};
@@ -161,7 +154,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
 
                 <div className="flex space-x-6 items-start">
                     <div className="flex flex-col items-center space-y-4">
-                        <div className={'flex w-full gap-4'}>
+                        <div className="flex w-full gap-4">
                             {difficulty && (
                                 <div
                                     className="px-2 py-1 bg-gray-100 rounded-xl text-sm self-start shadow-sm border-[1px]">
@@ -169,12 +162,13 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
                                 </div>
                             )}
                             <div className="flex">
-                                <button onClick={resetSudoku}
-                                        className="px-2 py-1 bg-white rounded-xl text-sm self-start shadow-sm border-[1px] border-black cursor-pointer hover:bg-red-200 transition-colors duration-200">
+                                <button
+                                    onClick={resetSudoku}
+                                    className="px-2 py-1 bg-white rounded-xl text-sm self-start shadow-sm border-[1px] border-black cursor-pointer hover:bg-red-200 transition-colors duration-200"
+                                >
                                     Resetuj Sudoku
                                 </button>
                             </div>
-
                         </div>
 
                         <div className="grid grid-cols-9 gap-0">
@@ -186,24 +180,24 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
                                         selectedNumber !== null && cellValue === selectedNumber;
 
                                     const borderClasses = `
-                    border 
-                    ${r % 3 === 0 ? "border-t-2 md:border-t-4 border-t-gray-400" : "border-t"}
-                    ${c % 3 === 0 ? "border-l-2 md:border-l-4 border-l-gray-400" : "border-l"}
-                    ${r === 8 ? "border-b-2 md:border-b-4 border-b-gray-400" : ""}
-                    ${c === 8 ? "border-r-2 md:border-r-4 border-r-gray-400" : ""}
-                  `;
+                                        border 
+                                        ${r % 3 === 0 ? "border-t-2 md:border-t-4 border-t-gray-400" : "border-t"}
+                                        ${c % 3 === 0 ? "border-l-2 md:border-l-4 border-l-gray-400" : "border-l"}
+                                        ${r === 8 ? "border-b-2 md:border-b-4 border-b-gray-400" : ""}
+                                        ${c === 8 ? "border-r-2 md:border-r-4 border-r-gray-400" : ""}
+                                    `;
 
                                     return (
-                                        <input
+                                        <div
                                             key={`${r}-${c}`}
-                                            value={val}
-                                            disabled={isPrefilled}
-                                            onChange={(e) => handleChange(r, c, e.target.value)}
-                                            className={`w-8 md:w-10 h-8 md:h-10 text-center text-lg ${borderClasses} 
-                        ${isPrefilled ? "bg-gray-100 font-bold" : "bg-white"}
-                        ${isHighlighted ? "bg-yellow-200" : ""}
-                      `}
-                                        />
+                                            onClick={() => handleCellClick(r, c)}
+                                            className={`w-8 md:w-10 h-8 md:h-10 flex items-center justify-center text-lg ${borderClasses}
+                                                ${isPrefilled ? "bg-gray-100 font-bold" : "bg-white cursor-pointer"}
+                                                ${isHighlighted ? "bg-yellow-200" : ""}
+                                            `}
+                                        >
+                                            {val}
+                                        </div>
                                     );
                                 })
                             )}
@@ -219,17 +213,15 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
                             return (
                                 <div
                                     key={n}
-                                    onClick={() =>
-                                        setSelectedNumber(selectedNumber === n ? null : n)
-                                    }
+                                    onClick={() => setSelectedNumber(selectedNumber === n ? null : n)}
                                     className={`relative w-10 h-10 flex items-center justify-center rounded-md border shadow-sm cursor-pointer
-                    ${isSelected ? "bg-yellow-300 border-yellow-500" : "bg-gray-100"}
-                  `}
+                                        ${isSelected ? "bg-yellow-300 border-yellow-500" : "bg-gray-100"}
+                                    `}
                                 >
                                     <span className="text-lg font-bold">{n}</span>
                                     <span className="absolute top-0 right-0 text-xs bg-gray-300 rounded-full px-1">
-                    {remainingCount[n]}
-                  </span>
+                                        {remainingCount[n]}
+                                    </span>
                                 </div>
                             );
                         })}
