@@ -26,6 +26,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
     const [message, setMessage] = useState<string>("");
     const [difficulty, setDifficulty] = useState<string>("");
     const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const queryClient = useQueryClient();
 
@@ -57,14 +58,12 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
                     setUserBoard(parsed.userBoard);
                     setSelectedNumber(parsed.selectedNumber);
                     setMessage("");
-                    return; // zatrzymujemy tu — nie nadpisujemy planszy
+                    return;
                 }
             } catch {
-                // ignorujemy błędne dane
             }
         }
 
-        // brak zapisanego lub stare dane
         setUserBoard(
             sudoku.board.map((row: number[]) =>
                 row.map((cell: number) => (cell === 0 ? "" : cell.toString()))
@@ -84,7 +83,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
     }, [userBoard, selectedNumber]);
 
     function handleCellClick(row: number, col: number) {
-        if (board[row][col] !== 0) return; // predefiniowane pola zablokowane
+        if (board[row][col] !== 0) return;
         if (selectedNumber === null) return;
 
         setUserBoard(prev => {
@@ -97,6 +96,9 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
     }
 
     async function checkSudoku() {
+        if (loading) return
+        setLoading(true)
+
         const correct = userBoard.every((row, r) =>
             row.every((val, c) => val !== "" && parseInt(val) === solution[r][c])
         );
@@ -107,13 +109,18 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
             if (difficulty === "medium") reward = 250;
             if (difficulty === "hard") reward = 400;
 
-            await updateCoins({type: "minigame", amount: reward});
-            await updateGameFlag("sudoku_flag");
-            toast.success(`Gratulacje! Otrzymano ${reward} monet!`);
-            await queryClient.invalidateQueries({queryKey: ["coins"]});
-            setOpen(false);
+            try {
+                await updateCoins({type: "minigame", amount: reward});
+                await updateGameFlag("sudoku_flag");
+                toast.success(`Gratulacje! Otrzymano ${reward} monet!`);
+                await queryClient.invalidateQueries({queryKey: ["coins"]});
+                setOpen(false);
+            } finally {
+                setLoading(false)
+            }
         } else {
             setMessage("❌ Niestety, coś się nie zgadza.");
+            setLoading(false)
         }
     }
 
@@ -203,7 +210,8 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
                             )}
                         </div>
 
-                        <Button onClick={checkSudoku}>Sprawdź Sudoku</Button>
+                        <Button onClick={checkSudoku}
+                                disabled={loading}>{loading ? "Sprawdzanie..." : "Sprawdź Sudoku"}</Button>
                         {message && <p className="mt-2 text-lg">{message}</p>}
                     </div>
 

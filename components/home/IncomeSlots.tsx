@@ -157,10 +157,15 @@ export default function IncomeSlots({setId}: { setId?: string }) {
                 return (
                     <div key={`slot-${slotNum}`} className="flex flex-col items-center">
                         {statsLoading ? (
-                            <div
-                                className="w-[150px] md:w-[170px] lg:w-[200px] aspect-[245/342] flex items-center justify-center">
-                                <LoadingIndicator/>
-                            </div>
+                            <Card
+                                className="w-[150px] md:w-[200px] aspect-[245/342] bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 group"
+                            >
+                                <CardContent className="flex flex-col items-center justify-center h-full p-1">
+                                    <div className={'w-32 h-32'}>
+                                        <LoadingIndicator/>
+                                    </div>
+                                </CardContent>
+                            </Card>
                         ) : selectedCard ? (
                             <div
                                 className={`w-[150px] md:w-[170px] lg:w-[200px] rounded-md cursor-pointer flex items-center justify-center hover:shadow-md hover:scale-105 transition-all duration-300`}

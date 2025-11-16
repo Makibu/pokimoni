@@ -11,7 +11,7 @@ import BannerRed from "@/public/banners/banner-red.png"
 import BannerGreen from "@/public/banners/banner-green.png"
 import BannerBlue from "@/public/banners/banner-blue.png"
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import IncomeSlots from "@/components/IncomeSlots";
+import IncomeSlots from "@/components/home/IncomeSlots";
 
 import {changeDate, changesData, version} from "@/lib/changesData";
 import {toast} from "sonner";

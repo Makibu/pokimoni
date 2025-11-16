@@ -3,7 +3,7 @@
 import {usePathname} from "next/navigation";
 import Balance from "@/components/data-display/Balance";
 import React, {useEffect, useState} from "react";
-import UserMenu from "@/components/UserMenu";
+import UserMenu from "@/components/home/UserMenu";
 
 export default function Navbar() {
     const pathname = usePathname()

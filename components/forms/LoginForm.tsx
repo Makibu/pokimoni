@@ -41,12 +41,6 @@ export default function LoginForm({
                     <div className="grid gap-2">
                         <div className="flex items-center">
                             <Label htmlFor="password">Hasło</Label>
-                            <a
-                                href="#"
-                                className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                            >
-                                Zapomniałeś hasła?
-                            </a>
                         </div>
                         <Input
                             id="password"
