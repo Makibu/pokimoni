@@ -1,11 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {
-    DAILY_REWARDS,
-    evaluateDailyClaim,
-    PIGGY_BANK_CAPACITY,
-    packPrice,
-    piggyBankBalance,
-} from "@/domain/economy";
+import {DAILY_REWARDS, evaluateDailyClaim, PIGGY_BANK_CAPACITY, packPrice, piggyBankBalance} from "@/domain/economy";
 
 describe("packPrice", () => {
     it("charges more for better tiers", () => {

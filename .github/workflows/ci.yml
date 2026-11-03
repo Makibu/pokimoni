@@ -14,6 +14,7 @@ jobs:
       NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
       SUPABASE_SERVICE_ROLE_KEY: placeholder
       JWT_SECRET: ci-placeholder-secret-ci-placeholder-secret
+      DATABASE_URL: postgres://placeholder:placeholder@localhost:5432/placeholder
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
