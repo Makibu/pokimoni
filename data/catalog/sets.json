@@ -1,0 +1,212 @@
+[
+  {
+    "id": "rsv10pt5",
+    "name": "White Flare",
+    "series": "Scarlet & Violet",
+    "printed_total": 86,
+    "total": 173,
+    "ptcgo_code": "WHT",
+    "release_date": "2025-07-18",
+    "images": {
+      "logo": "https://images.pokemontcg.io/rsv10pt5/logo.png",
+      "symbol": "https://images.pokemontcg.io/rsv10pt5/symbol.png"
+    },
+    "class": 3
+  },
+  {
+    "id": "sv1",
+    "name": "Scarlet & Violet",
+    "series": "Scarlet & Violet",
+    "printed_total": 198,
+    "total": 258,
+    "ptcgo_code": "SVI",
+    "release_date": "2023-03-31",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv1/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv1/symbol.png"
+    },
+    "class": 1
+  },
+  {
+    "id": "sv10",
+    "name": "Destined Rivals",
+    "series": "Scarlet & Violet",
+    "printed_total": 182,
+    "total": 244,
+    "ptcgo_code": "DRI",
+    "release_date": "2025-05-30",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv10/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv10/symbol.png"
+    },
+    "class": 2
+  },
+  {
+    "id": "sv2",
+    "name": "Paldea Evolved",
+    "series": "Scarlet & Violet",
+    "printed_total": 193,
+    "total": 279,
+    "ptcgo_code": "PAL",
+    "release_date": "2023-06-09",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv2/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv2/symbol.png"
+    },
+    "class": 1
+  },
+  {
+    "id": "sv3",
+    "name": "Obsidian Flames",
+    "series": "Scarlet & Violet",
+    "printed_total": 197,
+    "total": 230,
+    "ptcgo_code": "OBF",
+    "release_date": "2023-08-11",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv3/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv3/symbol.png"
+    },
+    "class": 1
+  },
+  {
+    "id": "sv3pt5",
+    "name": "151",
+    "series": "Scarlet & Violet",
+    "printed_total": 165,
+    "total": 207,
+    "ptcgo_code": "MEW",
+    "release_date": "2023-09-22",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv3pt5/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv3pt5/symbol.png"
+    },
+    "class": 3
+  },
+  {
+    "id": "sv4",
+    "name": "Paradox Rift",
+    "series": "Scarlet & Violet",
+    "printed_total": 182,
+    "total": 266,
+    "ptcgo_code": "PAR",
+    "release_date": "2023-11-03",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv4/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv4/symbol.png"
+    },
+    "class": 1
+  },
+  {
+    "id": "sv5",
+    "name": "Temporal Forces",
+    "series": "Scarlet & Violet",
+    "printed_total": 162,
+    "total": 218,
+    "ptcgo_code": "TEF",
+    "release_date": "2024-03-22",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv5/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv5/symbol.png"
+    },
+    "class": 1
+  },
+  {
+    "id": "sv6",
+    "name": "Twilight Masquerade",
+    "series": "Scarlet & Violet",
+    "printed_total": 167,
+    "total": 226,
+    "ptcgo_code": "TWM",
+    "release_date": "2024-05-24",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv6/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv6/symbol.png"
+    },
+    "class": 2
+  },
+  {
+    "id": "sv6pt5",
+    "name": "Shrouded Fable",
+    "series": "Scarlet & Violet",
+    "printed_total": 64,
+    "total": 99,
+    "ptcgo_code": "SFA",
+    "release_date": "2024-08-02",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv6pt5/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv6pt5/symbol.png"
+    },
+    "class": 3
+  },
+  {
+    "id": "sv7",
+    "name": "Stellar Crown",
+    "series": "Scarlet & Violet",
+    "printed_total": 142,
+    "total": 175,
+    "ptcgo_code": "SCR",
+    "release_date": "2024-09-13",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv7/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv7/symbol.png"
+    },
+    "class": 2
+  },
+  {
+    "id": "sv8",
+    "name": "Surging Sparks",
+    "series": "Scarlet & Violet",
+    "printed_total": 191,
+    "total": 252,
+    "ptcgo_code": "SSP",
+    "release_date": "2024-11-08",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv8/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv8/symbol.png"
+    },
+    "class": 2
+  },
+  {
+    "id": "sv8pt5",
+    "name": "Prismatic Evolutions",
+    "series": "Scarlet & Violet",
+    "printed_total": 131,
+    "total": 180,
+    "ptcgo_code": "PRE",
+    "release_date": "2025-01-17",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv8pt5/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv8pt5/symbol.png"
+    },
+    "class": 3
+  },
+  {
+    "id": "sv9",
+    "name": "Journey Together",
+    "series": "Scarlet & Violet",
+    "printed_total": 159,
+    "total": 190,
+    "ptcgo_code": "JTG",
+    "release_date": "2025-03-28",
+    "images": {
+      "logo": "https://images.pokemontcg.io/sv9/logo.png",
+      "symbol": "https://images.pokemontcg.io/sv9/symbol.png"
+    },
+    "class": 2
+  },
+  {
+    "id": "zsv10pt5",
+    "name": "Black Bolt",
+    "series": "Scarlet & Violet",
+    "printed_total": 86,
+    "total": 172,
+    "ptcgo_code": "BLK",
+    "release_date": "2025-07-18",
+    "images": {
+      "logo": "https://images.pokemontcg.io/zsv10pt5/logo.png",
+      "symbol": "https://images.pokemontcg.io/zsv10pt5/symbol.png"
+    },
+    "class": 3
+  }
+]

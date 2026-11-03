@@ -1,0 +1,376 @@
+[
+  {
+    "id": 1,
+    "title": "Pierwsze Kroki",
+    "description": "Zdobądź swoją pierwszą unikatową kartę.",
+    "reward": [
+      "50 monet"
+    ],
+    "rarity": "common",
+    "type": "cards_overall",
+    "amount": 1
+  },
+  {
+    "id": 2,
+    "title": "Rozbieg",
+    "description": "Zdobądź 50 unikatowych kart.",
+    "reward": [
+      "100 monet"
+    ],
+    "rarity": "common",
+    "type": "cards_overall",
+    "amount": 50
+  },
+  {
+    "id": 3,
+    "title": "Kartomaniak",
+    "description": "Zdobądź 200 unikatowych kart.",
+    "reward": [
+      "200 monet"
+    ],
+    "rarity": "rare",
+    "type": "cards_overall",
+    "amount": 200
+  },
+  {
+    "id": 4,
+    "title": "Kolekcjoner",
+    "description": "Zdobądź 500 unikatowych kart.",
+    "reward": [
+      "300 monet"
+    ],
+    "rarity": "rare",
+    "type": "cards_overall",
+    "amount": 500
+  },
+  {
+    "id": 5,
+    "title": "Poké-Mistrz",
+    "description": "Zdobądź 1000 unikatowych kart.",
+    "reward": [
+      "500 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_overall",
+    "amount": 1000
+  },
+  {
+    "id": 6,
+    "title": "Legendarny Kolekcjoner",
+    "description": "Zdobądź 2000 unikatowych kart.",
+    "reward": [
+      "700 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_overall",
+    "amount": 2000
+  },
+  {
+    "id": 7,
+    "title": "Złap Je Wszystkie",
+    "description": "Zdobądź wszystkie dostępne unikatowe karty.",
+    "reward": [
+      "1500 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_overall",
+    "amount": 3169
+  },
+  {
+    "id": 9,
+    "title": "Pechowiec",
+    "description": "Zdobądź 50 kart łącznie z duplikatami.",
+    "reward": [
+      "100 monet"
+    ],
+    "rarity": "common",
+    "type": "cards_duplicates",
+    "amount": 50
+  },
+  {
+    "id": 10,
+    "title": "Początkujący Zbieracz",
+    "description": "Zdobądź 200 kart łącznie z duplikatami.",
+    "reward": [
+      "200 monet"
+    ],
+    "rarity": "rare",
+    "type": "cards_duplicates",
+    "amount": 200
+  },
+  {
+    "id": 11,
+    "title": "Mistrz Duplikatów",
+    "description": "Zdobądź 500 kart łącznie z duplikatami.",
+    "reward": [
+      "300 monet"
+    ],
+    "rarity": "rare",
+    "type": "cards_duplicates",
+    "amount": 500
+  },
+  {
+    "id": 12,
+    "title": "Arcy-Pechowiec",
+    "description": "Zdobądź 1000 kart łącznie z duplikatami.",
+    "reward": [
+      "500 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_duplicates",
+    "amount": 1000
+  },
+  {
+    "id": 13,
+    "title": "Dużooo Kart",
+    "description": "Zdobądź 2000 kart łącznie z duplikatami.",
+    "reward": [
+      "700 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_duplicates",
+    "amount": 2000
+  },
+  {
+    "id": 14,
+    "title": "Znów Z Tym Pasztetem?!",
+    "description": "Zdobądź 5000 kart łącznie z duplikatami.",
+    "reward": [
+      "1500 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_duplicates",
+    "amount": 5000
+  },
+  {
+    "id": 15,
+    "title": "Pierwszy Opening",
+    "description": "Otwórz swoją pierwszą paczkę.",
+    "reward": [
+      "50 monet"
+    ],
+    "rarity": "common",
+    "type": "packs_overall",
+    "amount": 1
+  },
+  {
+    "id": 16,
+    "title": "Początek Przygody",
+    "description": "Otwórz 20 paczek.",
+    "reward": [
+      "100 monet"
+    ],
+    "rarity": "common",
+    "type": "packs_overall",
+    "amount": 20
+  },
+  {
+    "id": 17,
+    "title": "Ekspert Odpakowywania",
+    "description": "Otwórz 100 paczek.",
+    "reward": [
+      "200 monet"
+    ],
+    "rarity": "rare",
+    "type": "packs_overall",
+    "amount": 100
+  },
+  {
+    "id": 18,
+    "title": "Paczuchy",
+    "description": "Otwórz 500 paczek.",
+    "reward": [
+      "400 monet"
+    ],
+    "rarity": "epic",
+    "type": "packs_overall",
+    "amount": 500
+  },
+  {
+    "id": 19,
+    "title": "Paczkomat",
+    "description": "Otwórz 1000 paczek.",
+    "reward": [
+      "600 monet"
+    ],
+    "rarity": "epic",
+    "type": "packs_overall",
+    "amount": 1000
+  },
+  {
+    "id": 20,
+    "title": "Pokemonowy Rafał Brzoska",
+    "description": "Otwórz 2000 paczek.",
+    "reward": [
+      "1000 monet"
+    ],
+    "rarity": "epic",
+    "type": "packs_overall",
+    "amount": 2000
+  },
+  {
+    "id": 21,
+    "title": "Pierwsze Karty Rare",
+    "description": "Zdobądź 20 kart o rarity rare.",
+    "reward": [
+      "100 monet"
+    ],
+    "rarity": "common",
+    "type": "cards_rarity_rare",
+    "amount": 20
+  },
+  {
+    "id": 22,
+    "title": "Rare-mania",
+    "description": "Zdobądź 50 kart o rarity double rare.",
+    "reward": [
+      "200 monet"
+    ],
+    "rarity": "common",
+    "type": "cards_rarity_double_rare",
+    "amount": 50
+  },
+  {
+    "id": 23,
+    "title": "Ultra Zbieranie",
+    "description": "Zdobądź 100 kart o rarity ultra rare.",
+    "reward": [
+      "400 monet"
+    ],
+    "rarity": "rare",
+    "type": "cards_rarity_ultra_rare",
+    "amount": 100
+  },
+  {
+    "id": 24,
+    "title": "Asy Z Rękawa",
+    "description": "Zdobądź 10 kart o rarity ace spec rare.",
+    "reward": [
+      "400 monet"
+    ],
+    "rarity": "rare",
+    "type": "cards_rarity_ace_spec_rare",
+    "amount": 10
+  },
+  {
+    "id": 25,
+    "title": "Kolekcjoner Obrazków",
+    "description": "Zdobądź 100 kart o rarity illustration rare.",
+    "reward": [
+      "400 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_rarity_illustration_rare",
+    "amount": 100
+  },
+  {
+    "id": 26,
+    "title": "Fanatyk Krajobrazów",
+    "description": "Zdobądź 250 kart o rarity illustration rare.",
+    "reward": [
+      "700 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_rarity_illustration_rare",
+    "amount": 250
+  },
+  {
+    "id": 27,
+    "title": "Dobry Początek",
+    "description": "Zdobądź 15 kart o rarity rare lub lepszych.",
+    "reward": [
+      "150 monet"
+    ],
+    "rarity": "rare",
+    "type": "cards_rarity_rare_plus",
+    "amount": 15
+  },
+  {
+    "id": 28,
+    "title": "Spora Kolekcja",
+    "description": "Zdobądź 100 kart o rarity rare lub lepszych.",
+    "reward": [
+      "300 monet"
+    ],
+    "rarity": "rare",
+    "type": "cards_rarity_rare_plus",
+    "amount": 100
+  },
+  {
+    "id": 29,
+    "title": "Szczęściarz",
+    "description": "Zdobądź 50 kart o rarity ultra rare lub lepszych.",
+    "reward": [
+      "200 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_rarity_ultra_rare_plus",
+    "amount": 50
+  },
+  {
+    "id": 30,
+    "title": "Ustawione Losowania",
+    "description": "Zdobądź 500 kart o rarity illustration rare lub lepszych.",
+    "reward": [
+      "400 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_rarity_illustration_rare_plus",
+    "amount": 500
+  },
+  {
+    "id": 31,
+    "title": "Miłośnik Promili",
+    "description": "Zdobądź 15 kart o rarity hyper rare lub lepszych.",
+    "reward": [
+      "400 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_rarity_hyper_rare_plus",
+    "amount": 15
+  },
+  {
+    "id": 32,
+    "title": "Oszukista",
+    "description": "Zdobądź 50 kart o rarity hyper rare lub lepszych.",
+    "reward": [
+      "800 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_rarity_hyper_rare_plus",
+    "amount": 50
+  },
+  {
+    "id": 33,
+    "title": "Sekretna Karta",
+    "description": "Zdobądź 1 karte secret rare.",
+    "reward": [
+      "500 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_rarity_secret_rare",
+    "amount": 1
+  },
+  {
+    "id": 34,
+    "title": "Serio? Niemożliwe...",
+    "description": "Zdobądź 3 karty secret rare.",
+    "reward": [
+      "800 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_rarity_secret_rare",
+    "amount": 3
+  },
+  {
+    "id": 35,
+    "title": "Niezły Pechowiec",
+    "description": "Zdobądź 10 kart secret rare.",
+    "reward": [
+      "2000 monet"
+    ],
+    "rarity": "epic",
+    "type": "cards_rarity_secret_rare",
+    "amount": 10
+  }
+]

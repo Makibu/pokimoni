@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "name": "Kolekcjoner",
+    "type": "collection",
+    "description": "Zdobycie 1000 kart w kolekcji"
+  },
+  {
+    "id": 2,
+    "name": "Mistrz Rzadkości",
+    "type": "rarity",
+    "description": "Zdobycie przynajmniej jednej karty typu Special Rare"
+  },
+  {
+    "id": 3,
+    "name": "Bogacz",
+    "type": "income",
+    "description": "Posiadanie przychodu równego 30 monet lub więcej"
+  },
+  {
+    "id": 4,
+    "name": "Łowca Special Rare",
+    "type": "rarity",
+    "description": "Zdobądź 3 karty typu Special Rare"
+  },
+  {
+    "id": 5,
+    "name": "Ćwierć Kolekcji",
+    "type": "collection",
+    "description": "Zdobądź 250 kart"
+  },
+  {
+    "id": 6,
+    "name": "Mistrz Kolekcji",
+    "type": "collection",
+    "description": "Zdobądź wszystkie karty"
+  },
+  {
+    "id": 7,
+    "name": "Otwarcie Tysiąca",
+    "type": "packs",
+    "description": "Otwórz 1000 paczek"
+  },
+  {
+    "id": 8,
+    "name": "Otwarcie Setki",
+    "type": "packs",
+    "description": "Otwórz 100 paczek"
+  },
+  {
+    "id": 9,
+    "name": "Elita Rzadkości",
+    "type": "rarity",
+    "description": "Zdobądź 150 kart typu Special Illustration Rare lub wyższego"
+  }
+]
