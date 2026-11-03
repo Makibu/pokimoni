@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import SetTile from "@/components/data-display/SetTile";
 import {SetType} from "@/lib/types";
@@ -7,25 +7,26 @@ import TabHeader from "@/components/layout/TabHeader";
 import useSets from "@/hooks/queries/useSets";
 
 export default function IndexPage() {
-    const {setList, isLoading, error} = useSets()
+    const {setList, isLoading, error} = useSets();
 
     const {data: userTotalPerSet} = useUserTotalPerSet();
 
     if (isLoading) return <p>Ładowanie...</p>;
     if (error instanceof Error) return <p>Błąd: {error.message}</p>;
 
-
     return (
         <div
-            className={'overflow-x-hidden flex flex-col pb-32 bg-gradient-to-br from-white via-blue-50/30 to-slate-50'}>
-            <TabHeader title={"Twój indeks kart"}
-                       description={"Kliknij w paczkę, by zobaczyć swój postęp w zbieraniu kart!"}/>
-            <div className={'flex gap-10 md:gap-20 flex-wrap justify-center px-6 md:px-16 lg:px-32 mt-12'}>
+            className={"overflow-x-hidden flex flex-col pb-32 bg-gradient-to-br from-white via-blue-50/30 to-slate-50"}
+        >
+            <TabHeader
+                title={"Twój indeks kart"}
+                description={"Kliknij w paczkę, by zobaczyć swój postęp w zbieraniu kart!"}
+            />
+            <div className={"flex gap-10 md:gap-20 flex-wrap justify-center px-6 md:px-16 lg:px-32 mt-12"}>
                 {setList.map((set: SetType, index: number) => (
-                    <SetTile key={index} {...set} totalCollected={userTotalPerSet?.[set.id] ?? 0}/>
+                    <SetTile key={index} {...set} totalCollected={userTotalPerSet?.[set.id] ?? 0} />
                 ))}
             </div>
         </div>
     );
 }
-

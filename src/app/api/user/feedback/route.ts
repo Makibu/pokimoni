@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
     const {error} = await supabaseServer.from("feedback").insert({uid, description});
 
-    if (error) NextResponse.json({message: error.message}, {status: 500})
+    if (error) NextResponse.json({message: error.message}, {status: 500});
 
     return NextResponse.json({success: true});
 }

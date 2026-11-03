@@ -22,21 +22,14 @@ export const useUserCards = (setId?: string) => {
 
             const res = await fetch(url.toString());
             const data = await res.json();
-            if (!res.ok)
-                throw new Error(data.error || "Błąd pobierania kart użytkownika");
+            if (!res.ok) throw new Error(data.error || "Błąd pobierania kart użytkownika");
             return data.userCards as UserCardWithCard[];
         },
         enabled: !!uid,
     });
 
     const mutation = useMutation({
-        mutationFn: async ({
-                               cards,
-                               set_id,
-                           }: {
-            cards: { card_id: string; quantity: number }[];
-            set_id?: string;
-        }) => {
+        mutationFn: async ({cards, set_id}: {cards: {card_id: string; quantity: number}[]; set_id?: string}) => {
             if (!uid) throw new Error("Brak uid");
             const res = await fetch("/api/user/cards", {
                 method: "POST",

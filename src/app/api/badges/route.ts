@@ -2,7 +2,7 @@ import {supabaseServer} from "@/lib/supabaseServer";
 import {NextResponse} from "next/server";
 
 export async function GET(req: Request) {
-    const {data, error} = await supabaseServer.from("badges").select("*")
+    const {data, error} = await supabaseServer.from("badges").select("*");
 
     if (error) {
         return NextResponse.json({error: error.message}, {status: 500});

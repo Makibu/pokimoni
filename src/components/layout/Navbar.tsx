@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {usePathname} from "next/navigation";
 import Balance from "@/components/data-display/Balance";
@@ -6,18 +6,18 @@ import React, {useEffect, useState} from "react";
 import UserMenu from "@/components/home/UserMenu";
 
 export default function Navbar() {
-    const pathname = usePathname()
+    const pathname = usePathname();
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
-        }
-        window.addEventListener("scroll", handleScroll)
-        return () => window.removeEventListener("scroll", handleScroll)
-    }, [])
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
-    if (pathname === '/login') return null
+    if (pathname === "/login") return null;
 
     return (
         <>
@@ -40,11 +40,11 @@ export default function Navbar() {
                 {/*        </HybridTooltipContent>*/}
                 {/*    </HybridTooltip>*/}
                 {/*</div>*/}
-                <Balance/>
+                <Balance />
                 <div className="absolute right-6 h-12 flex items-center gap-2">
-                    <UserMenu/>
+                    <UserMenu />
                 </div>
             </div>
         </>
-    )
+    );
 }

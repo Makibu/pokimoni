@@ -13,9 +13,7 @@ function generateMinesweeperBoard(width: number, height: number, mines: number) 
         [centerR, centerC + 1],
     ];
 
-    const board: (number | "B")[][] = Array.from({length: height}, () =>
-        Array.from({length: width}, () => 0)
-    );
+    const board: (number | "B")[][] = Array.from({length: height}, () => Array.from({length: width}, () => 0));
 
     let placed = 0;
     while (placed < mines) {
@@ -34,12 +32,13 @@ function generateMinesweeperBoard(width: number, height: number, mines: number) 
         for (let x = 0; x < width; x++) {
             if (board[y][x] === "B") continue;
             let count = 0;
-            dirs.forEach(dy =>
-                dirs.forEach(dx => {
+            dirs.forEach((dy) =>
+                dirs.forEach((dx) => {
                     if (dy === 0 && dx === 0) return;
-                    const ny = y + dy, nx = x + dx;
+                    const ny = y + dy,
+                        nx = x + dx;
                     if (ny >= 0 && ny < height && nx >= 0 && nx < width && board[ny][nx] === "B") count++;
-                })
+                }),
             );
             board[y][x] = count;
         }
@@ -49,14 +48,14 @@ function generateMinesweeperBoard(width: number, height: number, mines: number) 
         [centerR - 1, centerC],
         [centerR + 1, centerC],
         [centerR, centerC - 1],
-        [centerR, centerC + 1]
+        [centerR, centerC + 1],
     ];
 
     sideCells.forEach(([r, c]) => {
         if (board[r][c] === 0) {
             const potentialBombs: [number, number][] = [];
-            dirs.forEach(dy =>
-                dirs.forEach(dx => {
+            dirs.forEach((dy) =>
+                dirs.forEach((dx) => {
                     if (dy === 0 && dx === 0) return;
                     const nr = r + dy;
                     const nc = c + dx;
@@ -70,7 +69,7 @@ function generateMinesweeperBoard(width: number, height: number, mines: number) 
                     ) {
                         potentialBombs.push([nr, nc]);
                     }
-                })
+                }),
             );
             if (potentialBombs.length > 0) {
                 const [br, bc] = potentialBombs[Math.floor(Math.random() * potentialBombs.length)];
@@ -83,12 +82,13 @@ function generateMinesweeperBoard(width: number, height: number, mines: number) 
         for (let x = 0; x < width; x++) {
             if (board[y][x] === "B") continue;
             let count = 0;
-            dirs.forEach(dy =>
-                dirs.forEach(dx => {
+            dirs.forEach((dy) =>
+                dirs.forEach((dx) => {
                     if (dy === 0 && dx === 0) return;
-                    const ny = y + dy, nx = x + dx;
+                    const ny = y + dy,
+                        nx = x + dx;
                     if (ny >= 0 && ny < height && nx >= 0 && nx < width && board[ny][nx] === "B") count++;
-                })
+                }),
             );
             board[y][x] = count;
         }
@@ -99,18 +99,15 @@ function generateMinesweeperBoard(width: number, height: number, mines: number) 
     const finalBoard = board.map((row, r) =>
         row.map((cell, c) => ({
             value: cell,
-            revealed: safeCells.some(([sr, sc]) => sr === r && sc === c)
-        }))
+            revealed: safeCells.some(([sr, sc]) => sr === r && sc === c),
+        })),
     );
 
     return finalBoard;
 }
 
 export async function GET() {
-    const {data} = await supabaseServer
-        .from("daily_minesweeper")
-        .select("*")
-        .single();
+    const {data} = await supabaseServer.from("daily_minesweeper").select("*").single();
 
     if (data) return NextResponse.json({minesweeper: data});
 

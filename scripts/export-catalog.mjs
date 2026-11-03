@@ -14,7 +14,11 @@ const PAGE = 1000;
 async function fetchAll(table, orderBy) {
     const rows = [];
     for (let from = 0; ; from += PAGE) {
-        const {data, error} = await db.from(table).select("*").order(orderBy).range(from, from + PAGE - 1);
+        const {data, error} = await db
+            .from(table)
+            .select("*")
+            .order(orderBy)
+            .range(from, from + PAGE - 1);
         if (error) throw new Error(`${table}: ${error.message}`);
         rows.push(...data);
         if (data.length < PAGE) return rows;

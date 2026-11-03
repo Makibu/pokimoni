@@ -18,7 +18,7 @@ type CardTileData = {
     id: string;
     name: string;
     rarity: string | null;
-    images: { small?: string; large?: string } | null;
+    images: {small?: string; large?: string} | null;
     isOwned: boolean;
     income?: number | null;
     quantity?: number;
@@ -26,9 +26,9 @@ type CardTileData = {
 };
 
 const rarityOrder: Record<string, number> = {
-    "common": 1,
-    "uncommon": 2,
-    "rare": 3,
+    common: 1,
+    uncommon: 2,
+    rare: 3,
     "double rare": 4,
     "ultra rare": 5,
     "ace spec rare": 6,
@@ -38,7 +38,7 @@ const rarityOrder: Record<string, number> = {
     "secret rare": 10,
 };
 
-export default function IncomeSlots({setId}: { setId?: string }) {
+export default function IncomeSlots({setId}: {setId?: string}) {
     const queryClient = useQueryClient();
 
     const [uid, setUid] = useState<string | null>(null);
@@ -47,7 +47,7 @@ export default function IncomeSlots({setId}: { setId?: string }) {
     const [openSlot, setOpenSlot] = useState<1 | 2 | null>(null);
     const [selectedSlots, setSelectedSlots] = useState<Record<1 | 2, UserCardWithCard | null>>({
         1: null,
-        2: null
+        2: null,
     });
 
     const {data: userCards, isLoading: cardsLoading} = useUserCards(setId);
@@ -55,33 +55,36 @@ export default function IncomeSlots({setId}: { setId?: string }) {
 
     useEffect(() => {
         if (userStats && userCards) {
-            const slot1Card = userCards.find(uc => uc.cards.id === userStats.slot_1);
-            const slot2Card = userCards.find(uc => uc.cards.id === userStats.slot_2);
+            const slot1Card = userCards.find((uc) => uc.cards.id === userStats.slot_1);
+            const slot2Card = userCards.find((uc) => uc.cards.id === userStats.slot_2);
             setSelectedSlots({
                 1: slot1Card ?? null,
                 2: slot2Card ?? null,
             });
         }
-    }, [userStats, userCards])
+    }, [userStats, userCards]);
 
     useEffect(() => {
-        const uid = JSON.parse(localStorage.getItem('user') || '{}').uid;
+        const uid = JSON.parse(localStorage.getItem("user") || "{}").uid;
         setUid(uid);
     }, []);
 
-    const cardsForTile = userCards?.map((uc) => ({
-        id: uc.cards.id,
-        name: uc.cards.name,
-        rarity: uc.cards.rarity,
-        images: uc.cards.images,
-        isOwned: uc.quantity! > 0,
-        income: uc.cards.income,
-        quantity: uc.quantity,
-        original: uc,
-    })) ?? [];
+    const cardsForTile =
+        userCards?.map((uc) => ({
+            id: uc.cards.id,
+            name: uc.cards.name,
+            rarity: uc.cards.rarity,
+            images: uc.cards.images,
+            isOwned: uc.quantity! > 0,
+            income: uc.cards.income,
+            quantity: uc.quantity,
+            original: uc,
+        })) ?? [];
 
     const sortedCards = [...cardsForTile].sort(
-        (a, b) => (rarityOrder[b.rarity?.toLowerCase() ?? "common"] || 0) - (rarityOrder[a.rarity?.toLowerCase() ?? "common"] || 0)
+        (a, b) =>
+            (rarityOrder[b.rarity?.toLowerCase() ?? "common"] || 0) -
+            (rarityOrder[a.rarity?.toLowerCase() ?? "common"] || 0),
     );
 
     const handleSelectCard = async (slot: 1 | 2, card: CardTileData) => {
@@ -93,7 +96,7 @@ export default function IncomeSlots({setId}: { setId?: string }) {
 
         const newSelectedSlots = {
             ...selectedSlots,
-            [slot]: newCardId ? card.original : null
+            [slot]: newCardId ? card.original : null,
         };
         setSelectedSlots(newSelectedSlots);
         setOpenSlot(null);
@@ -101,13 +104,13 @@ export default function IncomeSlots({setId}: { setId?: string }) {
         try {
             if (!uid) return;
 
-            const res = await fetch('/api/user/slots?uid=' + uid, {
-                method: 'PATCH',
-                headers: {'Content-Type': 'application/json'},
+            const res = await fetch("/api/user/slots?uid=" + uid, {
+                method: "PATCH",
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({uid, slot: `slot_${slot}`, card_id: newCardId}),
             });
 
-            if (!res.ok) throw new Error('Nie udało się zaktualizować slotu');
+            if (!res.ok) throw new Error("Nie udało się zaktualizować slotu");
 
             queryClient.invalidateQueries({queryKey: ["userStats"]});
             queryClient.invalidateQueries({queryKey: ["userSlots"]});
@@ -116,16 +119,13 @@ export default function IncomeSlots({setId}: { setId?: string }) {
             const resStats = await fetch(`/api/user/stats?uid=${uid}`);
             const updatedStats: UserStats = await resStats.json();
 
-            const incomePerHour =
-                (newSelectedSlots[1]?.cards?.income ?? 0) +
-                (newSelectedSlots[2]?.cards?.income ?? 0);
+            const incomePerHour = (newSelectedSlots[1]?.cards?.income ?? 0) + (newSelectedSlots[2]?.cards?.income ?? 0);
 
             const newlyEarned = await checkUserBadges(uid, updatedStats!, incomePerHour, "coins_income");
 
             if (newlyEarned && newlyEarned.length > 0) {
-                toast.info(`Zdobyłeś nowe odznaki: ${newlyEarned.map(b => b.name).join(", ")}`);
+                toast.info(`Zdobyłeś nowe odznaki: ${newlyEarned.map((b) => b.name).join(", ")}`);
             }
-
         } catch {
             setSelectedSlots(selectedSlots);
             toast.error("Nie udało się zaktualizować karty w slocie");
@@ -135,12 +135,11 @@ export default function IncomeSlots({setId}: { setId?: string }) {
     };
 
     return (
-        <div
-            className="xl:absolute xl:top-1/2 xl:right-6 flex gap-2 xl:-translate-y-1/2 z-10 mt-12 xl:mt-0 scale-90 xl:scale-100">
-            {[1, 2].map(slotNum => {
+        <div className="xl:absolute xl:top-1/2 xl:right-6 flex gap-2 xl:-translate-y-1/2 z-10 mt-12 xl:mt-0 scale-90 xl:scale-100">
+            {[1, 2].map((slotNum) => {
                 const selectedCard = selectedSlots[slotNum as 1 | 2];
 
-                const filteredCards = sortedCards.filter(card => {
+                const filteredCards = sortedCards.filter((card) => {
                     const isSelectedInOtherSlot =
                         (slotNum === 1 && selectedSlots[2]?.cards.id === card.id) ||
                         (slotNum === 2 && selectedSlots[1]?.cards.id === card.id);
@@ -150,19 +149,17 @@ export default function IncomeSlots({setId}: { setId?: string }) {
                     return true;
                 });
 
-                const uniqueCards = filteredCards.filter((card, index, self) =>
-                    index === self.findIndex(c => c.id === card.id)
+                const uniqueCards = filteredCards.filter(
+                    (card, index, self) => index === self.findIndex((c) => c.id === card.id),
                 );
 
                 return (
                     <div key={`slot-${slotNum}`} className="flex flex-col items-center">
                         {statsLoading ? (
-                            <Card
-                                className="w-[150px] md:w-[200px] aspect-[245/342] bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 group"
-                            >
+                            <Card className="w-[150px] md:w-[200px] aspect-[245/342] bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 group">
                                 <CardContent className="flex flex-col items-center justify-center h-full p-1">
-                                    <div className={'w-32 h-32'}>
-                                        <LoadingIndicator/>
+                                    <div className={"w-32 h-32"}>
+                                        <LoadingIndicator />
                                     </div>
                                 </CardContent>
                             </Card>
@@ -184,10 +181,8 @@ export default function IncomeSlots({setId}: { setId?: string }) {
                                 onClick={() => setOpenSlot(slotNum as 1 | 2)}
                             >
                                 <CardContent className="flex flex-col items-center justify-center h-full p-1">
-                                    <div
-                                        className="w-12 h-12 rounded-full bg-gray-300 group-hover:bg-blue-300 flex items-center justify-center mb-4 transition-colors duration-300">
-                                        <Package
-                                            className="h-8 w-8 text-gray-500 group-hover:text-blue-600 transition-colors duration-300"/>
+                                    <div className="w-12 h-12 rounded-full bg-gray-300 group-hover:bg-blue-300 flex items-center justify-center mb-4 transition-colors duration-300">
+                                        <Package className="h-8 w-8 text-gray-500 group-hover:text-blue-600 transition-colors duration-300" />
                                     </div>
                                     <p className="text-gray-500 group-hover:text-blue-600 font-medium text-center transition-colors duration-300">
                                         Slot na kartę #{slotNum}
@@ -208,22 +203,21 @@ export default function IncomeSlots({setId}: { setId?: string }) {
                                     <DrawerTitle>{`Wybierz kartę do slotu ${slotNum}`}</DrawerTitle>
                                 </DrawerHeader>
                                 {cardsLoading ? (
-                                    <LoadingIndicator/>
+                                    <LoadingIndicator />
                                 ) : (
                                     <div className="px-8 pt-5 overflow-y-scroll">
-                                        <div
-                                            className="grid grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6 max-w-full">
+                                        <div className="grid grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6 max-w-full">
                                             {uniqueCards.map((card, index) => (
                                                 <div
                                                     key={`${card.id}-${index}`}
                                                     onClick={() => handleSelectCard(slotNum as 1 | 2, card)}
                                                     className="cursor-pointer hover:scale-[1.03] transition-all"
                                                 >
-                                                    <CardTile {...card} visibleNames={true}/>
+                                                    <CardTile {...card} visibleNames={true} />
                                                 </div>
                                             ))}
                                         </div>
-                                        <div className={'w-full h-12'}></div>
+                                        <div className={"w-full h-12"}></div>
                                     </div>
                                 )}
                             </DrawerContent>

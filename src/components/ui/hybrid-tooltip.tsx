@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import {createContext, PropsWithChildren, useContext, useEffect, useState} from 'react';
-import {Tooltip, TooltipContent, TooltipTrigger} from './tooltip';
-import {Popover, PopoverContent, PopoverTrigger} from './popover';
-import {TooltipContentProps, TooltipProps, TooltipTriggerProps} from '@radix-ui/react-tooltip';
-import {PopoverContentProps, PopoverProps, PopoverTriggerProps} from '@radix-ui/react-popover';
+import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
+import {Tooltip, TooltipContent, TooltipTrigger} from "./tooltip";
+import {Popover, PopoverContent, PopoverTrigger} from "./popover";
+import {TooltipContentProps, TooltipProps, TooltipTriggerProps} from "@radix-ui/react-tooltip";
+import {PopoverContentProps, PopoverProps, PopoverTriggerProps} from "@radix-ui/react-popover";
 
 const TouchContext = createContext<boolean | undefined>(undefined);
 const useTouch = () => useContext(TouchContext);
@@ -14,11 +14,11 @@ export const TouchProvider = (props: PropsWithChildren) => {
 
     // Update on change - suggestion by @NickCrews below
     useEffect(() => {
-        const mq = window.matchMedia('(pointer: coarse)');
+        const mq = window.matchMedia("(pointer: coarse)");
         const update = () => setTouch(mq.matches);
         update();
-        mq.addEventListener('change', update);
-        return () => mq.removeEventListener('change', update);
+        mq.addEventListener("change", update);
+        return () => mq.removeEventListener("change", update);
     }, []);
 
     return <TouchContext.Provider value={isTouch} {...props} />;

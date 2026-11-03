@@ -1,6 +1,6 @@
-import {NextResponse} from 'next/server';
-import {supabaseServer} from '@/lib/supabaseServer';
-import bcrypt from 'bcryptjs';
+import {NextResponse} from "next/server";
+import {supabaseServer} from "@/lib/supabaseServer";
+import bcrypt from "bcryptjs";
 
 interface UserUpdatePayload {
     username?: string;
@@ -11,7 +11,7 @@ interface UserUpdatePayload {
 
 export async function PATCH(req: Request) {
     const {searchParams} = new URL(req.url);
-    const uid = searchParams.get('uid');
+    const uid = searchParams.get("uid");
 
     if (!uid) {
         return NextResponse.json({error: "Brak uid w zapytaniu"}, {status: 400});
@@ -22,18 +22,12 @@ export async function PATCH(req: Request) {
     const updates: UserUpdatePayload = {};
     if (username) updates.username = username;
     if (email) updates.email = email;
-    if (typeof avatar === 'number') updates.avatar = avatar;
+    if (typeof avatar === "number") updates.avatar = avatar;
     if (password) updates.password = await bcrypt.hash(password, 10);
 
-    const {data, error} = await supabaseServer
-        .from('users')
-        .update(updates)
-        .eq('uid', uid)
-        .select()
-        .single();
+    const {data, error} = await supabaseServer.from("users").update(updates).eq("uid", uid).select().single();
 
-    if (error)
-        return NextResponse.json({error: error.message}, {status: 500});
+    if (error) return NextResponse.json({error: error.message}, {status: 500});
 
     return NextResponse.json({
         uid: data.uid,
@@ -46,23 +40,19 @@ export async function PATCH(req: Request) {
 export async function DELETE(req: Request) {
     try {
         const {searchParams} = new URL(req.url);
-        const uid = searchParams.get('uid');
+        const uid = searchParams.get("uid");
 
         if (!uid) {
             return NextResponse.json({error: "Brak uid w zapytaniu"}, {status: 400});
         }
 
-        const {error} = await supabaseServer
-            .from("users")
-            .delete()
-            .eq("uid", uid);
+        const {error} = await supabaseServer.from("users").delete().eq("uid", uid);
 
-        if (error)
-            return NextResponse.json({error: error.message}, {status: 500});
+        if (error) return NextResponse.json({error: error.message}, {status: 500});
 
         return NextResponse.json({message: "Konto usunięte"});
     } catch (err: unknown) {
-        let message = 'Nieznany błąd';
+        let message = "Nieznany błąd";
         if (err instanceof Error) message = err.message;
         return NextResponse.json({error: message}, {status: 500});
     }

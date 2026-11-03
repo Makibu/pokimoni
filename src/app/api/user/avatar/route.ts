@@ -9,11 +9,7 @@ export async function GET(req: Request) {
         return NextResponse.json({error: "Brak uid"}, {status: 400});
     }
 
-    const {data, error} = await supabaseServer
-        .from("users")
-        .select("avatar")
-        .eq("uid", uid)
-        .single();
+    const {data, error} = await supabaseServer.from("users").select("avatar").eq("uid", uid).single();
 
     if (error) {
         return NextResponse.json({error: error.message}, {status: 500});

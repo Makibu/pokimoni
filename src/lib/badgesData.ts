@@ -1,14 +1,14 @@
 import {Award, Boxes, Coins, Crown, Gem, Package, Star, Trophy} from "lucide-react";
 
 type Badge = {
-    id: string,
-    name: string,
-    description: string,
-    type: "collection" | "rarity" | "income" | "packs",
-    amount: number | null,
-    unit: string,
-    icon: React.FC<React.SVGProps<SVGSVGElement>>,
-}
+    id: string;
+    name: string;
+    description: string;
+    type: "collection" | "rarity" | "income" | "packs";
+    amount: number | null;
+    unit: string;
+    icon: React.FC<React.SVGProps<SVGSVGElement>>;
+};
 
 export const badges: Badge[] = [
     {

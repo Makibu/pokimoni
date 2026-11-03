@@ -2,7 +2,7 @@ import {NextResponse} from "next/server";
 import {supabaseServer} from "@/lib/supabaseServer";
 
 function stringToBoard(str: string): number[][] {
-    const numbers = str.split("").map(ch => parseInt(ch, 10));
+    const numbers = str.split("").map((ch) => parseInt(ch, 10));
     const board: number[][] = [];
     for (let i = 0; i < 9; i++) {
         board.push(numbers.slice(i * 9, (i + 1) * 9));
@@ -11,10 +11,7 @@ function stringToBoard(str: string): number[][] {
 }
 
 export async function GET() {
-    const {data, error} = await supabaseServer
-        .from("daily_sudoku")
-        .select("*")
-        .single();
+    const {data, error} = await supabaseServer.from("daily_sudoku").select("*").single();
 
     if (error && error.code !== "PGRST116") {
         return NextResponse.json({error: error.message}, {status: 500});
@@ -25,8 +22,7 @@ export async function GET() {
     }
 
     const difficulties = ["easy", "medium", "medium"];
-    const randomDifficulty =
-        difficulties[Math.floor(Math.random() * difficulties.length)];
+    const randomDifficulty = difficulties[Math.floor(Math.random() * difficulties.length)];
 
     const url = "https://youdosudoku.com/api/";
 
@@ -37,10 +33,7 @@ export async function GET() {
     });
 
     if (!response.ok) {
-        return NextResponse.json(
-            {error: `Sudoku API error: ${response.statusText}`},
-            {status: response.status}
-        );
+        return NextResponse.json({error: `Sudoku API error: ${response.statusText}`}, {status: response.status});
     }
 
     const json = await response.json();

@@ -5,9 +5,9 @@ export type UserAchievement = {
 };
 
 const rarityOrder: Record<string, number> = {
-    "common": 1,
-    "uncommon": 2,
-    "rare": 3,
+    common: 1,
+    uncommon: 2,
+    rare: 3,
     "double rare": 4,
     "ultra rare": 5,
     "ace spec rare": 6,
@@ -17,10 +17,7 @@ const rarityOrder: Record<string, number> = {
     "secret rare": 10,
 };
 
-const achievementCheckers: Record<
-    string,
-    (stats: UserStats, ach: Achievement) => boolean
-> = {
+const achievementCheckers: Record<string, (stats: UserStats, ach: Achievement) => boolean> = {
     cards_overall: (stats, ach) => stats.total_unique_cards >= (ach.amount ?? Infinity),
 
     cards_duplicates: (stats, ach) => stats.total_cards >= (ach.amount ?? Infinity),
@@ -32,9 +29,7 @@ function checkCardsRarity(stats: UserStats, ach: Achievement): boolean {
     const parts = ach.type.split("_");
     const isPlus = parts[parts.length - 1] === "plus";
 
-    const rarityKey = isPlus
-        ? parts.slice(2, -1).join(" ")
-        : parts.slice(2).join(" ");
+    const rarityKey = isPlus ? parts.slice(2, -1).join(" ") : parts.slice(2).join(" ");
 
     const rarityRank = rarityOrder[rarityKey];
     if (!rarityRank) return false;
@@ -46,17 +41,13 @@ function checkCardsRarity(stats: UserStats, ach: Achievement): boolean {
                 ?.filter((r) => rarityOrder[r.rarity] >= rarityRank)
                 .reduce((sum, r) => sum + r.count, 0) ?? 0;
     } else {
-        count =
-            stats.rarityStats?.find((r) => r.rarity === rarityKey)?.count ?? 0;
+        count = stats.rarityStats?.find((r) => r.rarity === rarityKey)?.count ?? 0;
     }
 
     return count >= (ach.amount ?? Infinity);
 }
 
-export async function checkUserAchievements(
-    uid: string,
-    stats: UserStats
-) {
+export async function checkUserAchievements(uid: string, stats: UserStats) {
     const resAll = await fetch("/api/achievements");
     if (!resAll.ok) return null;
     const jsonAll = await resAll.json();

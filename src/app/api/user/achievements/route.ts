@@ -11,9 +11,11 @@ export async function GET(req: Request) {
 
     const {data, error} = await supabaseServer
         .from("user_achievements")
-        .select(`
+        .select(
+            `
                 *
-              `)
+              `,
+        )
         .eq("uid", uid);
 
     if (error) {
@@ -50,10 +52,7 @@ export async function POST(req: Request) {
         return NextResponse.json({message: "Brak nowych achievementów do odblokowania"});
     }
 
-    const {data, error} = await supabaseServer
-        .from("user_achievements")
-        .insert(newAchievements)
-        .select();
+    const {data, error} = await supabaseServer.from("user_achievements").insert(newAchievements).select();
 
     if (error) {
         return NextResponse.json({error: error.message}, {status: 500});
@@ -64,4 +63,3 @@ export async function POST(req: Request) {
         achievements: data,
     });
 }
-

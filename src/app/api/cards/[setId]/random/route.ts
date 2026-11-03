@@ -131,10 +131,7 @@ export async function GET(req: Request) {
         return NextResponse.json({error: "Brak setId w URL"}, {status: 400});
     }
 
-    const {data: cards, error} = await supabaseServer
-        .from("cards")
-        .select("*")
-        .eq("set_id", setId);
+    const {data: cards, error} = await supabaseServer.from("cards").select("*").eq("set_id", setId);
 
     if (error) {
         return NextResponse.json({error: error.message}, {status: 500});

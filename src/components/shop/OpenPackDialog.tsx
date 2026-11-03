@@ -37,7 +37,7 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
     const queryClient = useQueryClient();
     const {updateCoins} = useUserCoins();
     const {updateUserCards} = useUserCards();
-    const isMobile = useIsMobile()
+    const isMobile = useIsMobile();
 
     const [step, setStep] = useState<"start" | "revealing" | "final">("start");
     const [currentCards, setCurrentCards] = useState<RandomPacks | null>(null);
@@ -46,7 +46,7 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
     const [loading, setLoading] = useState(false);
 
     const [parameters, setParameters] = useState<CardParametersType[]>(
-        Array(5).fill({left: 0, x: 0, scale: 1, rotateY: 0})
+        Array(5).fill({left: 0, x: 0, scale: 1, rotateY: 0}),
     );
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [finalLayout, setFinalLayout] = useState<boolean>(false);
@@ -87,7 +87,7 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
 
             const newlyEarnedBadges = await checkUserBadges(uid, freshStats, 0, "all");
             if (newlyEarnedBadges?.length) {
-                toast.info(`Zdobyłeś nowe odznaki: ${newlyEarnedBadges.map(b => b.name).join(", ")}`);
+                toast.info(`Zdobyłeś nowe odznaki: ${newlyEarnedBadges.map((b) => b.name).join(", ")}`);
             }
 
             const res = await fetch(`/api/user/cards/rarity-stats?uid=${uid}`);
@@ -99,7 +99,7 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
             await queryClient.invalidateQueries({queryKey: ["achievementsNotification", uid]});
 
             if (newlyEarnedAchievements?.length) {
-                toast.info(`Zdobyłeś nowe osiągnięcia: ${newlyEarnedAchievements.map(a => a.title).join(", ")}`);
+                toast.info(`Zdobyłeś nowe osiągnięcia: ${newlyEarnedAchievements.map((a) => a.title).join(", ")}`);
             }
         } catch {
             toast.error("Coś poszło nie tak :O Spróbuj ponownie później");
@@ -193,26 +193,26 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
     }
 
     return (
-        <Dialog open={open} onOpenChange={(isOpen) => {
-            if (!isOpen) handleClose();
-        }}>
+        <Dialog
+            open={open}
+            onOpenChange={(isOpen) => {
+                if (!isOpen) handleClose();
+            }}
+        >
             <DialogContent
                 className="p-12 flex justify-center items-center flex-col"
                 onInteractOutside={(e) => e.preventDefault()}
                 onEscapeKeyDown={(e) => e.preventDefault()}
             >
-                <DialogTitle/>
+                <DialogTitle />
 
                 {step === "start" && (
                     <div
-                        className={`flex flex-col items-center justify-center gap-4 ${isMobile ? "w-full max-w-[900px]" : "w-[900px]"} h-[500px] relative`}>
+                        className={`flex flex-col items-center justify-center gap-4 ${isMobile ? "w-full max-w-[900px]" : "w-[900px]"} h-[500px] relative`}
+                    >
                         <h2 className="text-xl font-bold absolute top-0">Otwórz paczkę</h2>
-                        <img src={set?.images?.logo} alt={set?.name} className={`${isMobile && "w-[90vw] max-w-96"}`}/>
-                        <Button
-                            onClick={handleNext}
-                            className="absolute bottom-0"
-                            disabled={loading}
-                        >
+                        <img src={set?.images?.logo} alt={set?.name} className={`${isMobile && "w-[90vw] max-w-96"}`} />
+                        <Button onClick={handleNext} className="absolute bottom-0" disabled={loading}>
                             {loading ? "Ładowanie..." : `${price} monet`}
                         </Button>
                     </div>
@@ -220,7 +220,7 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
 
                 {(step === "revealing" || step === "final") && currentCards && (
                     <div
-                        key={currentCards.pack.map(c => c.id).join("-")}
+                        key={currentCards.pack.map((c) => c.id).join("-")}
                         className="w-[900px] h-[500px] flex relative justify-center items-center"
                     >
                         {parameters.map((param, i) => {
@@ -250,10 +250,12 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
                                     }}
                                     transition={{type: "spring", stiffness: 500, damping: 30}}
                                 >
-                                    <img src={"/card_backside.png"} alt="Card Backside"
-                                         className={"absolute backface-hidden"}/>
-                                    <div
-                                        className="absolute w-full h-full backface-hidden rotate-y-180 rounded-md overflow-hidden">
+                                    <img
+                                        src={"/card_backside.png"}
+                                        alt="Card Backside"
+                                        className={"absolute backface-hidden"}
+                                    />
+                                    <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-md overflow-hidden">
                                         {currentCards.pack[i]?.images?.small && (
                                             <img
                                                 src={currentCards.pack[i].images.small}
@@ -267,9 +269,7 @@ export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDial
                         })}
 
                         <div className="bottom-0 absolute">
-                            <Button onClick={handleNext}>
-                                {step === "final" ? "Zamknij" : "Next"}
-                            </Button>
+                            <Button onClick={handleNext}>{step === "final" ? "Zamknij" : "Next"}</Button>
                         </div>
                     </div>
                 )}

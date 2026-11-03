@@ -9,10 +9,7 @@ export async function GET(req: Request) {
         return NextResponse.json({error: "Brak uid w zapytaniu"}, {status: 400});
     }
 
-    const {data, error} = await supabaseServer
-        .from("user_badges")
-        .select("badge_id")
-        .eq("user_id", uid);
+    const {data, error} = await supabaseServer.from("user_badges").select("badge_id").eq("user_id", uid);
 
     if (error) {
         return NextResponse.json({error: error.message}, {status: 500});
@@ -23,21 +20,19 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
     const body = await req.json();
-    const {uid, badges}: { uid: string; badges: string[] } = body;
+    const {uid, badges}: {uid: string; badges: string[]} = body;
 
     if (!uid || !badges?.length) {
         return NextResponse.json({error: "Brak uid lub badges w body"}, {status: 400});
     }
 
-    const {data, error} = await supabaseServer
-        .from("user_badges")
-        .insert(
-            badges.map(badgeId => ({
-                user_id: uid,
-                badge_id: badgeId,
-                acquired_at: new Date().toISOString()
-            }))
-        );
+    const {data, error} = await supabaseServer.from("user_badges").insert(
+        badges.map((badgeId) => ({
+            user_id: uid,
+            badge_id: badgeId,
+            acquired_at: new Date().toISOString(),
+        })),
+    );
 
     if (error) {
         return NextResponse.json({error: error.message}, {status: 500});

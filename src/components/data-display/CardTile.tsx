@@ -1,39 +1,41 @@
-import {Card} from "@/lib/types"
+import {Card} from "@/lib/types";
 import Image from "next/image";
 
 export default function CardTile({
-                                     name,
-                                     rarity,
-                                     images,
-                                     isOwned,
-                                     visibleNames,
-                                     income,
-                                     className,
-                                     isInIndex,
-                                 }: Card & {
-    isOwned?: boolean,
-    visibleNames?: boolean,
-    className?: string,
-    isInIndex?: boolean
+    name,
+    rarity,
+    images,
+    isOwned,
+    visibleNames,
+    income,
+    className,
+    isInIndex,
+}: Card & {
+    isOwned?: boolean;
+    visibleNames?: boolean;
+    className?: string;
+    isInIndex?: boolean;
 }) {
     return (
-        <div
-            className={`rounded-xl flex flex-col justify-center relative group shadow-sm ${className}`}>
+        <div className={`rounded-xl flex flex-col justify-center relative group shadow-sm ${className}`}>
             {isOwned ? (
                 <div className={`aspect-[245/342] ${isInIndex && "w-[150px] md:w-[200px]"}`}>
-                    <Image src={images!.small as string} alt={name || "card"} width={300} height={300}/>
+                    <Image src={images!.small as string} alt={name || "card"} width={300} height={300} />
                 </div>
             ) : (
                 <div
-                    className={`aspect-[245/342] ${isInIndex && "w-[150px] md:w-[200px]"} bg-gray-700 flex items-center justify-center rounded-xl px-2 border-12 border-gray-400 relative`}>
+                    className={`aspect-[245/342] ${isInIndex && "w-[150px] md:w-[200px]"} bg-gray-700 flex items-center justify-center rounded-xl px-2 border-12 border-gray-400 relative`}
+                >
                     <span
-                        className={`text-gray-400 break-all text-center ${visibleNames ? "text-xl md:text-2xl" : "text-2xl md:text-5xl"}`}>{visibleNames ? name : "???"}</span>
-                    <span className={'absolute bottom-6 text-gray-400 text-base md:text-xl text-center'}>{rarity}</span>
+                        className={`text-gray-400 break-all text-center ${visibleNames ? "text-xl md:text-2xl" : "text-2xl md:text-5xl"}`}
+                    >
+                        {visibleNames ? name : "???"}
+                    </span>
+                    <span className={"absolute bottom-6 text-gray-400 text-base md:text-xl text-center"}>{rarity}</span>
                 </div>
             )}
             <div className="absolute w-full bottom-0 left-0 z-10 overflow-hidden rounded-b-md">
-                <div
-                    className="absolute inset-0 bg-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-md">
+                <div className="absolute inset-0 bg-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-md">
                     <div className="relative px-3 py-2">
                         <h2 className="text-lg font-semibold">{name}</h2>
                         <div className="flex justify-between text-gray-800 -mt-1">
@@ -45,11 +47,14 @@ export default function CardTile({
             </div>
             {income && (
                 <div
-                    className={'absolute -top-4 -right-4 bg-white/90 aspect-square p-2 w-12 flex justify-center items-center gap-[1px] rounded-full z-10 shadow-md border-2 border-yellow-300'}>
-                    <span className={'font-semibold'}>{income}</span>
-                    <sub className={'text-muted-foreground text-[9px]'}>/hr</sub>
+                    className={
+                        "absolute -top-4 -right-4 bg-white/90 aspect-square p-2 w-12 flex justify-center items-center gap-[1px] rounded-full z-10 shadow-md border-2 border-yellow-300"
+                    }
+                >
+                    <span className={"font-semibold"}>{income}</span>
+                    <sub className={"text-muted-foreground text-[9px]"}>/hr</sub>
                 </div>
             )}
         </div>
-    )
+    );
 }

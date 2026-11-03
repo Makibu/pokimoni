@@ -1,18 +1,18 @@
-import {NextResponse} from 'next/server';
-import {supabaseServer} from '@/lib/supabaseServer';
+import {NextResponse} from "next/server";
+import {supabaseServer} from "@/lib/supabaseServer";
 
 export async function PATCH(req: Request) {
     const body = await req.json();
     const {uid, slot, card_id} = body;
 
-    if (!uid || !slot || !['slot_1', 'slot_2'].includes(slot)) {
-        return NextResponse.json({error: 'Brak uid lub niepoprawny slot'}, {status: 400});
+    if (!uid || !slot || !["slot_1", "slot_2"].includes(slot)) {
+        return NextResponse.json({error: "Brak uid lub niepoprawny slot"}, {status: 400});
     }
 
     const {data, error} = await supabaseServer
-        .from('user_stats')
+        .from("user_stats")
         .update({[slot]: card_id ?? null})
-        .eq('uid', uid)
+        .eq("uid", uid)
         .select()
         .single();
 
@@ -33,12 +33,14 @@ export async function GET(req: Request) {
 
     const {data, error} = await supabaseServer
         .from("user_stats")
-        .select(`
+        .select(
+            `
             slot_1,
             slot_2,
             cards_1:slot_1(id, name, rarity, income),
             cards_2:slot_2(id, name, rarity, income)
-        `)
+        `,
+        )
         .eq("uid", uid)
         .single();
 
@@ -48,4 +50,3 @@ export async function GET(req: Request) {
 
     return NextResponse.json({slots: data});
 }
-

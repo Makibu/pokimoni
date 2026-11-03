@@ -1,7 +1,11 @@
 import {useQuery} from "@tanstack/react-query";
 
 export default function useSets() {
-    const {data: setList, isLoading, error} = useQuery({
+    const {
+        data: setList,
+        isLoading,
+        error,
+    } = useQuery({
         queryKey: ["sets"],
         queryFn: async () => {
             const res = await fetch("/api/sets");

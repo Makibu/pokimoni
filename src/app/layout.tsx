@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     description: "Super duper pokimoni game",
 };
 
-export default function RootLayout({children}: { children: React.ReactNode }) {
+export default function RootLayout({children}: {children: React.ReactNode}) {
     return (
         <html lang="en">
-        <body className={`${sora.className} antialiased`}>
-        <ClientLayout>{children}</ClientLayout>
-        </body>
+            <body className={`${sora.className} antialiased`}>
+                <ClientLayout>{children}</ClientLayout>
+            </body>
         </html>
     );
 }

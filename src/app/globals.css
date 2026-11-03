@@ -150,11 +150,11 @@
 }
 
 .primary-hover {
-    @apply border-2 border-blue-200 hover:border-blue-300 hover:shadow-lg rounded-md
+    @apply border-2 border-blue-200 hover:border-blue-300 hover:shadow-lg rounded-md;
 }
 
 .shop-card-border {
-    @apply border-2 border-blue-300 hover:border-blue-500 rounded-xl
+    @apply border-2 border-blue-300 hover:border-blue-500 rounded-xl;
 }
 
 .perspective-1000 {

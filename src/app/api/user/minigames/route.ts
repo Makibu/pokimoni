@@ -28,10 +28,7 @@ export async function POST(req: Request) {
     const {uid, gameName} = body;
 
     if (!uid || !gameName) {
-        return NextResponse.json(
-            {error: "Brak uid lub gameName w body"},
-            {status: 400}
-        );
+        return NextResponse.json({error: "Brak uid lub gameName w body"}, {status: 400});
     }
 
     const validColumns = ["sudoku_flag", "minesweeper_flag"];
@@ -43,10 +40,7 @@ export async function POST(req: Request) {
     const updateObj: Record<string, boolean> = {};
     updateObj[gameName] = true;
 
-    const {error} = await supabaseServer
-        .from("user_stats")
-        .update(updateObj)
-        .eq("uid", uid);
+    const {error} = await supabaseServer.from("user_stats").update(updateObj).eq("uid", uid);
 
     if (error) return NextResponse.json({error: error.message}, {status: 500});
 

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {useQuery} from "@tanstack/react-query";
 import {Card} from "@/lib/types";
@@ -11,9 +11,9 @@ import {useUserCards} from "@/hooks/queries/useUserCards";
 import {useAuth} from "@/context/authContext";
 
 const rarityOrder: Record<string, number> = {
-    "common": 1,
-    "uncommon": 2,
-    "rare": 3,
+    common: 1,
+    uncommon: 2,
+    rare: 3,
     "double rare": 4,
     "ultra rare": 5,
     "ace spec rare": 6,
@@ -30,11 +30,15 @@ export default function IndexPage() {
     const [sort, setSort] = useState<string>("rarity-asc");
     const [activeFilters, setActiveFilters] = useState<string[]>(rarityList);
     const [showOwnedOnly, setShowOwnedOnly] = useState<boolean>(false);
-    const {settings} = useAuth()
+    const {settings} = useAuth();
 
-    const {id} = useParams<{ id: string }>();
+    const {id} = useParams<{id: string}>();
 
-    const {data: cardList, isLoading: isCardsLoading, error: cardsError} = useQuery({
+    const {
+        data: cardList,
+        isLoading: isCardsLoading,
+        error: cardsError,
+    } = useQuery({
         queryKey: ["cards", id],
         queryFn: async ({signal}) => {
             const res = await fetch(`/api/cards/${id}`, {signal});
@@ -52,18 +56,18 @@ export default function IndexPage() {
     const cards: Card[] = cardList?.cards || [];
     const userCardsList = userCards || [];
 
-    const userCardsMap: Record<string, { acquired_at: string }> = {};
-    userCardsList.forEach(uc => {
+    const userCardsMap: Record<string, {acquired_at: string}> = {};
+    userCardsList.forEach((uc) => {
         userCardsMap[uc.card_id] = {acquired_at: uc.acquired_at ?? new Date().toISOString()};
     });
 
-    const mergedCards: (Card & { acquired_at?: string; isOwned: boolean })[] = cards.map(card => ({
+    const mergedCards: (Card & {acquired_at?: string; isOwned: boolean})[] = cards.map((card) => ({
         ...card,
         acquired_at: card.id ? userCardsMap[card.id]?.acquired_at : undefined,
         isOwned: !!card.id && !!userCardsMap[card.id],
     }));
 
-    const sortedCards: (Card & { acquired_at?: string; isOwned: boolean })[] = mergedCards.slice().sort((a, b) => {
+    const sortedCards: (Card & {acquired_at?: string; isOwned: boolean})[] = mergedCards.slice().sort((a, b) => {
         const aRarity = rarityOrder[a.rarity?.toLowerCase() || "common"] || 0;
         const bRarity = rarityOrder[b.rarity?.toLowerCase() || "common"] || 0;
         if (aRarity !== bRarity) return aRarity - bRarity;
@@ -71,7 +75,7 @@ export default function IndexPage() {
         const aNum = parseInt(a.id?.split("-")[1] || "0", 10);
         const bNum = parseInt(b.id?.split("-")[1] || "0", 10);
         return aNum - bNum;
-    })
+    });
 
     function resetFilters() {
         setSort("rarity-asc");
@@ -79,9 +83,9 @@ export default function IndexPage() {
     }
 
     const filteredCards = sortedCards
-        .filter(card => activeFilters.includes(card.rarity?.toLowerCase() || ""))
-        .filter(card => card.name?.toLowerCase().includes(search.toLowerCase()) || search === "")
-        .filter(card => !showOwnedOnly || card.isOwned)
+        .filter((card) => activeFilters.includes(card.rarity?.toLowerCase() || ""))
+        .filter((card) => card.name?.toLowerCase().includes(search.toLowerCase()) || search === "")
+        .filter((card) => !showOwnedOnly || card.isOwned)
         .sort((a, b) => {
             switch (sort) {
                 case "rarity-asc":
@@ -103,9 +107,12 @@ export default function IndexPage() {
 
     return (
         <div
-            className={'overflow-x-hidden flex flex-col px-6 md:px-16 lg:px-32 pb-32 bg-gradient-to-br from-white via-blue-50/30 to-slate-50'}>
-            <div className={'flex mt-32 mb-6 z-10 items-center gap-4'}>
-                <SearchFilter onSearch={setSearch}/>
+            className={
+                "overflow-x-hidden flex flex-col px-6 md:px-16 lg:px-32 pb-32 bg-gradient-to-br from-white via-blue-50/30 to-slate-50"
+            }
+        >
+            <div className={"flex mt-32 mb-6 z-10 items-center gap-4"}>
+                <SearchFilter onSearch={setSearch} />
                 <CardFilter
                     rarityList={rarityList}
                     activeFilters={activeFilters}
@@ -117,12 +124,12 @@ export default function IndexPage() {
                     setShowOwnedOnly={setShowOwnedOnly}
                 />
             </div>
-            <div className={'flex gap-8 flex-wrap justify-center'}>
+            <div className={"flex gap-8 flex-wrap justify-center"}>
                 {filteredCards.map((card, index) => (
-                    <CardTile key={index} {...card} visibleNames={settings.showHiddenPokemonNames} isInIndex/>
+                    <CardTile key={index} {...card} visibleNames={settings.showHiddenPokemonNames} isInIndex />
                 ))}
             </div>
-            <ScrollButton/>
+            <ScrollButton />
         </div>
     );
 }

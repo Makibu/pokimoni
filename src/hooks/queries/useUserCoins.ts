@@ -13,13 +13,13 @@ type UpdateCoinsInput = {
 
 export const useUserCoins = () => {
     const queryClient = useQueryClient();
-    const [uid, setUid] = useState<string | null>(null)
+    const [uid, setUid] = useState<string | null>(null);
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user') || '{}')
-        const storedUid = user.uid
-        if (storedUid) setUid(storedUid)
-    }, [])
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        const storedUid = user.uid;
+        if (storedUid) setUid(storedUid);
+    }, []);
 
     const {data, isLoading, error} = useQuery<CoinsData>({
         queryKey: ["coins", uid],

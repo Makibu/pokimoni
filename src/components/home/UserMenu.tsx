@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
@@ -23,14 +23,14 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger
+    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 export default function UserMenu() {
-    const {user, signOut, updateUser, settings, setSettings} = useAuth()
-    const isMobile = useIsMobile()
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
-    const [activeTab, setActiveTab] = useState("profile")
+    const {user, signOut, updateUser, settings, setSettings} = useAuth();
+    const isMobile = useIsMobile();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState("profile");
     const [confirmStep, setConfirmStep] = useState(false);
 
     const [username, setUsername] = useState(user?.username || "");
@@ -38,12 +38,12 @@ export default function UserMenu() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const [uid, setUid] = useState<string | null>(null)
-    const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null)
-    const [currentAvatar, setCurrentAvatar] = useState<number | null>(null)
+    const [uid, setUid] = useState<string | null>(null);
+    const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
+    const [currentAvatar, setCurrentAvatar] = useState<number | null>(null);
 
     useEffect(() => {
-        const uid = JSON.parse(localStorage.getItem('user') || '{}').uid;
+        const uid = JSON.parse(localStorage.getItem("user") || "{}").uid;
         setUid(uid);
     }, []);
 
@@ -51,9 +51,8 @@ export default function UserMenu() {
         if (!uid) return;
 
         const fetchAvatar = async () => {
-
             const res = await fetch(`/api/user/avatar?uid=${uid}`);
-            if (!res.ok) return null
+            if (!res.ok) return null;
             const data = await res.json();
             if (data.avatar) {
                 setCurrentAvatar(data.avatar);
@@ -67,23 +66,23 @@ export default function UserMenu() {
     useEffect(() => {
         setUsername(user?.username || "");
         setEmail(user?.email || "");
-        setCurrentAvatar(user?.avatar || null)
-        setSelectedAvatar(user?.avatar || null)
+        setCurrentAvatar(user?.avatar || null);
+        setSelectedAvatar(user?.avatar || null);
     }, [user]);
 
     const handleProfileClick = () => {
-        setActiveTab("profile")
-        setIsDialogOpen(true)
-    }
+        setActiveTab("profile");
+        setIsDialogOpen(true);
+    };
 
     const handleSettingsClick = () => {
-        setActiveTab("settings")
-        setIsDialogOpen(true)
-    }
+        setActiveTab("settings");
+        setIsDialogOpen(true);
+    };
 
     const handleSaveProfile = async () => {
         if (password && password !== confirmPassword) {
-            toast.error("Hasła nie są takie same!!!")
+            toast.error("Hasła nie są takie same!!!");
             return;
         }
 
@@ -92,16 +91,16 @@ export default function UserMenu() {
                 username,
                 email,
                 password: password || undefined,
-                avatar: selectedAvatar ?? currentAvatar
-            })
-            setCurrentAvatar(selectedAvatar)
+                avatar: selectedAvatar ?? currentAvatar,
+            });
+            setCurrentAvatar(selectedAvatar);
             toast.success("Profil zaktualizowany pomyślnie!");
             setPassword("");
             setConfirmPassword("");
         } catch {
             toast.error("Wystąpił błąd przy aktualizacji profilu");
         }
-    }
+    };
 
     const handleDeleteConfirm = async () => {
         try {
@@ -118,12 +117,12 @@ export default function UserMenu() {
 
     return (
         <>
-            {!isMobile && (<span>Witaj, {user?.username}</span>)}
+            {!isMobile && <span>Witaj, {user?.username}</span>}
             <DropdownMenu>
-                <DropdownMenuTrigger className={'rounded-full cursor-pointer'}>
+                <DropdownMenuTrigger className={"rounded-full cursor-pointer"}>
                     <Avatar>
-                        {(selectedAvatar || currentAvatar) ? (
-                            <AvatarImage src={`/avatars/avatar-${selectedAvatar ?? currentAvatar}.webp`}/>
+                        {selectedAvatar || currentAvatar ? (
+                            <AvatarImage src={`/avatars/avatar-${selectedAvatar ?? currentAvatar}.webp`} />
                         ) : (
                             <AvatarFallback className="bg-blue-500 text-white text-xl">
                                 {user?.username?.charAt(0)}
@@ -131,15 +130,15 @@ export default function UserMenu() {
                         )}
                     </Avatar>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className={'mr-6'}>
+                <DropdownMenuContent className={"mr-6"}>
                     <DropdownMenuItem onClick={handleProfileClick}>
-                        <User/> Profil
+                        <User /> Profil
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleSettingsClick}>
-                        <Settings/> Ustawienia
+                        <Settings /> Ustawienia
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={signOut} variant={'destructive'}>
-                        <LogOut/> Wyloguj
+                    <DropdownMenuItem onClick={signOut} variant={"destructive"}>
+                        <LogOut /> Wyloguj
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
@@ -163,17 +162,22 @@ export default function UserMenu() {
 
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                         <TabsList className="grid w-full grid-cols-2 gap-2">
-                            <TabsTrigger value="profile" className={'cursor-pointer'}>Profil</TabsTrigger>
-                            <TabsTrigger value="settings" className={'cursor-pointer'}>Ustawienia</TabsTrigger>
+                            <TabsTrigger value="profile" className={"cursor-pointer"}>
+                                Profil
+                            </TabsTrigger>
+                            <TabsTrigger value="settings" className={"cursor-pointer"}>
+                                Ustawienia
+                            </TabsTrigger>
                         </TabsList>
 
                         <TabsContent value="profile" className="space-y-6 mt-6">
                             <div className="space-y-4">
                                 <div className="flex items-center space-x-4">
                                     <Avatar className="h-20 w-20">
-                                        {(selectedAvatar || currentAvatar) ? (
+                                        {selectedAvatar || currentAvatar ? (
                                             <AvatarImage
-                                                src={`/avatars/avatar-${selectedAvatar ?? currentAvatar}.webp`}/>
+                                                src={`/avatars/avatar-${selectedAvatar ?? currentAvatar}.webp`}
+                                            />
                                         ) : (
                                             <AvatarFallback className="bg-blue-500 text-white text-xl">
                                                 {user?.username?.charAt(0)}
@@ -186,8 +190,7 @@ export default function UserMenu() {
                                     </div>
                                 </div>
 
-
-                                <Separator/>
+                                <Separator />
 
                                 <div className="flex flex-col gap-3 items-start">
                                     <Label className="text-base">Avatar</Label>
@@ -212,31 +215,47 @@ export default function UserMenu() {
                                     </div>
                                 </div>
 
-                                <Separator/>
+                                <Separator />
                                 <div className="grid gap-4">
                                     <div className="grid gap-2">
                                         <Label htmlFor="username">Nazwa użytkownika</Label>
-                                        <Input id="username" value={username}
-                                               onChange={(e) => setUsername(e.target.value)}/>
+                                        <Input
+                                            id="username"
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value)}
+                                        />
                                     </div>
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="email">Email</Label>
-                                        <Input id="email" type="email" value={email}
-                                               onChange={(e) => setEmail(e.target.value)}/>
+                                        <Input
+                                            id="email"
+                                            type="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                        />
                                     </div>
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="password">Nowe hasło</Label>
-                                        <Input id="password" type="password" placeholder="Wprowadź nowe hasło"
-                                               value={password} onChange={(e) => setPassword(e.target.value)}/>
+                                        <Input
+                                            id="password"
+                                            type="password"
+                                            placeholder="Wprowadź nowe hasło"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                        />
                                     </div>
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="confirm-password">Potwierdź hasło</Label>
-                                        <Input id="confirm-password" type="password"
-                                               placeholder="Potwierdź nowe hasło" value={confirmPassword}
-                                               onChange={(e) => setConfirmPassword(e.target.value)}/>
+                                        <Input
+                                            id="confirm-password"
+                                            type="password"
+                                            placeholder="Potwierdź nowe hasło"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                        />
                                     </div>
                                 </div>
 
@@ -249,32 +268,35 @@ export default function UserMenu() {
                                             className="flex items-center gap-2"
                                             onClick={() => setConfirmStep(true)}
                                         >
-                                            <Trash2 className="h-4 w-4"/>
+                                            <Trash2 className="h-4 w-4" />
                                             Usuń konto
                                         </Button>
                                     ) : (
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
                                                 <Button variant="destructive" className="flex items-center gap-2">
-                                                    <Trash2 className="h-4 w-4"/>
+                                                    <Trash2 className="h-4 w-4" />
                                                     Na pewno?
                                                 </Button>
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>
-                                                    <AlertDialogTitle className={'text-red-500 font-bold'}>Trwałe
-                                                        usunięcie
-                                                        konta</AlertDialogTitle>
+                                                    <AlertDialogTitle className={"text-red-500 font-bold"}>
+                                                        Trwałe usunięcie konta
+                                                    </AlertDialogTitle>
                                                     <AlertDialogDescription>
                                                         To spowoduje trwałe usunięcie Twojego konta oraz wszystkich
                                                         danych. Operacji nie będzie można cofnąć.
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
-                                                    <AlertDialogCancel
-                                                        onClick={() => setConfirmStep(false)}>Anuluj</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={handleDeleteConfirm}
-                                                                       className={'bg-red-500 hover:bg-red-600'}>
+                                                    <AlertDialogCancel onClick={() => setConfirmStep(false)}>
+                                                        Anuluj
+                                                    </AlertDialogCancel>
+                                                    <AlertDialogAction
+                                                        onClick={handleDeleteConfirm}
+                                                        className={"bg-red-500 hover:bg-red-600"}
+                                                    >
                                                         Usuń konto
                                                     </AlertDialogAction>
                                                 </AlertDialogFooter>
@@ -292,39 +314,49 @@ export default function UserMenu() {
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
                                             <div className="space-y-0.5">
-                                                <Label className="text-base">Widoczne nazwy nieodkrytych
-                                                    Pokémon</Label>
+                                                <Label className="text-base">Widoczne nazwy nieodkrytych Pokémon</Label>
                                                 <p className="text-sm text-muted-foreground">
                                                     Pokazuj nazwy Pokémon, których jeszcze nie złapałeś
                                                 </p>
                                             </div>
-                                            <Switch checked={settings.showHiddenPokemonNames}
-                                                    onCheckedChange={(value) => setSettings(prev => ({
+                                            <Switch
+                                                checked={settings.showHiddenPokemonNames}
+                                                onCheckedChange={(value) =>
+                                                    setSettings((prev) => ({
                                                         ...prev,
-                                                        showHiddenPokemonNames: value
-                                                    }))}/>
+                                                        showHiddenPokemonNames: value,
+                                                    }))
+                                                }
+                                            />
                                         </div>
                                     </div>
                                 </div>
 
-                                <Separator/>
+                                <Separator />
 
                                 <div>
                                     <h3 className="text-lg font-semibold mb-4">Ustawienia interfejsu</h3>
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
                                             <div className="space-y-0.5">
-                                                <Label className="text-base">Tryb ciemny <sup
-                                                    className={'text-red-400'}>Tymczasowo wyłączone</sup></Label>
-                                                <p className="text-sm text-muted-foreground">Przełącz na ciemny
-                                                    motyw
-                                                    interfejsu</p>
+                                                <Label className="text-base">
+                                                    Tryb ciemny{" "}
+                                                    <sup className={"text-red-400"}>Tymczasowo wyłączone</sup>
+                                                </Label>
+                                                <p className="text-sm text-muted-foreground">
+                                                    Przełącz na ciemny motyw interfejsu
+                                                </p>
                                             </div>
-                                            <Switch checked={settings.darkMode} disabled
-                                                    onCheckedChange={(value) => setSettings(prev => ({
+                                            <Switch
+                                                checked={settings.darkMode}
+                                                disabled
+                                                onCheckedChange={(value) =>
+                                                    setSettings((prev) => ({
                                                         ...prev,
-                                                        darkMode: value
-                                                    }))}/>
+                                                        darkMode: value,
+                                                    }))
+                                                }
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -334,5 +366,5 @@ export default function UserMenu() {
                 </DialogContent>
             </Dialog>
         </>
-    )
+    );
 }

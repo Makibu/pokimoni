@@ -1,10 +1,10 @@
-import {NextResponse} from 'next/server';
-import {supabaseServer} from '@/lib/supabaseServer';
+import {NextResponse} from "next/server";
+import {supabaseServer} from "@/lib/supabaseServer";
 
 export async function GET(req: Request) {
     const {searchParams} = new URL(req.url);
-    const uid = searchParams.get('uid');
-    const setId = searchParams.get('setId');
+    const uid = searchParams.get("uid");
+    const setId = searchParams.get("setId");
 
     if (!uid) {
         return NextResponse.json({error: "Brak uid w zapytaniu"}, {status: 400});
@@ -12,17 +12,19 @@ export async function GET(req: Request) {
 
     let query = supabaseServer
         .from("user_cards")
-        .select(`
+        .select(
+            `
                 id,
                 card_id,
                 quantity,
                 acquired_at,
                 cards (*)
-              `)
+              `,
+        )
         .eq("uid", uid);
 
     if (setId) {
-        query = query.eq('cards.set_id', setId);
+        query = query.eq("cards.set_id", setId);
     }
 
     const {data, error} = await query;
@@ -66,9 +68,7 @@ export async function POST(req: Request) {
             if (updateError) throw new Error(updateError.message);
         } else {
             uniqueCardsAdded += 1;
-            const {error: insertError} = await supabaseServer
-                .from("user_cards")
-                .insert({uid, card_id, quantity});
+            const {error: insertError} = await supabaseServer.from("user_cards").insert({uid, card_id, quantity});
 
             if (insertError) throw new Error(insertError.message);
         }
@@ -93,13 +93,11 @@ export async function POST(req: Request) {
 
     if (updateStatsError) throw new Error(updateStatsError.message);
 
-    const {error: packError} = await supabaseServer
-        .from("user_packs")
-        .insert({
-            uid,
-            set_id,
-            opened_at: new Date().toISOString(),
-        });
+    const {error: packError} = await supabaseServer.from("user_packs").insert({
+        uid,
+        set_id,
+        opened_at: new Date().toISOString(),
+    });
 
     if (packError) throw new Error(packError.message);
 
@@ -118,4 +116,3 @@ export async function POST(req: Request) {
         userStats: newStats,
     });
 }
-

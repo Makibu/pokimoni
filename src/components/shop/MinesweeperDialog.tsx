@@ -57,12 +57,12 @@ export default function MinesweeperDialog({open, setOpen}: MinesweeperDialogProp
                 savedLives = parsed.lives;
             } else {
                 userBoard = minesweeper.board.map((row: Cell[]) =>
-                    row.map((cell: Cell) => ({value: cell.value, revealed: cell.revealed, flagged: false}))
+                    row.map((cell: Cell) => ({value: cell.value, revealed: cell.revealed, flagged: false})),
                 );
             }
         } else {
             userBoard = minesweeper.board.map((row: Cell[]) =>
-                row.map((cell: Cell) => ({value: cell.value, revealed: cell.revealed, flagged: false}))
+                row.map((cell: Cell) => ({value: cell.value, revealed: cell.revealed, flagged: false})),
             );
         }
 
@@ -96,7 +96,7 @@ export default function MinesweeperDialog({open, setOpen}: MinesweeperDialogProp
                 } else {
                     setLives(0);
                     setGameOver(true);
-                    updateGameFlag("minesweeper_flag")
+                    updateGameFlag("minesweeper_flag");
                     toast.error("💥 Koniec gry!");
                     for (let i = 0; i < newBoard.length; i++) {
                         for (let j = 0; j < newBoard[i].length; j++) {
@@ -121,7 +121,7 @@ export default function MinesweeperDialog({open, setOpen}: MinesweeperDialogProp
                                 if (nr >= 0 && nr < newBoard.length && nc >= 0 && nc < newBoard[0].length) {
                                     floodReveal(nr, nc);
                                 }
-                            })
+                            }),
                         );
                     }
                 };
@@ -143,7 +143,7 @@ export default function MinesweeperDialog({open, setOpen}: MinesweeperDialogProp
         if (revealedAndFlagged === totalCells) {
             setGameOver(true);
             toast.success("🎉 Wygrałeś!");
-            await updateGameFlag("minesweeper_flag")
+            await updateGameFlag("minesweeper_flag");
             let reward = 0;
             if (difficulty === "easy") reward = 100;
             if (difficulty === "medium") reward = 250;
@@ -167,16 +167,16 @@ export default function MinesweeperDialog({open, setOpen}: MinesweeperDialogProp
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="w-full md:w-[unset] flex flex-col">
                 <DialogTitle></DialogTitle>
-                <div className={'flex w-full gap-4 h-8'}>
+                <div className={"flex w-full gap-4 h-8"}>
                     {difficulty && (
-                        <div
-                            className="px-2 h-full flex items-center bg-gray-100 rounded-xl text-sm shadow-sm border-[1px]">
+                        <div className="px-2 h-full flex items-center bg-gray-100 rounded-xl text-sm shadow-sm border-[1px]">
                             {difficulty}
                         </div>
                     )}
                     <div
                         className={`${flagMode ? "shadow-inner bg-gray-200" : "shadow-md bg-gray-100"} border-[1px] select-none border-2 aspect-square transition-all h-full rounded-md cursor-pointer grid place-items-center`}
-                        onClick={() => setFlagMode(!flagMode)}>
+                        onClick={() => setFlagMode(!flagMode)}
+                    >
                         🚩
                     </div>
 
@@ -188,15 +188,12 @@ export default function MinesweeperDialog({open, setOpen}: MinesweeperDialogProp
                                     i >= lives ? "opacity-40" : ""
                                 }`}
                             >
-                                    ❤️
-                                </span>
+                                ❤️
+                            </span>
                         ))}
                     </div>
 
-                    <div className="ml-2 font-bold text-lg">
-                        Bomby: {remainingMines}
-                    </div>
-
+                    <div className="ml-2 font-bold text-lg">Bomby: {remainingMines}</div>
                 </div>
 
                 <div
@@ -211,27 +208,28 @@ export default function MinesweeperDialog({open, setOpen}: MinesweeperDialogProp
                                 className={`
           w-6 h-6 sm:w-8 sm:h-8
           flex items-center justify-center border text-sm sm:text-sm font-bold select-none cursor-pointer
-          ${cell.revealed
-                                    ? cell.value === "B"
-                                        ? "bg-red-400 text-white"
-                                        : "bg-gray-200"
-                                    : "bg-gray-100 hover:bg-gray-300"}
+          ${
+              cell.revealed
+                  ? cell.value === "B"
+                      ? "bg-red-400 text-white"
+                      : "bg-gray-200"
+                  : "bg-gray-100 hover:bg-gray-300"
+          }
         `}
                             >
                                 {cell.revealed
                                     ? cell.value === "B"
                                         ? "💣"
                                         : cell.value === 0
-                                            ? ""
-                                            : cell.value
+                                          ? ""
+                                          : cell.value
                                     : cell.flagged
-                                        ? "🚩"
-                                        : ""}
+                                      ? "🚩"
+                                      : ""}
                             </div>
-                        ))
+                        )),
                     )}
                 </div>
-
             </DialogContent>
         </Dialog>
     );

@@ -1,15 +1,15 @@
 export interface Achievement {
     id: number;
-    description: string
+    description: string;
     title: string;
-    reward: string[]
-    rarity: string
-    type: string
-    amount: number
+    reward: string[];
+    rarity: string;
+    type: string;
+    amount: number;
 }
 
-export type CardImages = { large: string; small: string }
-export type SetImages = { logo: string; symbol: string }
+export type CardImages = {large: string; small: string};
+export type SetImages = {logo: string; symbol: string};
 
 export interface BadgeType {
     id: number;
@@ -21,40 +21,40 @@ export interface BadgeType {
 export interface Card {
     id: string;
     name: string;
-    subtypes?: string[]
-    set_id?: string
-    rarity: string
-    images: CardImages
-    income: number | null
+    subtypes?: string[];
+    set_id?: string;
+    rarity: string;
+    images: CardImages;
+    income: number | null;
 }
 
 export interface SetType {
     id: string;
     name: string;
-    series: string
-    printed_total?: number
-    total: number
-    ptcgo_code: string
-    release_date: string
-    images: SetImages
+    series: string;
+    printed_total?: number;
+    total: number;
+    ptcgo_code: string;
+    release_date: string;
+    images: SetImages;
     class: 1 | 2 | 3 | 0;
 }
 
 export interface UserAchievement {
     uid: string;
     achievement_id: number;
-    unlocked_at?: string
+    unlocked_at?: string;
 }
 
 export interface AchievementWithUserData extends Achievement {
-    claimed_flag: boolean
-    isCompleted: boolean
+    claimed_flag: boolean;
+    isCompleted: boolean;
 }
 
 export interface UserBadge {
     user_id: string;
     badge_id: number;
-    acquired_at?: string
+    acquired_at?: string;
 }
 
 export interface UserCard {
@@ -62,7 +62,7 @@ export interface UserCard {
     uid: string;
     card_id: string;
     quantity?: number;
-    acquired_at?: string
+    acquired_at?: string;
 }
 
 export interface UserCardWithCard {
@@ -76,9 +76,9 @@ export interface UserCardWithCard {
 
 export interface UserPack {
     id: number;
-    uid?: string
-    set_id?: string
-    opened_at?: string
+    uid?: string;
+    set_id?: string;
+    opened_at?: string;
 }
 
 export interface UserStats {
@@ -101,16 +101,16 @@ export interface UserStats {
     };
     total_duplicates: number;
     daily_coins_flag: boolean;
-    slot_1: string,
-    slot_2: string,
-    bestCard: Card,
-    cardsTotal: number,
-    userBadges: { badge_id: number }[],
+    slot_1: string;
+    slot_2: string;
+    bestCard: Card;
+    cardsTotal: number;
+    userBadges: {badge_id: number}[];
     recentActivity: {
-        action: string,
-        item: string,
-        time: string,
-    }[]
+        action: string;
+        item: string;
+        time: string;
+    }[];
 }
 
 export interface User {
@@ -118,8 +118,8 @@ export interface User {
     username: string;
     email: string;
     password: string;
-    created_at?: string
-    avatar?: number
+    created_at?: string;
+    avatar?: number;
 }
 
 export interface SlotsData {

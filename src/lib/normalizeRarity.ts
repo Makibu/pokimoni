@@ -1,3 +1,3 @@
 export const normalizeRarity = (rarity: string): string => {
-    return rarity.trim().toLowerCase()
-}
+    return rarity.trim().toLowerCase();
+};

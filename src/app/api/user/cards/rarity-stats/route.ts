@@ -12,9 +12,9 @@ interface UserCardWithRarity {
 }
 
 const rarityOrder: Record<string, number> = {
-    "common": 1,
-    "uncommon": 2,
-    "rare": 3,
+    common: 1,
+    uncommon: 2,
+    rare: 3,
     "double rare": 4,
     "ultra rare": 5,
     "ace spec rare": 6,
@@ -38,19 +38,21 @@ export async function GET(req: Request) {
             rarityStats[rarity.toLowerCase()] = 0;
         }
 
-        const {data: userCards, error: userCardsError} = await supabaseServer
+        const {data: userCards, error: userCardsError} = (await supabaseServer
             .from("user_cards")
-            .select(`
+            .select(
+                `
         quantity,
         cards:card_id(rarity)
-      `)
-            .eq("uid", uid) as { data: UserCardWithRarity[] | null; error: PostgrestError | null };
+      `,
+            )
+            .eq("uid", uid)) as {data: UserCardWithRarity[] | null; error: PostgrestError | null};
 
         if (userCardsError) {
             return NextResponse.json({error: userCardsError.message}, {status: 500});
         }
 
-        userCards?.forEach(c => {
+        userCards?.forEach((c) => {
             const card = c.cards;
             const rarity = (card?.rarity ?? "unknown").toLowerCase();
 
@@ -61,14 +63,14 @@ export async function GET(req: Request) {
             }
         });
 
-        const rarityList = Object.keys(rarityOrder).map(r => ({
+        const rarityList = Object.keys(rarityOrder).map((r) => ({
             rarity: r.toLowerCase(),
             count: rarityStats[r.toLowerCase()],
         }));
 
         return NextResponse.json({rarityStats: rarityList});
     } catch (err: unknown) {
-        let message = 'Nieznany błąd';
+        let message = "Nieznany błąd";
         if (err instanceof Error) message = err.message;
         return NextResponse.json({error: message}, {status: 500});
     }

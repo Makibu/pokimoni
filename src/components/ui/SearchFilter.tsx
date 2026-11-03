@@ -15,7 +15,7 @@ import {ArrowDown, ArrowUp, Filter} from "lucide-react";
 
 type SearchFilterProps = {
     onSearch: (query: string) => void;
-}
+};
 
 type CardFilterProps = {
     rarityList: string[];
@@ -26,7 +26,7 @@ type CardFilterProps = {
     resetFilters: () => void;
     showOwnedOnly: boolean;
     setShowOwnedOnly: (value: boolean) => void;
-}
+};
 
 export function SearchFilter({onSearch}: SearchFilterProps) {
     const [value, setValue] = useState("");
@@ -49,20 +49,20 @@ export function SearchFilter({onSearch}: SearchFilterProps) {
 }
 
 export function CardFilter({
-                               rarityList,
-                               activeFilters,
-                               setActiveFilters,
-                               sort,
-                               setSort,
-                               resetFilters,
-                               showOwnedOnly,
-                               setShowOwnedOnly,
-                           }: CardFilterProps) {
+    rarityList,
+    activeFilters,
+    setActiveFilters,
+    sort,
+    setSort,
+    resetFilters,
+    showOwnedOnly,
+    setShowOwnedOnly,
+}: CardFilterProps) {
     const allSelected = activeFilters.length === rarityList.length;
 
     const toggleFilter = (rarity: string) => {
         if (activeFilters.includes(rarity)) {
-            setActiveFilters(activeFilters.filter(r => r !== rarity));
+            setActiveFilters(activeFilters.filter((r) => r !== rarity));
         } else {
             setActiveFilters([...activeFilters, rarity]);
         }
@@ -80,7 +80,7 @@ export function CardFilter({
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button className="flex items-center gap-2" variant={"outline"}>
-                    <Filter className="h-4 w-4"/>
+                    <Filter className="h-4 w-4" />
                     Filtry
                 </Button>
             </DropdownMenuTrigger>
@@ -91,13 +91,21 @@ export function CardFilter({
                     <div className="flex items-center relative px-6">
                         <span className="text-sm">Rzadkość</span>
                         <div className="absolute right-6 flex gap-1">
-                            <Button size={"icon"} className="w-5 h-5" onClick={() => setSort("rarity-asc")}
-                                    variant={sort === "rarity-asc" ? "default" : "outline"}>
-                                <ArrowUp className="scale-80"/>
+                            <Button
+                                size={"icon"}
+                                className="w-5 h-5"
+                                onClick={() => setSort("rarity-asc")}
+                                variant={sort === "rarity-asc" ? "default" : "outline"}
+                            >
+                                <ArrowUp className="scale-80" />
                             </Button>
-                            <Button size={"icon"} className="w-5 h-5" onClick={() => setSort("rarity-desc")}
-                                    variant={sort === "rarity-desc" ? "default" : "outline"}>
-                                <ArrowDown className="scale-80"/>
+                            <Button
+                                size={"icon"}
+                                className="w-5 h-5"
+                                onClick={() => setSort("rarity-desc")}
+                                variant={sort === "rarity-desc" ? "default" : "outline"}
+                            >
+                                <ArrowDown className="scale-80" />
                             </Button>
                         </div>
                     </div>
@@ -125,48 +133,60 @@ export function CardFilter({
                     <div className="flex items-center relative px-6">
                         <span className="text-sm">Nowość</span>
                         <div className="absolute right-6 flex gap-1">
-                            <Button size={"icon"} className="w-5 h-5"
-                                    onClick={() => setSort(sort === "newest" ? "" : "newest")}
-                                    variant={sort === "newest" ? "default" : "outline"}>
-                                <ArrowUp className="scale-80"/>
+                            <Button
+                                size={"icon"}
+                                className="w-5 h-5"
+                                onClick={() => setSort(sort === "newest" ? "" : "newest")}
+                                variant={sort === "newest" ? "default" : "outline"}
+                            >
+                                <ArrowUp className="scale-80" />
                             </Button>
-                            <Button size={"icon"} className="w-5 h-5"
-                                    onClick={() => setSort(sort === "oldest" ? "" : "oldest")}
-                                    variant={sort === "oldest" ? "default" : "outline"}>
-                                <ArrowDown className="scale-80"/>
+                            <Button
+                                size={"icon"}
+                                className="w-5 h-5"
+                                onClick={() => setSort(sort === "oldest" ? "" : "oldest")}
+                                variant={sort === "oldest" ? "default" : "outline"}
+                            >
+                                <ArrowDown className="scale-80" />
                             </Button>
                         </div>
                     </div>
                 </div>
 
-                <DropdownMenuSeparator/>
+                <DropdownMenuSeparator />
 
                 <DropdownMenuLabel>Filtry</DropdownMenuLabel>
-                <DropdownMenuCheckboxItem onClick={toggleAll} onSelect={(e) => e.preventDefault()}
-                                          checked={allSelected}>
+                <DropdownMenuCheckboxItem
+                    onClick={toggleAll}
+                    onSelect={(e) => e.preventDefault()}
+                    checked={allSelected}
+                >
                     {allSelected ? "Odznacz wszystkie" : "Zaznacz wszystkie"}
                 </DropdownMenuCheckboxItem>
-                <DropdownMenuSeparator className="mx-2 bg-gray-200"/>
-                {rarityList.map(rarity => (
-                    <DropdownMenuCheckboxItem onSelect={(e) => e.preventDefault()}
-                                              key={rarity}
-                                              checked={activeFilters.includes(rarity)}
-                                              onCheckedChange={() => toggleFilter(rarity)}
+                <DropdownMenuSeparator className="mx-2 bg-gray-200" />
+                {rarityList.map((rarity) => (
+                    <DropdownMenuCheckboxItem
+                        onSelect={(e) => e.preventDefault()}
+                        key={rarity}
+                        checked={activeFilters.includes(rarity)}
+                        onCheckedChange={() => toggleFilter(rarity)}
                     >
                         <span className="capitalize">{rarity}</span>
                     </DropdownMenuCheckboxItem>
                 ))}
 
-                <DropdownMenuSeparator/>
+                <DropdownMenuSeparator />
 
                 {/* Nowy checkbox – pokaż tylko zdobyte */}
-                <DropdownMenuCheckboxItem onSelect={(e) => e.preventDefault()}
-                                          checked={showOwnedOnly}
-                                          onCheckedChange={(val) => setShowOwnedOnly(!!val)}>
+                <DropdownMenuCheckboxItem
+                    onSelect={(e) => e.preventDefault()}
+                    checked={showOwnedOnly}
+                    onCheckedChange={(val) => setShowOwnedOnly(!!val)}
+                >
                     Pokaż tylko zdobyte
                 </DropdownMenuCheckboxItem>
 
-                <DropdownMenuSeparator/>
+                <DropdownMenuSeparator />
 
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()} onClick={resetFilters}>
                     Resetuj filtry

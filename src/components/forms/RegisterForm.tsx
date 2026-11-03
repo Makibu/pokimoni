@@ -5,30 +5,30 @@ import {Button} from "@/components/ui/button";
 import React, {FormEvent} from "react";
 
 type RegisterFormProps = {
-    username: string,
-    setUsername: (username: string) => void,
-    email: string,
-    setEmail: (email: string) => void,
-    password: string,
-    setPassword: (password: string) => void,
-    loading: boolean,
-    onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>,
-    onSwitchTab: () => void,
-}
+    username: string;
+    setUsername: (username: string) => void;
+    email: string;
+    setEmail: (email: string) => void;
+    password: string;
+    setPassword: (password: string) => void;
+    loading: boolean;
+    onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
+    onSwitchTab: () => void;
+};
 
 export default function RegisterForm({
-                                         username,
-                                         setUsername,
-                                         email,
-                                         setEmail,
-                                         password,
-                                         setPassword,
-                                         loading,
-                                         onSubmit,
-                                         onSwitchTab
-                                     }: RegisterFormProps) {
+    username,
+    setUsername,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    loading,
+    onSubmit,
+    onSwitchTab,
+}: RegisterFormProps) {
     return (
-        <form onSubmit={onSubmit} className={'grid gap-6'}>
+        <form onSubmit={onSubmit} className={"grid gap-6"}>
             <CardContent>
                 <div className="flex flex-col gap-6">
                     <div className="grid gap-2">
@@ -66,10 +66,7 @@ export default function RegisterForm({
                 </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
-                <Button type="submit"
-                        className="w-full"
-                        disabled={loading}
-                >
+                <Button type="submit" className="w-full" disabled={loading}>
                     {loading ? "Rejestracja..." : "Zarejestruj"}
                 </Button>
                 <CardDescription>
@@ -84,5 +81,5 @@ export default function RegisterForm({
                 </CardDescription>
             </CardFooter>
         </form>
-    )
+    );
 }

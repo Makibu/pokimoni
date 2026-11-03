@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {useEffect, useMemo, useState} from "react";
 import {Dialog, DialogContent, DialogTitle} from "@/components/ui/dialog";
@@ -60,14 +60,11 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
                     setMessage("");
                     return;
                 }
-            } catch {
-            }
+            } catch {}
         }
 
         setUserBoard(
-            sudoku.board.map((row: number[]) =>
-                row.map((cell: number) => (cell === 0 ? "" : cell.toString()))
-            )
+            sudoku.board.map((row: number[]) => row.map((cell: number) => (cell === 0 ? "" : cell.toString()))),
         );
         setSelectedNumber(null);
         setMessage("");
@@ -76,18 +73,15 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
     useEffect(() => {
         if (!userBoard.length) return;
         const today = new Date().toISOString().split("T")[0];
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify({date: today, userBoard, selectedNumber})
-        );
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({date: today, userBoard, selectedNumber}));
     }, [userBoard, selectedNumber]);
 
     function handleCellClick(row: number, col: number) {
         if (board[row][col] !== 0) return;
         if (selectedNumber === null) return;
 
-        setUserBoard(prev => {
-            const newBoard = prev.map(r => [...r]);
+        setUserBoard((prev) => {
+            const newBoard = prev.map((r) => [...r]);
             const currentVal = newBoard[row][col];
             const newVal = currentVal === selectedNumber.toString() ? "" : selectedNumber.toString();
             newBoard[row][col] = newVal;
@@ -96,11 +90,11 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
     }
 
     async function checkSudoku() {
-        if (loading) return
-        setLoading(true)
+        if (loading) return;
+        setLoading(true);
 
         const correct = userBoard.every((row, r) =>
-            row.every((val, c) => val !== "" && parseInt(val) === solution[r][c])
+            row.every((val, c) => val !== "" && parseInt(val) === solution[r][c]),
         );
 
         if (correct) {
@@ -116,29 +110,24 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
                 await queryClient.invalidateQueries({queryKey: ["coins"]});
                 setOpen(false);
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
         } else {
             setMessage("❌ Niestety, coś się nie zgadza.");
-            setLoading(false)
+            setLoading(false);
         }
     }
 
     function resetSudoku() {
         if (!board.length) return;
 
-        const clearedBoard = board.map((row) =>
-            row.map((cell) => (cell === 0 ? "" : cell.toString()))
-        );
+        const clearedBoard = board.map((row) => row.map((cell) => (cell === 0 ? "" : cell.toString())));
 
         setUserBoard(clearedBoard);
         setSelectedNumber(null);
 
         const today = new Date().toISOString().split("T")[0];
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify({date: today, userBoard: clearedBoard, selectedNumber: null})
-        );
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({date: today, userBoard: clearedBoard, selectedNumber: null}));
     }
 
     const remainingCount = useMemo(() => {
@@ -149,7 +138,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
             row.forEach((val) => {
                 const n = parseInt(val);
                 if (!isNaN(n)) counts[n]--;
-            })
+            }),
         );
         return counts;
     }, [userBoard]);
@@ -163,8 +152,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
                     <div className="flex flex-col items-center space-y-4">
                         <div className="flex w-full gap-4">
                             {difficulty && (
-                                <div
-                                    className="px-2 py-1 bg-gray-100 rounded-xl text-sm self-start shadow-sm border-[1px]">
+                                <div className="px-2 py-1 bg-gray-100 rounded-xl text-sm self-start shadow-sm border-[1px]">
                                     {difficulty}
                                 </div>
                             )}
@@ -183,8 +171,7 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
                                 row.map((val, c) => {
                                     const isPrefilled = board[r][c] !== 0;
                                     const cellValue = parseInt(val);
-                                    const isHighlighted =
-                                        selectedNumber !== null && cellValue === selectedNumber;
+                                    const isHighlighted = selectedNumber !== null && cellValue === selectedNumber;
 
                                     const borderClasses = `
                                         border 
@@ -206,12 +193,13 @@ export default function SudokuDialog({open, setOpen}: SudokuDialogProps) {
                                             {val}
                                         </div>
                                     );
-                                })
+                                }),
                             )}
                         </div>
 
-                        <Button onClick={checkSudoku}
-                                disabled={loading}>{loading ? "Sprawdzanie..." : "Sprawdź Sudoku"}</Button>
+                        <Button onClick={checkSudoku} disabled={loading}>
+                            {loading ? "Sprawdzanie..." : "Sprawdź Sudoku"}
+                        </Button>
                         {message && <p className="mt-2 text-lg">{message}</p>}
                     </div>
 

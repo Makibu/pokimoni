@@ -19,14 +19,14 @@ export default function ScrollButton() {
                 className="bg-white/50 backdrop-blur-md p-1 rounded-full hover:bg-white transition cursor-pointer flex justify-center items-center shadow-sm"
                 aria-label="Scroll to top"
             >
-                <ChevronUp/>
+                <ChevronUp />
             </button>
             <button
                 onClick={scrollToBottom}
                 className="bg-white/50 backdrop-blur-md p-1 rounded-full hover:bg-white transition cursor-pointer flex justify-center items-center shadow-sm"
                 aria-label="Scroll to bottom"
             >
-                <ChevronDown/>
+                <ChevronDown />
             </button>
         </div>
     );

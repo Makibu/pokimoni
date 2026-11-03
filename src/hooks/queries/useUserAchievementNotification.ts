@@ -16,10 +16,10 @@ export default function useUserAchievementNotification() {
             const res = await fetch(`/api/user/achievements/unclaimed_notification?uid=${uid}`);
             if (!res.ok) throw new Error("Nie udało się pobrać powiadomienia");
             const json = await res.json();
-            return json.has_unclaimed_achievements
+            return json.has_unclaimed_achievements;
         },
         enabled: !!uid,
-        staleTime: 0
+        staleTime: 0,
     });
 
     return {

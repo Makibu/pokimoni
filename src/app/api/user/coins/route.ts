@@ -1,6 +1,5 @@
 import {NextRequest, NextResponse} from "next/server";
-import {supabaseServer} from '@/lib/supabaseServer';
-
+import {supabaseServer} from "@/lib/supabaseServer";
 
 export async function GET(req: NextRequest) {
     const {searchParams} = new URL(req.url);
@@ -45,7 +44,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({error: "Daily coins already collected"}, {status: 400});
     }
 
-    const updates: { coins: number; daily_coins_flag?: boolean } = {coins: userStat?.coins + amount};
+    const updates: {coins: number; daily_coins_flag?: boolean} = {coins: userStat?.coins + amount};
 
     if (type === "daily") {
         updates.daily_coins_flag = false;
