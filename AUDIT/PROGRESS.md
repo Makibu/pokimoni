@@ -13,8 +13,10 @@ Ostatnia aktualizacja: 2026-11-03
 | VII. Wywiad produktowy + specyfikacja | DONE | `PRODUCT_SPECIFICATION.md`; otwarte tylko liczby ekonomii i „Premium” |
 | VIII. Gap analysis | DONE | `GAP_ANALYSIS.md` |
 | IX. Docelowa architektura | DONE | `TARGET_ARCHITECTURE.md` — Drizzle zaakceptowany |
-| X. Plan refaktoryzacji | IN PROGRESS | `REFACTORING_PLAN.md` |
-| XI–XIII (wdrożenie, testy, audyt końcowy) | NOT STARTED | |
+| X. Plan refaktoryzacji | DONE | `REFACTORING_PLAN.md` — zaakceptowany |
+| XI. Faza 0 — fundamenty | DONE | `IMPLEMENTATION_LOG.md`; PR `phase-0` → `rebuild` |
+| XI. Faza 1 — baza i domena | NOT STARTED | |
+| XI. Fazy 2–9 | NOT STARTED | |
 
 ## Ustalenia
 
@@ -54,5 +56,5 @@ Ostatnia aktualizacja: 2026-11-03
 ## Otwarte pytania do właściciela
 
 1. Liczby ekonomii i rezygnacja z wariantu „Premium” (`PRODUCT_SPECIFICATION.md` rozdz. 4, F4).
-2. Akceptacja planu refaktoryzacji (`REFACTORING_PLAN.md`).
+2. ~~Plan refaktoryzacji~~ — zaakceptowany 2026-11-03.
 3. Status RLS (przy resecie i tak zostanie włączony).
