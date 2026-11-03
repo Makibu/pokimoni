@@ -100,15 +100,21 @@ Cofnięcie: `alter table public."<tabela>" disable row level security`.
 Luka była realna: test przed zmianą pokazał, że klucz anon czytał `users`. Sprawdzano tylko liczbę wierszy.
 Crony działają jako właściciel tabel (`postgres`), więc RLS ich nie dotyczy; ich kolejny przebieg nie był obserwowany.
 
-### Nadal otwarte — HIGH
+### Dostęp klucza anon zamknięty
 
-Klucz anon nadal ma dostęp do dwóch rzeczy, których RLS na tabelach nie obejmuje:
+Za zgodą właściciela: widok `user_unclaimed_achievements_flag` dostał `security_invoker = true`, a 5 funkcji
+(`add_hourly_income`, `choose_daily_pack_for_today`, `delete_daily_sudoku`, `delete_daily_minesweeper`,
+`log_daily_pack_history`) straciło `EXECUTE` dla `public`, `anon`, `authenticated`.
 
-- **Widok `user_unclaimed_achievements_flag`** działa z uprawnieniami właściciela i zwraca `uid` wszystkich graczy.
-  Stare API przyjmuje `uid` bez weryfikacji (SEC-01), więc to wystarcza do przejęcia konta.
-  Naprawa: `alter view public.user_unclaimed_achievements_flag set (security_invoker = true)`.
-- **Funkcje przez RPC** wykonywalne przez `anon`: `add_hourly_income`, `delete_daily_sudoku`,
-  `delete_daily_minesweeper`, `choose_daily_pack_for_today`, `log_daily_pack_history`.
-  Naprawa: `revoke execute` od `public`, `anon`, `authenticated`.
+| Sprawdzenie | Wynik |
+|---|---|
+| Klucz anon: widok | 0 wierszy (wcześniej zwracał `uid` graczy) |
+| Uprawnienia funkcji (`has_function_privilege`) | anon i authenticated: brak; service_role: jest |
+| Klucz service-role: tabele i widok | zwraca wiersze |
+| Produkcja: `/api/sets`, `/api/sets/random` | 200 |
 
-Obie zmiany czekają na decyzję właściciela.
+Funkcje nie są `SECURITY DEFINER`, więc po włączeniu RLS wywołanie przez anon i tak nie zmieniałoby danych;
+cofnięcie uprawnień to druga warstwa. Cofnięcia: `alter view ... reset (security_invoker)`, `grant execute ...`.
+
+**SEC-01 nadal dotyczy starej aplikacji:** kto zna `uid`, może przejąć konto przez stare API. Znika przy przełączeniu (faza 4).
+Pierwszy przebieg cronów po zmianach nie był jeszcze obserwowany (kolejne: 23:00 UTC).

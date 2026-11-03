@@ -58,5 +58,5 @@ Ostatnia aktualizacja: 2026-11-03
 
 1. ~~Liczby ekonomii~~ — zaakceptowane 2026-11-03 (bez wariantu „Premium”).
 2. ~~Plan refaktoryzacji~~ — zaakceptowany 2026-11-03.
-3. RLS na tabelach `public` włączony 2026-11-03. Otwarte: widok z `uid` i funkcje RPC dostępne dla `anon` (`SECURITY_AUDIT.md`).
+3. ~~RLS i dostęp anon~~ — zamknięte 2026-11-03 (`SECURITY_AUDIT.md`).
 4. ~~`DATABASE_URL`~~ — ustawiony 2026-11-03.
