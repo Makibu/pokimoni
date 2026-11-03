@@ -1,7 +1,6 @@
 "use client";
 
-import {useAuth} from "@/context/authContext";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {useRouter} from "next/navigation";
 import Image from "next/image";
 
@@ -10,10 +9,13 @@ import {Card, CardHeader, CardTitle} from "@/components/ui/card";
 import {toast} from "sonner";
 import RegisterForm from "@/components/forms/RegisterForm";
 import LoginForm from "@/components/forms/LoginForm";
+import {useLogin, useRegister} from "@/features/account/use-session";
+import {registerSchema} from "@/lib/validation/account";
 
 export default function LoginPage() {
-    const {user, signIn, signUp} = useAuth();
     const router = useRouter();
+    const login = useLogin();
+    const register = useRegister();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -23,47 +25,35 @@ export default function LoginPage() {
     const [regPassword, setRegPassword] = useState("");
 
     const [activeTab, setActiveTab] = useState("login");
-    const [loadingLogin, setLoadingLogin] = useState(false);
-    const [loadingRegister, setLoadingRegister] = useState(false);
 
-    useEffect(() => {
-        if (user) {
-            router.replace("/");
-        }
-    }, [user, router]);
-
-    async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        setLoadingLogin(true);
-        try {
-            await signIn(email, password);
-            toast.success("Zalogowano pomyślnie!");
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                toast.error(err.message);
-            } else {
-                toast.error("Wystąpił nieoczekiwany błąd");
-            }
-        } finally {
-            setLoadingLogin(false);
-        }
+    function enterGame(message: string) {
+        toast.success(message);
+        router.replace("/");
+        router.refresh();
     }
 
-    async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
+    function handleLogin(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setLoadingRegister(true);
-        try {
-            await signUp(username, regEmail, regPassword);
-            toast.success("Zarejestrowano pomyślnie!");
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                toast.error(err.message);
-            } else {
-                toast.error("Wystąpił nieoczekiwany błąd");
-            }
-        } finally {
-            setLoadingRegister(false);
+        login.mutate(
+            {email, password},
+            {
+                onSuccess: () => enterGame("Zalogowano pomyślnie!"),
+                onError: (error) => toast.error(error.message),
+            },
+        );
+    }
+
+    function handleRegister(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        const input = registerSchema.safeParse({username, email: regEmail, password: regPassword});
+        if (!input.success) {
+            toast.error(input.error.issues[0].message);
+            return;
         }
+        register.mutate(input.data, {
+            onSuccess: () => enterGame("Zarejestrowano pomyślnie!"),
+            onError: (error) => toast.error(error.message),
+        });
     }
 
     return (
@@ -89,7 +79,7 @@ export default function LoginPage() {
                             setEmail={setEmail}
                             password={password}
                             setPassword={setPassword}
-                            loading={loadingLogin}
+                            loading={login.isPending}
                             onSubmit={handleLogin}
                             onSwitchTab={() => setActiveTab("register")}
                         />
@@ -101,7 +91,7 @@ export default function LoginPage() {
                             setUsername={setUsername}
                             password={regPassword}
                             setPassword={setRegPassword}
-                            loading={loadingRegister}
+                            loading={register.isPending}
                             onSubmit={handleRegister}
                             onSwitchTab={() => setActiveTab("login")}
                         />

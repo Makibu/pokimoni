@@ -80,3 +80,47 @@ Gałąź: `phase-1` (od `phase-0`) → PR do `rebuild` po scaleniu fazy 0.
 - **Migracja nie jest jeszcze wgrana do Supabase** — wymaga `DATABASE_URL` (connection string poolera
   z hasłem do bazy) w `.env.local`. Potrzebne od fazy 2; wgranie tworzy tylko schemat `game`, nie dotyka `public`.
 - Weryfikacja `pglite-socket` dla lokalnych E2E — przeniesiona do fazy 2 (pierwsze E2E z bazą).
+
+## Faza 2 — Konta i sesje (2026-11-03)
+
+Gałąź: `phase-2` (od `phase-1`).
+
+**Baza:** `DATABASE_URL` ustawiony w `.env.local` (poza repo). Migracja i seed wgrane do schematu `game`
+na Supabase: 15 setów, 3169 kart, 34 osiągnięcia, 9 odznak, RLS na wszystkich tabelach.
+Stare tabele w `public` sprawdzone po migracji: bez zmian (4 konta, 678 paczek, 3169 kart).
+
+### Co zrobiono
+
+- `server/auth`: hasła bcrypt (koszt 12), token HS256 przez `jose`, limit prób w tabeli `auth_attempts`
+  (10 nieudanych logowań na email, 50 na IP, 10 rejestracji na IP w oknie 15 min).
+- `server/http/handler.ts`: `route()` (kontrola Origin, jednolite błędy bez szczegółów bazy), `parseBody()`
+  (zod, wymagany JSON), `requireUser()` (podpis + `token_version` + istnienie konta).
+- `server/services/account.ts` i `/api/auth/{register,login,logout,me}`. Żaden endpoint kont nie przyjmuje `uid`.
+- `proxy.ts` weryfikuje podpis tokenu (nie samą obecność ciasteczka).
+- UI: `features/account` (React Query), `SessionGuard`, `features/settings`, nowy `UserMenu` i strona logowania;
+  usunięte `context/authContext.tsx`, `jsonwebtoken`, `/api/login`, `/api/register`, `/api/user/update`, `/api/user/avatar`.
+- E2E na PGlite przez `pglite-socket` (`scripts/e2e-db.ts`) — bez Dockera, ta sama ścieżka lokalnie i w CI.
+
+### Decyzje podjęte w trakcie
+
+- **Nowa zmienna `SESSION_SECRET`** (48 losowych bajtów) zamiast nadpisywania `JWT_SECRET`: obecny `JWT_SECRET`
+  ma 11 znaków, a nowy kod wymaga co najmniej 32. Na Vercel trzeba ją dodać przy przełączeniu (faza 4).
+- **Ustawienie „tryb ciemny”** usunięte z UI do czasu implementacji w fazie 8 (dotąd atrapa).
+- **Sesja 30 dni** z unieważnianiem przez `token_version` przy zmianie hasła.
+
+### Wyniki bramki
+
+| Polecenie | Wynik |
+|---|---|
+| `format:check`, `typecheck`, `build` | OK |
+| `lint` | 0 błędów, 28 ostrzeżeń (stary kod) |
+| `npm test` | **74/74** (w tym 25 testów API kont) |
+| `test:e2e` | **14/14** (desktop + mobile): rejestracja, wylogowanie, logowanie, błędne hasło, sfałszowane ciasteczko, usunięcie konta, wylogowanie innych sesji po zmianie hasła |
+| `npm audit --omit=dev` | 0 podatności |
+| Izolacja testów | `game.users` na Supabase = 0 po E2E: testy nie dotykają prawdziwej bazy |
+
+### Stan przejściowy
+
+Na tej gałęzi widoki gry (sklep, kolekcja, statystyki) nie mają jeszcze danych: stare hooki czytają `uid`
+z `localStorage`, którego już nikt nie zapisuje, a stare endpointy nadal działają na `public`. Podpięcie
+pod nowy backend to faza 3. `master` i produkcja nie są dotknięte.

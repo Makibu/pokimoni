@@ -12,7 +12,7 @@ type RegisterFormProps = {
     password: string;
     setPassword: (password: string) => void;
     loading: boolean;
-    onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
+    onSubmit: (e: FormEvent<HTMLFormElement>) => void;
     onSwitchTab: () => void;
 };
 

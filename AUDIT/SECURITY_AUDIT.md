@@ -74,3 +74,14 @@ Endpointy zwracają `error.message` z Postgresa, `api/achievements` cały obiekt
   (w tym hashy haseł w `users`). **Do potwierdzenia w Supabase.**
 - `API_NINJAS_KEY` w `.env.local` — nieużywany w kodzie.
 - Sekretów w historii git nie znaleziono.
+
+## Aktualizacja 2026-11-03 — sprawdzone na bazie
+
+- **SEC-09 potwierdzone — HIGH:** RLS jest **wyłączony na wszystkich 15 tabelach w `public`**, w tym `users`
+  z hashami haseł. Klucz anon nie trafia do bundla (nieużywany `supabaseClient`), więc tabele nie są otwarte
+  przez samą stronę, ale każdy, kto ma URL projektu i klucz anon, może je czytać i modyfikować przez REST API
+  Supabase. Włączenie RLS nie zmienia działania starej aplikacji (klucz service-role omija RLS).
+- **Słaby sekret — MEDIUM:** `JWT_SECRET` w `.env.local` ma 11 znaków. Nowy kod używa `SESSION_SECRET` (min. 32).
+- **Hasło do bazy** zostało podane w rozmowie. Po przełączeniu produkcji (faza 4) należy je zmienić
+  (Database → Settings) razem z rotacją klucza service-role.
+- Schemat `game`: RLS na wszystkich tabelach, brak polityk, schemat nie jest wystawiony przez REST API.

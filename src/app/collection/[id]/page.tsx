@@ -8,7 +8,7 @@ import ScrollButton from "@/components/ui/ScrollButton";
 import {useState} from "react";
 import {CardFilter, SearchFilter} from "@/components/ui/SearchFilter";
 import {useUserCards} from "@/hooks/queries/useUserCards";
-import {useAuth} from "@/context/authContext";
+import {useSettings} from "@/features/settings/use-settings";
 
 const rarityOrder: Record<string, number> = {
     common: 1,
@@ -30,7 +30,7 @@ export default function IndexPage() {
     const [sort, setSort] = useState<string>("rarity-asc");
     const [activeFilters, setActiveFilters] = useState<string[]>(rarityList);
     const [showOwnedOnly, setShowOwnedOnly] = useState<boolean>(false);
-    const {settings} = useAuth();
+    const {settings} = useSettings();
 
     const {id} = useParams<{id: string}>();
 

@@ -17,7 +17,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs migrate",
     "db:seed": "tsx --env-file=.env.local scripts/seed.ts"
   },
   "dependencies": {
@@ -42,7 +42,7 @@
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.45.4",
     "framer-motion": "^12.23.12",
-    "jsonwebtoken": "^9.0.2",
+    "jose": "^6.2.15",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.539.0",
     "next": "16.4.5",
@@ -57,9 +57,9 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.15",
+    "@electric-sql/pglite-socket": "^0.2.18",
     "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4",
-    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.20.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

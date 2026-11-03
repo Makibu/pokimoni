@@ -9,11 +9,9 @@ const legacyEffectFiles = [
     "src/app/page.tsx",
     "src/components/data-display/AchievementTile.tsx",
     "src/components/home/IncomeSlots.tsx",
-    "src/components/home/UserMenu.tsx",
     "src/components/shop/MinesweeperDialog.tsx",
     "src/components/shop/OpenPackDialog.tsx",
     "src/components/shop/SudokuDialog.tsx",
-    "src/context/authContext.tsx",
     "src/hooks/queries/*.ts",
     "src/hooks/useIsMobile.ts",
 ];

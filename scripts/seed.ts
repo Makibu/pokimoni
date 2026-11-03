@@ -3,6 +3,12 @@
 import {getDb} from "@/server/db/client";
 import {seedCatalog} from "@/server/db/seed";
 
-await seedCatalog(getDb());
-console.log("Catalog seeded");
-process.exit(0);
+seedCatalog(getDb())
+    .then(() => {
+        console.log("Catalog seeded");
+        process.exit(0);
+    })
+    .catch((error: unknown) => {
+        console.error(error instanceof Error ? error.message : "Seeding failed");
+        process.exit(1);
+    });

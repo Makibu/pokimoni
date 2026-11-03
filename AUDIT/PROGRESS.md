@@ -7,16 +7,17 @@ Ostatnia aktualizacja: 2026-11-03
 | I. Rekonesans repo, stack, stan git | DONE | `PROJECT_OVERVIEW.md` |
 | I. Lint / typecheck / build / audit | DONE | wszystko przechodzi; 7 podatnych zależności |
 | II. Code review | DONE (statycznie) | `CODE_REVIEW.md` — BUG-01..16, DB-01..08, ARCH, PERF |
-| III. Audyt bezpieczeństwa | IN PROGRESS | `SECURITY_AUDIT.md`; nadal nieznane: RLS, widok, RPC, crony |
+| III. Audyt bezpieczeństwa | IN PROGRESS | `SECURITY_AUDIT.md`; RLS sprawdzony: wyłączony na `public` |
 | IV. Wydajność | NOT STARTED | tylko obserwacje statyczne; pomiary po postawieniu środowiska dev |
-| V. SEO / UX / responsywność | BLOCKED | uruchomienie lokalne łączy się z produkcyjną bazą — czeka na decyzję o środowisku dev |
+| V. SEO / UX / responsywność | NOT STARTED | E2E działa na PGlite; przegląd UX po podpięciu widoków w fazie 3 |
 | VII. Wywiad produktowy + specyfikacja | DONE | `PRODUCT_SPECIFICATION.md`; otwarte tylko liczby ekonomii i „Premium” |
 | VIII. Gap analysis | DONE | `GAP_ANALYSIS.md` |
 | IX. Docelowa architektura | DONE | `TARGET_ARCHITECTURE.md` — Drizzle zaakceptowany |
 | X. Plan refaktoryzacji | DONE | `REFACTORING_PLAN.md` — zaakceptowany |
 | XI. Faza 0 — fundamenty | DONE | `IMPLEMENTATION_LOG.md`; PR `phase-0` → `rebuild` |
 | XI. Faza 1 — baza i domena | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-1` |
-| XI. Fazy 2–9 | NOT STARTED | |
+| XI. Faza 2 — konta i sesje | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-2` |
+| XI. Fazy 3–9 | NOT STARTED | |
 
 ## Ustalenia
 
@@ -57,5 +58,5 @@ Ostatnia aktualizacja: 2026-11-03
 
 1. ~~Liczby ekonomii~~ — zaakceptowane 2026-11-03 (bez wariantu „Premium”).
 2. ~~Plan refaktoryzacji~~ — zaakceptowany 2026-11-03.
-3. Status RLS (przy resecie i tak zostanie włączony).
-4. `DATABASE_URL` (Supabase → Connect → Transaction pooler) w `.env.local` — potrzebne od fazy 2.
+3. RLS wyłączony na `public` (potwierdzone) — czy włączyć od razu, przed fazą 4?
+4. ~~`DATABASE_URL`~~ — ustawiony 2026-11-03.

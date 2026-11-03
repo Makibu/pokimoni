@@ -5,5 +5,9 @@ export default defineConfig({
     test: {
         include: ["tests/unit/**/*.test.ts", "tests/integration/**/*.test.ts"],
         environment: "node",
+        env: {
+            SESSION_SECRET: "test-only-secret-test-only-secret-1234",
+            BCRYPT_COST: "4",
+        },
     },
 });
