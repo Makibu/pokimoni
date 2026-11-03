@@ -5,17 +5,17 @@ import nextTs from "eslint-config-next/typescript";
 // Legacy files that read the user id from localStorage inside effects. They are rewritten or
 // removed in phases 2–3 of AUDIT/REFACTORING_PLAN.md; delete this override together with them.
 const legacyEffectFiles = [
-    "app/achievements/page.tsx",
-    "app/page.tsx",
-    "components/data-display/AchievementTile.tsx",
-    "components/home/IncomeSlots.tsx",
-    "components/home/UserMenu.tsx",
-    "components/shop/MinesweeperDialog.tsx",
-    "components/shop/OpenPackDialog.tsx",
-    "components/shop/SudokuDialog.tsx",
-    "context/authContext.tsx",
-    "hooks/queries/*.ts",
-    "hooks/useIsMobile.ts",
+    "src/app/achievements/page.tsx",
+    "src/app/page.tsx",
+    "src/components/data-display/AchievementTile.tsx",
+    "src/components/home/IncomeSlots.tsx",
+    "src/components/home/UserMenu.tsx",
+    "src/components/shop/MinesweeperDialog.tsx",
+    "src/components/shop/OpenPackDialog.tsx",
+    "src/components/shop/SudokuDialog.tsx",
+    "src/context/authContext.tsx",
+    "src/hooks/queries/*.ts",
+    "src/hooks/useIsMobile.ts",
 ];
 
 export default defineConfig([
@@ -28,5 +28,5 @@ export default defineConfig([
             "react-hooks/immutability": "warn",
         },
     },
-    globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", "data/**"]),
+    globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", "data/**", "playwright-report/**", "test-results/**"]),
 ]);

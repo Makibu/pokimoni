@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import {BookMarked, BugIcon, ChartNoAxesCombined, Info, LucideIcon, ShoppingBag, Trophy} from "lucide-react";
-import PokemonBackground2 from "@/public/pokemon-background-2.jpg";
+import PokemonBackground2 from "@public/pokemon-background-2.jpg";
 import Image, {StaticImageData} from "next/image";
 import React, {useEffect, useState} from "react";
 
-import BannerYellow from "@/public/banners/banner-yellow.png"
-import BannerRed from "@/public/banners/banner-red.png"
-import BannerGreen from "@/public/banners/banner-green.png"
-import BannerBlue from "@/public/banners/banner-blue.png"
+import BannerYellow from "@public/banners/banner-yellow.png"
+import BannerRed from "@public/banners/banner-red.png"
+import BannerGreen from "@public/banners/banner-green.png"
+import BannerBlue from "@public/banners/banner-blue.png"
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import IncomeSlots from "@/components/home/IncomeSlots";
 

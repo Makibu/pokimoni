@@ -1,5 +1,5 @@
 import Lottie from "lottie-react";
-import animationData from "@/public/Loading.json"
+import animationData from "@public/Loading.json"
 
 export default function LoadingIndicator() {
     return (

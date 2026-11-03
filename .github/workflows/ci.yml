@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [master, rebuild]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    env:
+      # Placeholder values: the build must not depend on real secrets.
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
+      SUPABASE_SERVICE_ROLE_KEY: placeholder
+      JWT_SECRET: ci-placeholder-secret-ci-placeholder-secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7

@@ -5,7 +5,7 @@ import React, {useEffect, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import Image from "next/image";
 
-import PokemonBackground from "@/public/pokemon-background.jpg"
+import PokemonBackground from "@public/pokemon-background.jpg"
 import {Card, CardHeader, CardTitle} from "@/components/ui/card";
 import {toast} from "sonner"
 import RegisterForm from "@/components/forms/RegisterForm";
