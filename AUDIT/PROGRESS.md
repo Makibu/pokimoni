@@ -1,0 +1,58 @@
+# Postęp audytu
+
+Ostatnia aktualizacja: 2026-11-03
+
+| Etap | Status | Uwagi |
+|---|---|---|
+| I. Rekonesans repo, stack, stan git | DONE | `PROJECT_OVERVIEW.md` |
+| I. Lint / typecheck / build / audit | DONE | wszystko przechodzi; 7 podatnych zależności |
+| II. Code review | DONE (statycznie) | `CODE_REVIEW.md` — BUG-01..16, DB-01..08, ARCH, PERF |
+| III. Audyt bezpieczeństwa | IN PROGRESS | `SECURITY_AUDIT.md`; nadal nieznane: RLS, widok, RPC, crony |
+| IV. Wydajność | NOT STARTED | tylko obserwacje statyczne; pomiary po postawieniu środowiska dev |
+| V. SEO / UX / responsywność | BLOCKED | uruchomienie lokalne łączy się z produkcyjną bazą — czeka na decyzję o środowisku dev |
+| VII. Wywiad produktowy + specyfikacja | DONE | `PRODUCT_SPECIFICATION.md`; otwarte tylko liczby ekonomii i „Premium” |
+| VIII. Gap analysis | DONE | `GAP_ANALYSIS.md` |
+| IX. Docelowa architektura | DONE | `TARGET_ARCHITECTURE.md` — Drizzle zaakceptowany |
+| X. Plan refaktoryzacji | IN PROGRESS | `REFACTORING_PLAN.md` |
+| XI–XIII (wdrożenie, testy, audyt końcowy) | NOT STARTED | |
+
+## Ustalenia
+
+- 2026-11-03: projekt portfolio + znajomi, dopuszczalny pełny reset danych, brak pilnych wdrożeń;
+  planowane wymiany kart i publiczne profile. Schemat tabel w `DB_SCHEMA_SNAPSHOT.sql`.
+- 2026-11-03: **auth — zostaje własny JWT** (decyzja właściciela, odrzucono Supabase Auth).
+  Wymagania techniczne wynikające z decyzji:
+  - token tylko w cookie `HttpOnly; Secure; SameSite=Lax`, ustawianym przez serwer; usunięcie z `localStorage`;
+  - weryfikacja biblioteką `jose` (działa w Edge middleware; `jsonwebtoken` nie działa, a jego zależność `jws` ma advisory high);
+  - jeden helper `requireUser()` w każdym route handlerze, `uid` wyłącznie z tokenu, parametr `uid` usunięty z API;
+  - middleware weryfikuje podpis, a nie samą obecność cookie;
+  - krótszy czas życia sesji + `token_version` w `users` do unieważniania (wylogowanie wszędzie, zmiana hasła);
+  - rate limit logowania/rejestracji, walidacja danych, wymóg obecnego hasła przy zmianie emaila/hasła i usunięciu konta;
+  - RLS włączony na wszystkich tabelach bez polityk dla `anon` (dostęp tylko przez serwer kluczem service-role);
+  - reset hasła mailem — poza zakresem, chyba że właściciel zdecyduje inaczej.
+
+- 2026-11-03: brak Dockera i wolnych projektów Supabase; produkcję można wyczyścić i postawić od nowa.
+  Plan środowiska: schemat jako migracje SQL w repo (`supabase/migrations`), wgrywane przez Supabase CLI
+  `db push` (nie wymaga Dockera); do czasu ponownego startu jedyny projekt służy jako dev.
+  Testy logiki SQL bez Dockera: PGlite (Postgres w WASM) w testach — do potwierdzenia przy projektowaniu.
+- 2026-11-03: wymiany 1:1 tylko między znajomymi, akceptacja/odrzucenie, bez monet,
+  karty w slocie dochodu zablokowane. Otrzymano: funkcję `choose_daily_pack_for_today`, widok, listę cronów.
+
+- 2026-11-03: zasady wymian, znajomych (inbox, nick unikalny), profilu publicznego (do 3 statystyk + gablota)
+  w `PRODUCT_SPECIFICATION.md`. Sudoku i Saper do usunięcia. Otrzymano `add_hourly_income`, joby resetu.
+  Odczytano dane ekonomii z bazy (skrypt tylko do odczytu, nic nie zapisano).
+
+- 2026-11-03: streak z limitem, zadania tylko solo, rotacja 9 wariantów minigier, gablota 5 kart,
+  inbox globalny z czerwoną kropką, lista statystyk profilu zaakceptowana.
+
+- 2026-11-03: doba gry od 10:00 Europe/Warsaw; nick case-insensitive w wyszukiwaniu; hasło min. 8 dowolnych; profil jako pop-up; 10. egzemplarz z paczki i z wymiany przepada (oznaczenie „LIMIT”); cel ~5 paczek dziennie.
+- 2026-11-03: minigry zaakceptowane; osiągnięcia mogą dawać paczki; limit 9 egzemplarzy karty bez
+  sprzedaży; otwieranie paczek do całkowitej przebudowy. Spisano specyfikację v1 do weryfikacji.
+
+- 2026-11-03: Drizzle ORM zaakceptowany (Next.js 16 przyjęty razem z architekturą).
+
+## Otwarte pytania do właściciela
+
+1. Liczby ekonomii i rezygnacja z wariantu „Premium” (`PRODUCT_SPECIFICATION.md` rozdz. 4, F4).
+2. Akceptacja planu refaktoryzacji (`REFACTORING_PLAN.md`).
+3. Status RLS (przy resecie i tak zostanie włączony).
