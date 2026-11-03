@@ -1,18 +1,14 @@
 "use client";
 
 import SetTile from "@/components/data-display/SetTile";
-import {SetType} from "@/lib/types";
-import {useUserTotalPerSet} from "@/hooks/queries/useUserTotalPerSet";
 import TabHeader from "@/components/layout/TabHeader";
-import useSets from "@/hooks/queries/useSets";
+import {useCollectionSets} from "@/features/game/use-game";
 
-export default function IndexPage() {
-    const {setList, isLoading, error} = useSets();
-
-    const {data: userTotalPerSet} = useUserTotalPerSet();
+export default function CollectionPage() {
+    const {data: sets, isLoading, error} = useCollectionSets();
 
     if (isLoading) return <p>Ładowanie...</p>;
-    if (error instanceof Error) return <p>Błąd: {error.message}</p>;
+    if (error) return <p>Błąd: {error.message}</p>;
 
     return (
         <div
@@ -23,8 +19,8 @@ export default function IndexPage() {
                 description={"Kliknij w paczkę, by zobaczyć swój postęp w zbieraniu kart!"}
             />
             <div className={"flex gap-10 md:gap-20 flex-wrap justify-center px-6 md:px-16 lg:px-32 mt-12"}>
-                {setList.map((set: SetType, index: number) => (
-                    <SetTile key={index} {...set} totalCollected={userTotalPerSet?.[set.id] ?? 0} />
+                {sets?.map((set) => (
+                    <SetTile key={set.id} {...set} />
                 ))}
             </div>
         </div>

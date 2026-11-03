@@ -1,39 +1,20 @@
 "use client";
 
-import {useQuery} from "@tanstack/react-query";
-import {SetType} from "@/lib/types";
 import {Button} from "@/components/ui/button";
-import {CoinsIcon} from "lucide-react";
-import {useUserTotalPerSet} from "@/hooks/queries/useUserTotalPerSet";
-import {useEffect, useRef, useState} from "react";
-import {useUserCoins} from "@/hooks/queries/useUserCoins";
-import OpenPackDialog from "@/components/shop/OpenPackDialog";
+import {CoinsIcon, Gift} from "lucide-react";
+import {useEffect, useRef} from "react";
 import Image from "next/image";
+import type {PackSource, ShopSet} from "@/server/services/packs";
 
-export default function PacksCarousel({price}: {price: number}) {
-    const {coins} = useUserCoins();
-    const [open, setOpen] = useState(false);
-    const [selectedSetData, setSelectedSetData] = useState<SetType | null>(null);
+type PacksCarouselProps = {
+    title: string;
+    sets: ShopSet[];
+    coins: number;
+    vouchers: number;
+    onOpen: (set: ShopSet, source: PackSource) => void;
+};
 
-    const {data: setList} = useQuery({
-        queryKey: ["sets"],
-        queryFn: async () => {
-            const res = await fetch("/api/sets");
-            if (!res.ok) throw new Error("Nie udało się pobrać setów");
-            return res.json();
-        },
-    });
-
-    const {data: userTotalPerSet} = useUserTotalPerSet();
-    const sets: SetType[] = setList?.data || [];
-
-    const filteredSets = sets.filter((set) => {
-        if (price === 100) return set.class === 1;
-        if (price === 200) return set.class === 2;
-        if (price === 300) return set.class === 3;
-        return false;
-    });
-
+export default function PacksCarousel({title, sets, coins, vouchers, onOpen}: PacksCarouselProps) {
     const scrollRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -51,53 +32,52 @@ export default function PacksCarousel({price}: {price: number}) {
         return () => el.removeEventListener("wheel", onWheel);
     }, []);
 
-    async function handleOpenPack(set: SetType) {
-        setSelectedSetData(set);
-        setOpen(true);
-    }
-
     return (
         <div className="flex flex-col gap-4">
-            <h1 className="text-xl md:text-3xl font-semibold text-blue-500">Paczki po {price} monet:</h1>
+            <h1 className="text-xl md:text-3xl font-semibold text-blue-500">{title}</h1>
             <div className="py-[25px] shop-card-border gap-4">
                 <div ref={scrollRef} className="flex overflow-x-auto gap-4 custom-scroll">
                     <div className="w-[25px]" />
-                    {filteredSets.map((set: SetType, index: number) => (
+                    {sets.map((set) => (
                         <div
-                            key={index}
+                            key={set.id}
                             className="w-52 h-52 md:w-72 md:h-72 border-2 shrink-0 rounded-xl p-4 flex flex-col justify-center items-center relative mb-2 overflow-hidden"
                         >
                             <div className={"w-full h-full grid place-items-center pb-2"}>
-                                <Image src={set.images!.logo as string} alt={set.name} width={180} height={180} />
+                                <Image src={set.logo} alt={set.name} width={180} height={180} unoptimized />
                             </div>
                             <h5 className="text-sm text-gray-500 absolute bottom-4 right-4">
-                                {userTotalPerSet?.[set.id] ?? 0}/{set.total}
+                                {set.collected}/{set.total}
                             </h5>
                             <div className="flex flex-col items-center gap-1 ">
                                 <h3 className="text-base md:text-lg font-semibold whitespace-nowrap">{set.name}</h3>
-                                <Button
-                                    size="sm"
-                                    className="bg-blue-500 hover:bg-blue-600"
-                                    disabled={coins < price}
-                                    onClick={() => handleOpenPack(set)}
-                                >
-                                    {price}
-                                    <CoinsIcon />
-                                </Button>
+                                <div className="flex gap-2">
+                                    <Button
+                                        size="sm"
+                                        className="bg-blue-500 hover:bg-blue-600"
+                                        disabled={coins < set.price}
+                                        onClick={() => onOpen(set, "shop")}
+                                    >
+                                        {set.price}
+                                        <CoinsIcon />
+                                    </Button>
+                                    {vouchers > 0 && (
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            aria-label={`Otwórz za darmo: ${set.name}`}
+                                            onClick={() => onOpen(set, "voucher")}
+                                        >
+                                            <Gift />
+                                        </Button>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     ))}
                     <div className="w-[25px]" />
                 </div>
             </div>
-
-            <OpenPackDialog
-                open={open}
-                set={selectedSetData}
-                price={price}
-                setOpen={setOpen}
-                setSelectedSetData={setSelectedSetData}
-            />
         </div>
     );
 }

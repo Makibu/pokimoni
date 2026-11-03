@@ -1,12 +1,10 @@
-import {supabaseServer} from "@/lib/supabaseServer";
 import {NextResponse} from "next/server";
+import {getDb} from "@/server/db/client";
+import {requireUser, route} from "@/server/http/handler";
+import {listAchievements} from "@/server/services/progress";
 
-export async function GET(req: Request) {
-    const {data, error} = await supabaseServer.from("achievements").select("*");
-
-    if (error) {
-        return NextResponse.json({error: error}, {status: 500});
-    }
-
-    return NextResponse.json({achievements: data});
-}
+export const GET = route(async (req) => {
+    const db = getDb();
+    const user = await requireUser(db, req);
+    return NextResponse.json(await listAchievements(db, user.id));
+});

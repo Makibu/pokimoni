@@ -10,9 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Placeholder values: the build must not depend on real secrets.
-      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
-      SUPABASE_SERVICE_ROLE_KEY: placeholder
       SESSION_SECRET: ci-placeholder-secret-ci-placeholder-secret
       DATABASE_URL: postgres://placeholder:placeholder@localhost:5432/placeholder
     steps:

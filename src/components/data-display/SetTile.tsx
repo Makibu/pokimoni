@@ -1,21 +1,15 @@
-import {SetType} from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
+import type {CollectionSet} from "@/server/services/collection";
 
-export default function SetTile({
-    id,
-    name,
-    total,
-    series,
-    images,
-    totalCollected,
-    className,
-}: SetType & {totalCollected?: number; className?: string}) {
+export default function SetTile({id, name, total, series, logo, collected}: CollectionSet) {
     return (
         <div
-            className={`w-48 md:w-72 h-72 md:h-[400px] border-2 rounded-xl flex flex-col justify-center p-4 relative group bg-white/60 shadow-sm backdrop-blur-lg ${className}`}
+            className={
+                "w-48 md:w-72 h-72 md:h-[400px] border-2 rounded-xl flex flex-col justify-center p-4 relative group bg-white/60 shadow-sm backdrop-blur-lg"
+            }
         >
-            <Image src={images!.logo as string} alt={name} width={300} height={300} />
+            <Image src={logo} alt={name} width={300} height={300} unoptimized />
 
             <div className="absolute w-full bottom-0 left-0 z-10 overflow-hidden rounded-b-md">
                 <div className="absolute inset-0 bg-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-md"></div>
@@ -25,13 +19,13 @@ export default function SetTile({
                     <div className="flex justify-between text-gray-800 -mt-1 text-sm md:text-base">
                         <h3>{series}</h3>
                         <span>
-                            {totalCollected}/{total}
+                            {collected}/{total}
                         </span>
                     </div>
                 </div>
             </div>
 
-            <div className="absolute inset-0 rounded-xl bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity z-0">
+            <div className="absolute inset-0 rounded-xl bg-black/50 opacity-0 group-hover:opacity-100 focus-within:opacity-100 flex items-center justify-center transition-opacity z-0">
                 <Link
                     href={`/collection/${id}`}
                     className="px-4 py-2 bg-white text-black font-semibold rounded-lg shadow hover:bg-gray-200 transition-colors"

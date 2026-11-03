@@ -1,25 +1,17 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import {useSyncExternalStore} from "react";
 
-export function useIsMobile(breakpoint = 1280) {
-    const [isMobile, setIsMobile] = useState(false);
-    const [mounted, setMounted] = useState(false);
+function subscribe(listener: () => void) {
+    window.addEventListener("resize", listener);
+    return () => window.removeEventListener("resize", listener);
+}
 
-    useEffect(() => {
-        setMounted(true);
-
-        const checkIsMobile = () => {
-            setIsMobile(window.innerWidth <= breakpoint);
-        };
-
-        checkIsMobile();
-
-        window.addEventListener("resize", checkIsMobile);
-        return () => window.removeEventListener("resize", checkIsMobile);
-    }, [breakpoint]);
-
-    if (!mounted) return null;
-
-    return isMobile;
+/** Whether the viewport is at most `breakpoint` wide; `null` while rendering on the server. */
+export function useIsMobile(breakpoint = 1280): boolean | null {
+    return useSyncExternalStore(
+        subscribe,
+        () => window.innerWidth <= breakpoint,
+        () => null,
+    );
 }

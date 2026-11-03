@@ -3,11 +3,11 @@
 import Link from "next/link";
 import {BookMarked, ChartNoAxesCombined, HomeIcon, ShoppingBag, Trophy} from "lucide-react";
 import {usePathname} from "next/navigation";
-import useUserAchievementNotification from "@/hooks/queries/useUserAchievementNotification";
+import {usePlayer} from "@/features/game/use-game";
 
 export default function Sidebar() {
     const pathname = usePathname();
-    const {has_unclaimed_achievements} = useUserAchievementNotification();
+    const {data: player} = usePlayer();
 
     const linkMap = [
         {name: "Home", href: "/", icon: HomeIcon},
@@ -43,7 +43,7 @@ export default function Sidebar() {
                                 title={item.name}
                             >
                                 <Icon size={20} className="transition-transform duration-200" />
-                                {item.name === "Achievements" && has_unclaimed_achievements && (
+                                {item.name === "Achievements" && player?.hasUnclaimedAchievements && (
                                     <div
                                         className={
                                             "w-4 grid place-items-center text-white absolute top-0 right-0 aspect-square rounded-full bg-red-400 text-[10px]"

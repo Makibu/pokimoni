@@ -4,7 +4,7 @@ import Link from "next/link";
 import {BookMarked, BugIcon, ChartNoAxesCombined, Info, LucideIcon, ShoppingBag, Trophy} from "lucide-react";
 import PokemonBackground2 from "@public/pokemon-background-2.jpg";
 import Image, {StaticImageData} from "next/image";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 
 import BannerYellow from "@public/banners/banner-yellow.png";
 import BannerRed from "@public/banners/banner-red.png";
@@ -15,6 +15,7 @@ import IncomeSlots from "@/components/home/IncomeSlots";
 
 import {changeDate, changesData, version} from "@/lib/changesData";
 import {toast} from "sonner";
+import {useSendFeedback} from "@/features/game/use-game";
 
 type BannerColor = "yellow" | "red" | "green" | "blue";
 
@@ -65,34 +66,17 @@ export default function Card() {
 
     const [feedbackText, setFeedbackText] = useState("");
 
-    const [uid, setUid] = useState<string | null>(null);
+    const sendFeedback = useSendFeedback();
 
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("user") || "{}");
-        const storedUid = user.uid;
-        if (storedUid) setUid(storedUid);
-    }, []);
-
-    async function handleSubmitFeedback() {
-        if (!uid || !feedbackText.trim()) return;
-
-        try {
-            const res = await fetch("/api/user/feedback", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({uid, description: feedbackText.trim()}),
-            });
-
-            if (!res.ok) throw new Error("Nie udało się wysłać feedbacku");
-
-            toast.success("Wiadomość wysłana! Dziękujemy :D");
-            setFeedbackText("");
-            setShowFeedbackDialog(false);
-        } catch {
-            toast.error("Coś poszło nie tak, nie udało się wysłać wiadomości ;c");
-        }
+    function handleSubmitFeedback() {
+        sendFeedback.mutate(feedbackText, {
+            onSuccess: () => {
+                toast.success("Wiadomość wysłana! Dziękujemy :D");
+                setFeedbackText("");
+                setShowFeedbackDialog(false);
+            },
+            onError: (error) => toast.error(error.message),
+        });
     }
 
     return (
@@ -140,11 +124,20 @@ export default function Card() {
             <IncomeSlots />
 
             <div className={"fixed right-6 bottom-20 lg:bottom-6 flex gap-2 md:gap-4 flex-col md:flex-row"}>
-                <BugIcon
-                    className={"w-4 md:w-5 aspect-square cursor-pointer"}
+                <button
+                    aria-label="Zgłoś błąd lub pomysł"
+                    className={"cursor-pointer"}
                     onClick={() => setShowFeedbackDialog(true)}
-                />
-                <Info className="aspect-square w-4 md:w-5 cursor-pointer" onClick={() => setShowVersionInfo(true)} />
+                >
+                    <BugIcon className={"w-4 md:w-5 aspect-square"} />
+                </button>
+                <button
+                    aria-label="Informacje o aplikacji"
+                    className={"cursor-pointer"}
+                    onClick={() => setShowVersionInfo(true)}
+                >
+                    <Info className="aspect-square w-4 md:w-5" />
+                </button>
             </div>
 
             <Dialog open={showVersionInfo} onOpenChange={setShowVersionInfo}>
@@ -225,7 +218,7 @@ export default function Card() {
                             <button
                                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
                                 onClick={handleSubmitFeedback}
-                                disabled={!feedbackText.trim()}
+                                disabled={!feedbackText.trim() || sendFeedback.isPending}
                             >
                                 Wyślij
                             </button>

@@ -1,16 +1,29 @@
 "use client";
 
-import {Award, BarChart3, CircleQuestionMark, CoinsIcon, Crown, Package, Star, TrendingUp, Trophy} from "lucide-react";
-import TabHeader from "@/components/layout/TabHeader";
-import {useUserStats} from "@/hooks/queries/useUserStats";
-import LoadingIndicator from "@/components/ui/LoadingIndicator";
-import {Badge} from "@/components/ui/badge";
-import {badges} from "@/lib/badgesData";
+import {
+    Award,
+    BarChart3,
+    Boxes,
+    CircleQuestionMark,
+    CoinsIcon,
+    Crown,
+    Gem,
+    Package,
+    Star,
+    TrendingUp,
+    Trophy,
+} from "lucide-react";
+import Image from "next/image";
 import {formatDistanceToNow} from "date-fns";
 import {pl} from "date-fns/locale";
+import TabHeader from "@/components/layout/TabHeader";
+import {Badge} from "@/components/ui/badge";
 import {HybridTooltip, HybridTooltipContent, HybridTooltipTrigger} from "@/components/ui/hybrid-tooltip";
+import LoadingIndicator from "@/components/ui/LoadingIndicator";
+import {RARITIES, type Rarity} from "@/domain/rarity";
+import {useStatistics} from "@/features/game/use-game";
 
-const rarityColors = {
+const rarityColors: Record<Rarity, string> = {
     common: "#d1d5db",
     uncommon: "#6b7280",
     rare: "#3b82f6",
@@ -23,18 +36,73 @@ const rarityColors = {
     "ace spec rare": "#14b8a6",
 };
 
-const actionIcons: Record<string, React.ElementType> = {
-    "Zdobył kartę": Star,
-    "Ukończył osiągnięcie": Trophy,
-    "Zdobył odznakę": Award,
+const activityLabels = {
+    card: {action: "Zdobyto kartę", icon: Star},
+    achievement: {action: "Ukończono osiągnięcie", icon: Trophy},
+    badge: {action: "Zdobyto odznakę", icon: Award},
 };
 
+const badgeIcons: Record<string, React.ElementType> = {
+    award: Award,
+    star: Star,
+    coins: CoinsIcon,
+    gem: Gem,
+    trophy: Trophy,
+    boxes: Boxes,
+    package: Package,
+    crown: Crown,
+};
+
+const statTileColors = {
+    blue: {tile: "from-blue-50 to-blue-100/50 border-blue-200", value: "text-blue-600", total: "text-blue-500"},
+    cyan: {tile: "from-cyan-50 to-cyan-100/50 border-cyan-200", value: "text-cyan-600", total: "text-cyan-500"},
+    indigo: {
+        tile: "from-indigo-50 to-indigo-100/50 border-indigo-200",
+        value: "text-indigo-600",
+        total: "text-indigo-500",
+    },
+    sky: {tile: "from-sky-50 to-sky-100/50 border-sky-200", value: "text-sky-600", total: "text-sky-500"},
+    yellow: {
+        tile: "from-yellow-50 to-yellow-100/50 border-yellow-200",
+        value: "text-yellow-600",
+        total: "text-yellow-500",
+    },
+};
+
+function StatTile({
+    color,
+    label,
+    value,
+    total,
+}: {
+    color: keyof typeof statTileColors;
+    label: string;
+    value: number;
+    total?: number;
+}) {
+    const classes = statTileColors[color];
+    return (
+        <div className={`bg-gradient-to-br ${classes.tile} border-2 backdrop-blur-sm rounded-lg p-4 text-center`}>
+            <div className={`text-2xl font-bold ${classes.value}`}>
+                {value}
+                {total !== undefined && <span className={`${classes.total} text-base font-normal`}>/{total}</span>}
+            </div>
+            <p className="text-sm text-slate-600">{label}</p>
+        </div>
+    );
+}
+
 export default function StatisticsPage() {
-    const {data: userStats, isLoading} = useUserStats();
+    const {data: stats, error} = useStatistics();
 
-    if (!userStats || isLoading) return <LoadingIndicator />;
+    if (error) return <p>Błąd: {error.message}</p>;
+    if (!stats) return <LoadingIndicator />;
 
-    const earnedBadgeIds = userStats.userBadges?.map((b) => b.badge_id) ?? [];
+    const rarityStats = [...RARITIES].reverse().map((rarity) => {
+        const count = stats.copiesByRarity[rarity] ?? 0;
+        return {rarity, count, percent: stats.totalCards > 0 ? Math.round((count / stats.totalCards) * 100) : 0};
+    });
+    const earnedBadges = stats.badges.filter((badge) => badge.earned).length;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-slate-50 relative overflow-hidden pb-32">
@@ -45,41 +113,21 @@ export default function StatisticsPage() {
 
             <main className="container mx-auto px-4 py-8 relative z-10">
                 <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-                    <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-2 border-blue-200 backdrop-blur-sm rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-blue-600">
-                            {userStats.total_unique_cards}
-                            <span className={"text-blue-500 text-base font-normal"}>/{userStats.cardsTotal}</span>
-                        </div>
-                        <p className="text-sm text-slate-600">Unikatowe Karty</p>
-                    </div>
-
-                    <div className="bg-gradient-to-br from-cyan-50 to-cyan-100/50 border-2 border-cyan-200 backdrop-blur-sm rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-cyan-600">{userStats.total_cards}</div>
-                        <p className="text-sm text-slate-600">Wszystkie Karty</p>
-                    </div>
-
-                    <div className="bg-gradient-to-br from-indigo-50 to-indigo-100/50 border-2 border-indigo-200 backdrop-blur-sm rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-indigo-600">{userStats.total_packs}</div>
-                        <p className="text-sm text-slate-600">Paczki</p>
-                    </div>
-
-                    <div className="bg-gradient-to-br from-sky-50 to-sky-100/50 border-2 border-sky-200 backdrop-blur-sm rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-sky-600">
-                            {userStats.total_achievements}
-                            <span className={"text-sky-500 text-base font-normal"}>
-                                /{userStats.totalAchievementsCount}
-                            </span>
-                        </div>
-                        <p className="text-sm text-slate-600">Osiągnięcia</p>
-                    </div>
-
-                    <div className="bg-gradient-to-br from-yellow-50 to-yellow-100/50 border-2 border-yellow-200 backdrop-blur-sm rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-yellow-600">
-                            {userStats.userBadges.length}
-                            <span className={"text-yellow-500 text-base font-normal"}>/{badges.length}</span>
-                        </div>
-                        <p className="text-sm text-slate-600">Odznaki</p>
-                    </div>
+                    <StatTile
+                        color="blue"
+                        label="Unikatowe Karty"
+                        value={stats.uniqueCards}
+                        total={stats.catalogCards}
+                    />
+                    <StatTile color="cyan" label="Wszystkie Karty" value={stats.totalCards} />
+                    <StatTile color="indigo" label="Paczki" value={stats.packsOpened} />
+                    <StatTile
+                        color="sky"
+                        label="Osiągnięcia"
+                        value={stats.achievementsUnlocked}
+                        total={stats.achievementsTotal}
+                    />
+                    <StatTile color="yellow" label="Odznaki" value={earnedBadges} total={stats.badges.length} />
                 </div>
 
                 <div className="flex flex-col lg:grid lg:grid-cols-2 gap-x-4 gap-y-8">
@@ -89,28 +137,23 @@ export default function StatisticsPage() {
                             Rozkład Rzadkości
                         </h3>
                         <div className="space-y-3 max-h-80 overflow-y-auto">
-                            {userStats.rarityStats.map(
-                                ({rarity, count, percent}: {rarity: string; count: number; percent: number}) => (
-                                    <div key={rarity} className="space-y-2">
-                                        <div className="flex justify-between items-center">
-                                            <span className="font-medium text-sm capitalize">{rarity}</span>
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-xs text-slate-500">{count}</span>
-                                                <Badge className="bg-blue-50 text-blue-700 text-xs">{percent}%</Badge>
-                                            </div>
-                                        </div>
-                                        <div className="w-full rounded-full h-1.5 bg-slate-100">
-                                            <div
-                                                className="h-1.5 rounded-full"
-                                                style={{
-                                                    width: `${percent}%`,
-                                                    backgroundColor: rarityColors[rarity as keyof typeof rarityColors],
-                                                }}
-                                            />
+                            {rarityStats.map(({rarity, count, percent}) => (
+                                <div key={rarity} className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="font-medium text-sm capitalize">{rarity}</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-xs text-slate-500">{count}</span>
+                                            <Badge className="bg-blue-50 text-blue-700 text-xs">{percent}%</Badge>
                                         </div>
                                     </div>
-                                ),
-                            )}
+                                    <div className="w-full rounded-full h-1.5 bg-slate-100">
+                                        <div
+                                            className="h-1.5 rounded-full"
+                                            style={{width: `${percent}%`, backgroundColor: rarityColors[rarity]}}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
@@ -120,24 +163,27 @@ export default function StatisticsPage() {
                                 <Package className="h-5 w-5 text-indigo-600" />
                                 Ulubiona Paczka
                             </h3>
-                            {userStats.favoritePack ? (
+                            {stats.favoriteSet ? (
                                 <>
-                                    <img
-                                        src={userStats.favoritePack.images.logo}
-                                        alt={userStats.favoritePack.name}
+                                    <Image
+                                        src={stats.favoriteSet.logo}
+                                        alt={stats.favoriteSet.name}
+                                        width={240}
+                                        height={120}
+                                        unoptimized
                                         className={"py-2"}
                                     />
                                     <div className="text-center">
                                         <div className="text-xl font-bold text-indigo-600 mb-1">
-                                            {userStats.favoritePack?.name}
+                                            {stats.favoriteSet.name}
                                         </div>
                                         <p className="text-sm text-slate-500">
-                                            Otwarta {userStats.favoritePack?.opened} razy
+                                            Otwarta {stats.favoriteSet.opened} razy
                                         </p>
                                     </div>
                                 </>
                             ) : (
-                                <div className="text-center absolute bottom-4">
+                                <div className="text-center">
                                     <div className="text-xl font-bold text-indigo-600 mb-1">Brak</div>
                                     <p className="text-sm text-slate-500 px-12">
                                         Otwórz swoją pierwszą paczkę, by ją wyświetlić!
@@ -151,25 +197,28 @@ export default function StatisticsPage() {
                                 <Crown className="h-5 w-5 text-yellow-600" />
                                 Najlepszy Pokémon
                             </h3>
-                            {userStats.bestCard ? (
+                            {stats.bestCard ? (
                                 <>
-                                    <img
-                                        src={userStats.bestCard.images?.small}
-                                        alt={userStats.bestCard.name}
+                                    <Image
+                                        src={stats.bestCard.imageSmall}
+                                        alt={stats.bestCard.name}
+                                        width={245}
+                                        height={342}
+                                        unoptimized
                                         className={"px-16 py-2"}
                                     />
                                     <div className="text-center">
                                         <div className="text-xl font-bold text-yellow-600 mb-1">
-                                            {userStats.bestCard.name}
+                                            {stats.bestCard.name}
                                         </div>
-                                        <p className="text-sm text-slate-500">
-                                            {userStats.bestCard.rarity} - {userStats.bestCard.income}
+                                        <p className="text-sm text-slate-500 capitalize">
+                                            {stats.bestCard.rarity} - {stats.bestCard.income}
                                             <CoinsIcon className={"inline-block w-3 ml-1"} />
                                         </p>
                                     </div>
                                 </>
                             ) : (
-                                <div className="text-center absolute bottom-4">
+                                <div className="text-center">
                                     <div className="text-xl font-bold text-yellow-600 mb-1">Brak</div>
                                     <div className={"text-sm text-slate-500 px-12"}>
                                         Otwórz pierwszą paczkę by zdobyć swojego pokemona!
@@ -179,30 +228,27 @@ export default function StatisticsPage() {
                         </div>
                     </div>
 
-                    <div className="bg-white/90 backdrop-blur-sm border-2 border-blue-100 rounded-lg p-6 col-span-2">
+                    <div className="bg-white/90 backdrop-blur-sm border-2 border-blue-100 rounded-lg p-6 lg:col-span-2">
                         <h3 className="flex items-center gap-2 text-lg font-semibold mb-4">
                             <Award className="h-5 w-5 text-orange-600" />
                             Gablota Odznak
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
-                            {badges.map((badge, index) => {
-                                const IconComponent = badge.icon;
-
-                                const isEarned = earnedBadgeIds.includes(Number(badge.id));
-
+                            {stats.badges.map((badge) => {
+                                const IconComponent = badgeIcons[badge.icon] ?? Award;
                                 return (
                                     <div
-                                        key={index}
-                                        className={`p-3 rounded-lg relative text-center ${isEarned ? "bg-orange-50 border border-orange-200" : "bg-slate-50 border border-slate-200 opacity-50"}`}
+                                        key={badge.id}
+                                        className={`p-3 rounded-lg relative text-center ${badge.earned ? "bg-orange-50 border border-orange-200" : "bg-slate-50 border border-slate-200 opacity-50"}`}
                                     >
                                         <IconComponent
-                                            className={`h-6 w-6 mx-auto mb-1 ${isEarned ? "text-orange-600" : "text-slate-400"}`}
+                                            className={`h-6 w-6 mx-auto mb-1 ${badge.earned ? "text-orange-600" : "text-slate-400"}`}
                                         />
                                         <p className="text-xs font-medium">{badge.name}</p>
                                         <HybridTooltip>
                                             <HybridTooltipTrigger asChild>
                                                 <CircleQuestionMark
-                                                    className={`absolute top-2 right-2 w-4 h-4 md:w-6 md:h-6 ${isEarned ? "text-orange-600" : "text-slate-400"}`}
+                                                    className={`absolute top-2 right-2 w-4 h-4 md:w-6 md:h-6 ${badge.earned ? "text-orange-600" : "text-slate-400"}`}
                                                 />
                                             </HybridTooltipTrigger>
                                             <HybridTooltipContent>
@@ -220,16 +266,22 @@ export default function StatisticsPage() {
                             <TrendingUp className="h-5 w-5 text-blue-600" />
                             Ostatnia Aktywność
                         </h3>
+                        {stats.recentActivity.length === 0 && (
+                            <p className="text-sm text-slate-500">Nic się jeszcze nie wydarzyło.</p>
+                        )}
                         <div className="space-y-4">
-                            {userStats.recentActivity.map((activity, index) => {
-                                const IconComponent = actionIcons[activity.action] ?? Star;
+                            {stats.recentActivity.map((activity) => {
+                                const {action, icon: IconComponent} = activityLabels[activity.kind];
                                 return (
-                                    <div key={index} className="flex items-center gap-4 p-3 bg-slate-50/70 rounded-lg">
+                                    <div
+                                        key={`${activity.kind}-${activity.item}-${activity.time}`}
+                                        className="flex items-center gap-4 p-3 bg-slate-50/70 rounded-lg"
+                                    >
                                         <div className="p-2 bg-blue-50 rounded-full">
                                             <IconComponent className="h-4 w-4 text-blue-600" />
                                         </div>
                                         <div className="flex-1">
-                                            <p className="text-sm font-medium">{activity.action}</p>
+                                            <p className="text-sm font-medium">{action}</p>
                                             <span className="text-indigo-600">{activity.item}</span>
                                             <p className="text-xs text-slate-500">
                                                 {formatDistanceToNow(new Date(activity.time), {

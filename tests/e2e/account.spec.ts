@@ -1,24 +1,8 @@
-import {expect, type Page, test} from "@playwright/test";
-
-const PASSWORD = "dowolne-haslo";
-
-function uniquePlayer(testInfo: {project: {name: string}}) {
-    const suffix = `${testInfo.project.name.slice(0, 1)}${Date.now().toString(36)}${Math.floor(Math.random() * 1000)}`;
-    return {username: `Gracz_${suffix}`, email: `gracz_${suffix}@example.com`};
-}
-
-async function register(page: Page, player: {username: string; email: string}) {
-    await page.goto("/login");
-    await page.getByRole("button", {name: "Stwórz konto!"}).click();
-    await page.getByLabel("Nazwa użytkownika").fill(player.username);
-    await page.getByLabel("Email").fill(player.email);
-    await page.getByLabel("Hasło").fill(PASSWORD);
-    await page.getByRole("button", {name: "Zarejestruj", exact: true}).click();
-    await expect(page).toHaveURL(/\/$/);
-}
+import {expect, test} from "@playwright/test";
+import {PASSWORD, register, uniquePlayer} from "./helpers";
 
 test("player can register, stay signed in, log out and log back in", async ({page}, testInfo) => {
-    const player = uniquePlayer(testInfo);
+    const player = uniquePlayer(testInfo.project.name);
     await register(page, player);
 
     // The session cookie cannot be read by scripts and nothing identifying is left in localStorage.
@@ -43,7 +27,7 @@ test("player can register, stay signed in, log out and log back in", async ({pag
 });
 
 test("wrong password shows an error and stays on the login page", async ({page}, testInfo) => {
-    const player = uniquePlayer(testInfo);
+    const player = uniquePlayer(testInfo.project.name);
     await register(page, player);
     await page.getByRole("button", {name: "Menu użytkownika"}).click();
     await page.getByRole("menuitem", {name: "Wyloguj"}).click();
@@ -63,7 +47,7 @@ test("a forged session cookie does not open the game", async ({page, context, ba
 });
 
 test("player can delete the account after confirming the password", async ({page}, testInfo) => {
-    const player = uniquePlayer(testInfo);
+    const player = uniquePlayer(testInfo.project.name);
     await register(page, player);
 
     await page.getByRole("button", {name: "Menu użytkownika"}).click();
@@ -80,7 +64,7 @@ test("player can delete the account after confirming the password", async ({page
 });
 
 test("changing the password signs out other sessions", async ({page, browser, baseURL}, testInfo) => {
-    const player = uniquePlayer(testInfo);
+    const player = uniquePlayer(testInfo.project.name);
     await register(page, player);
 
     const otherContext = await browser.newContext({baseURL});

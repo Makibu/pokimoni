@@ -1,276 +1,101 @@
 "use client";
 
-import {Card, SetType} from "@/lib/types";
-import {Dialog, DialogContent, DialogTitle} from "@/components/ui/dialog";
-import {Button} from "@/components/ui/button";
-import {useUserCoins} from "@/hooks/queries/useUserCoins";
+import Image from "next/image";
+import {CoinsIcon} from "lucide-react";
 import {toast} from "sonner";
-import {useEffect, useState} from "react";
-import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {useUserCards} from "@/hooks/queries/useUserCards";
-import {checkUserBadges} from "@/lib/checkUserBadges";
-import {motion} from "framer-motion";
-import {checkUserAchievements} from "@/lib/checkUserAchievements";
-import {useIsMobile} from "@/hooks/useIsMobile";
+import {Button} from "@/components/ui/button";
+import {Dialog, DialogContent, DialogTitle} from "@/components/ui/dialog";
+import {type OpenedPack, useOpenPack} from "@/features/game/use-game";
+import type {PackSource} from "@/server/services/packs";
 
-type OpenPackDialogProps = {
-    open: boolean;
-    set: SetType | null;
+export type PackToOpen = {
+    setId: string;
+    name: string;
+    logo: string;
     price: number;
-    setSelectedSetData: (set: SetType | null) => void;
-    setOpen: (open: boolean) => void;
+    source: PackSource;
 };
 
-type RandomPacks = {
-    isGodPack: boolean;
-    pack: Card[];
-};
-
-type CardParametersType = {
-    scale: number;
-    x: number;
-    left: number | string;
-    rotateY: number;
-};
-
-export default function OpenPackDialog({open, set, price, setOpen}: OpenPackDialogProps) {
-    const queryClient = useQueryClient();
-    const {updateCoins} = useUserCoins();
-    const {updateUserCards} = useUserCards();
-    const isMobile = useIsMobile();
-
-    const [step, setStep] = useState<"start" | "revealing" | "final">("start");
-    const [currentCards, setCurrentCards] = useState<RandomPacks | null>(null);
-    const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
-    const [uid, setUid] = useState<string>("");
-    const [loading, setLoading] = useState(false);
-
-    const [parameters, setParameters] = useState<CardParametersType[]>(
-        Array(5).fill({left: 0, x: 0, scale: 1, rotateY: 0}),
-    );
-    const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const [finalLayout, setFinalLayout] = useState<boolean>(false);
-
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("user") || "{}");
-        if (user.uid) setUid(user.uid);
-    }, []);
-
-    const {refetch} = useQuery({
-        queryKey: ["generatedCards", set?.id],
-        queryFn: async () => {
-            const response = await fetch(`/api/cards/${set?.id}/random`);
-            const data = await response.json();
-            return data;
-        },
-        enabled: false,
-    });
-
-    async function handleOpenPack() {
-        if (!set) return;
-        setLoading(true);
-        toast.success("Zakupiono paczkę!");
-
-        try {
-            await updateCoins({type: "purchase", amount: -price});
-            setStep("revealing");
-
-            const {data: newCards} = await refetch();
-            setCurrentCards(newCards);
-
-            const result = await updateUserCards({
-                cards: newCards.pack.map((c: Card) => ({card_id: c.id, quantity: 1})),
-                set_id: set?.id,
-            });
-
-            const freshStats = result.userStats;
-
-            const newlyEarnedBadges = await checkUserBadges(uid, freshStats, 0, "all");
-            if (newlyEarnedBadges?.length) {
-                toast.info(`Zdobyłeś nowe odznaki: ${newlyEarnedBadges.map((b) => b.name).join(", ")}`);
-            }
-
-            const res = await fetch(`/api/user/cards/rarity-stats?uid=${uid}`);
-            const rarityData = await res.json();
-            const statsWithRarity = {...freshStats, rarityStats: rarityData.rarityStats};
-
-            const newlyEarnedAchievements = await checkUserAchievements(uid, statsWithRarity);
-
-            await queryClient.invalidateQueries({queryKey: ["achievementsNotification", uid]});
-
-            if (newlyEarnedAchievements?.length) {
-                toast.info(`Zdobyłeś nowe osiągnięcia: ${newlyEarnedAchievements.map((a) => a.title).join(", ")}`);
-            }
-        } catch {
-            toast.error("Coś poszło nie tak :O Spróbuj ponownie później");
-        } finally {
-            await queryClient.invalidateQueries({queryKey: ["userSetStats"]});
-            await queryClient.invalidateQueries({queryKey: ["userAchievements"]});
-            await queryClient.invalidateQueries({queryKey: ["achievements", uid]});
-            await queryClient.invalidateQueries({queryKey: ["userStats", uid]});
-            await queryClient.invalidateQueries({queryKey: ["achievementsNotification", uid]});
-
-            setLoading(false);
-        }
+function announceRewards({earned}: OpenedPack) {
+    if (earned.achievements.length > 0) {
+        toast.info(`Nowe osiągnięcia: ${earned.achievements.map((achievement) => achievement.title).join(", ")}`);
     }
+    if (earned.badges.length > 0) {
+        toast.info(`Nowe odznaki: ${earned.badges.map((badge) => badge.name).join(", ")}`);
+    }
+}
 
-    function handleNext() {
-        if (!parameters.length) return;
+/** Simple pack opening; the full reveal experience replaces it in phase 5 of the rebuild plan. */
+export default function OpenPackDialog({pack, onClose}: {pack: PackToOpen | null; onClose: () => void}) {
+    const open = useOpenPack();
+    const result = open.data;
 
-        if (step === "start") {
-            handleOpenPack();
-            return;
-        }
-
-        if (step === "final") {
-            handleClose();
-            return;
-        }
-
-        if (finalLayout) return;
-
-        const nextIndex = activeIndex === null ? 0 : activeIndex + 1;
-        const newParameters = [...parameters];
-        const isLast = nextIndex >= parameters.length;
-
-        if (!isLast) {
-            if (activeIndex !== null) {
-                newParameters[activeIndex] = {
-                    ...newParameters[activeIndex],
-                    left: "90%",
-                    x: -100,
-                    scale: 1,
-                    rotateY: 180,
-                };
-            }
-
-            newParameters[nextIndex] = {
-                ...newParameters[nextIndex],
-                left: "50%",
-                x: -50,
-                scale: 1.2,
-                rotateY: 180,
-            };
-
-            setParameters(newParameters);
-            setActiveIndex(nextIndex);
-        } else {
-            if (activeIndex !== null) {
-                newParameters[activeIndex] = {
-                    ...newParameters[activeIndex],
-                    left: "90%",
-                    x: -100,
-                    scale: 1,
-                    rotateY: 180,
-                };
-            }
-            setParameters(newParameters);
-
-            setTimeout(() => {
-                const spread = 60;
-                const middleIndex = Math.floor(parameters.length / 2);
-                const finalParams = [...parameters].reverse().map((_, i) => ({
-                    left: "50%",
-                    x: (i - middleIndex) * spread - 50,
-                    scale: 1,
-                    rotateY: 180,
-                }));
-                setParameters(finalParams);
-                setFinalLayout(true);
-                setStep("final");
-            }, 500);
-        }
+    function handleOpen() {
+        if (!pack) return;
+        open.mutate(
+            {setId: pack.setId, source: pack.source},
+            {
+                onSuccess: announceRewards,
+                onError: (error) => toast.error(error.message),
+            },
+        );
     }
 
     function handleClose() {
-        setStep("start");
-        setActiveIndex(null);
-        setFinalLayout(false);
-        setSelectedCardIndex(null);
-        setParameters(Array(5).fill({left: 0, x: 0, scale: 1, rotateY: 0}));
-        setCurrentCards(null);
-        setOpen(false);
+        open.reset();
+        onClose();
     }
 
     return (
-        <Dialog
-            open={open}
-            onOpenChange={(isOpen) => {
-                if (!isOpen) handleClose();
-            }}
-        >
-            <DialogContent
-                className="p-12 flex justify-center items-center flex-col"
-                onInteractOutside={(e) => e.preventDefault()}
-                onEscapeKeyDown={(e) => e.preventDefault()}
-            >
-                <DialogTitle />
+        <Dialog open={pack !== null} onOpenChange={(isOpen) => !isOpen && handleClose()}>
+            <DialogContent className="sm:max-w-3xl w-full max-h-[90svh] overflow-y-auto">
+                <DialogTitle>{result ? result.set.name : "Otwórz paczkę"}</DialogTitle>
 
-                {step === "start" && (
-                    <div
-                        className={`flex flex-col items-center justify-center gap-4 ${isMobile ? "w-full max-w-[900px]" : "w-[900px]"} h-[500px] relative`}
-                    >
-                        <h2 className="text-xl font-bold absolute top-0">Otwórz paczkę</h2>
-                        <img src={set?.images?.logo} alt={set?.name} className={`${isMobile && "w-[90vw] max-w-96"}`} />
-                        <Button onClick={handleNext} className="absolute bottom-0" disabled={loading}>
-                            {loading ? "Ładowanie..." : `${price} monet`}
+                {!result && pack && (
+                    <div className="flex flex-col items-center gap-6 py-6">
+                        <Image src={pack.logo} alt={pack.name} width={320} height={160} unoptimized />
+                        <Button onClick={handleOpen} disabled={open.isPending}>
+                            {open.isPending ? (
+                                "Otwieranie..."
+                            ) : pack.source === "voucher" ? (
+                                "Otwórz za darmo"
+                            ) : (
+                                <>
+                                    Otwórz za {pack.price} <CoinsIcon />
+                                </>
+                            )}
                         </Button>
                     </div>
                 )}
 
-                {(step === "revealing" || step === "final") && currentCards && (
-                    <div
-                        key={currentCards.pack.map((c) => c.id).join("-")}
-                        className="w-[900px] h-[500px] flex relative justify-center items-center"
-                    >
-                        {parameters.map((param, i) => {
-                            const isSelected = finalLayout && selectedCardIndex === i;
-                            const zIndex = finalLayout ? parameters.length - 1 + i : i;
-
-                            return (
-                                <motion.div
-                                    key={i}
-                                    className={`absolute aspect-[245/342] w-48 perspective-1000 transform-style-preserve-3d ${finalLayout ? "cursor-pointer" : ""}`}
-                                    style={{
-                                        top: `calc(50% + ${i * 10}px)`,
-                                        translateY: "-50%",
-                                        zIndex: zIndex,
-                                    }}
-                                    animate={{
-                                        left: param.left,
-                                        x: param.left === "50%" ? param.x - 50 : param.x,
-                                        y: isSelected ? -20 : 0,
-                                        scale: isSelected ? 1.3 : param.scale,
-                                        zIndex: isSelected ? 20 : 1,
-                                        rotateY: param.rotateY,
-                                    }}
-                                    onClick={() => {
-                                        if (!finalLayout) return;
-                                        setSelectedCardIndex((prev) => (prev === i ? null : i));
-                                    }}
-                                    transition={{type: "spring", stiffness: 500, damping: 30}}
-                                >
-                                    <img
-                                        src={"/card_backside.png"}
-                                        alt="Card Backside"
-                                        className={"absolute backface-hidden"}
+                {result && (
+                    <div className="flex flex-col items-center gap-6">
+                        {result.isGodPack && <p className="text-xl font-bold text-yellow-600">God pack!</p>}
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 w-full">
+                            {result.cards.map((card, index) => (
+                                <div key={`${card.id}-${index}`} className="relative" data-testid="opened-card">
+                                    <Image
+                                        src={card.imageSmall}
+                                        alt={card.name}
+                                        width={245}
+                                        height={342}
+                                        unoptimized
+                                        className="w-full h-auto"
                                     />
-                                    <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-md overflow-hidden">
-                                        {currentCards.pack[i]?.images?.small && (
-                                            <img
-                                                src={currentCards.pack[i].images.small}
-                                                alt={`Card ${i}`}
-                                                className="w-full h-full object-cover rounded-md"
-                                            />
-                                        )}
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
-
-                        <div className="bottom-0 absolute">
-                            <Button onClick={handleNext}>{step === "final" ? "Zamknij" : "Next"}</Button>
+                                    {card.isNew && (
+                                        <span className="absolute top-1 left-1 bg-green-500 text-white text-xs font-semibold px-2 py-0.5 rounded">
+                                            NOWA
+                                        </span>
+                                    )}
+                                    {card.overLimit && (
+                                        <span className="absolute top-1 left-1 bg-gray-700 text-white text-xs font-semibold px-2 py-0.5 rounded">
+                                            LIMIT
+                                        </span>
+                                    )}
+                                </div>
+                            ))}
                         </div>
+                        <Button onClick={handleClose}>Zamknij</Button>
                     </div>
                 )}
             </DialogContent>

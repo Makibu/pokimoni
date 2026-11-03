@@ -12,6 +12,7 @@ import {Button} from "@/components/ui/button";
 import {Switch} from "@/components/ui/switch";
 import {useIsMobile} from "@/hooks/useIsMobile";
 import {useState} from "react";
+import Image from "next/image";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {
@@ -118,9 +119,11 @@ function ProfileTab({account, onDeleted}: {account: Account; onDeleted: () => vo
                                 selectedAvatar === num ? "border-blue-500 ring-2 ring-blue-300" : "border-transparent"
                             }`}
                         >
-                            <img
+                            <Image
                                 src={`/avatars/avatar-${num}.webp`}
                                 alt=""
+                                width={48}
+                                height={48}
                                 className="w-12 h-12 rounded-full object-cover"
                             />
                         </button>

@@ -17,7 +17,9 @@ Ostatnia aktualizacja: 2026-11-03
 | XI. Faza 0 — fundamenty | DONE | `IMPLEMENTATION_LOG.md`; PR `phase-0` → `rebuild` |
 | XI. Faza 1 — baza i domena | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-1` |
 | XI. Faza 2 — konta i sesje | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-2` |
-| XI. Fazy 3–9 | NOT STARTED | |
+| XI. Faza 3 — rdzeń gry | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-3` |
+| XI. Faza 4 — przełączenie produkcji | BLOCKED | wymaga zgody właściciela |
+| XI. Fazy 5–9 | NOT STARTED | |
 
 ## Ustalenia
 
@@ -60,3 +62,5 @@ Ostatnia aktualizacja: 2026-11-03
 2. ~~Plan refaktoryzacji~~ — zaakceptowany 2026-11-03.
 3. ~~RLS i dostęp anon~~ — zamknięte 2026-11-03 (`SECURITY_AUDIT.md`).
 4. ~~`DATABASE_URL`~~ — ustawiony 2026-11-03.
+5. Zgoda na przełączenie produkcji (faza 4): usunięcie starych tabel i cronów, zmienne na Vercelu.
+6. Czy ograniczyć paczkę dnia do 1 sztuki dziennie?

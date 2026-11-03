@@ -124,3 +124,55 @@ Stare tabele w `public` sprawdzone po migracji: bez zmian (4 konta, 678 paczek, 
 Na tej gałęzi widoki gry (sklep, kolekcja, statystyki) nie mają jeszcze danych: stare hooki czytają `uid`
 z `localStorage`, którego już nikt nie zapisuje, a stare endpointy nadal działają na `public`. Podpięcie
 pod nowy backend to faza 3. `master` i produkcja nie są dotknięte.
+
+## Faza 3 — Rdzeń gry na nowym backendzie (2026-11-03)
+
+Gałąź: `phase-3` (od `phase-2`).
+
+### Co zrobiono
+
+- **Domena:** `progress` (warunki osiągnięć i odznak), `daily-pack` (poprawne losowanie ważone, DB-09).
+- **Serwisy:** `coins` (atomowa zmiana salda + dziennik), `wallet` (streak, skarbonka, sloty), `packs` (sklep, paczka dnia,
+  zakup i otwarcie w jednej transakcji, darmowe paczki, limit 9), `progress` (ocena i jednorazowy odbiór nagród),
+  `collection` (kolekcja, statystyki z faktycznych tabel).
+- **API:** `/api/player`, `/api/daily/claim`, `/api/piggy-bank/collect`, `/api/slots/[slot]`, `/api/shop`, `/api/packs/open`,
+  `/api/collection`, `/api/collection/owned`, `/api/collection/[setId]`, `/api/achievements`,
+  `/api/achievements/[id]/claim`, `/api/statistics`, `/api/feedback`.
+- **UI:** wszystkie widoki na nowym API (`features/game/use-game.ts`). Tymczasowe, proste okno otwierania paczek (faza 5).
+- **Usunięto:** wszystkie stare endpointy, Sudoku, Saper, `hooks/queries`, `lib/checkUser*`, `lib/badgesData`, `lib/types`,
+  klientów Supabase, `@supabase/supabase-js`, `scripts/export-catalog.mjs`, tymczasowe obniżenie reguł ESLint.
+
+Naprawione: BUG-01, 02, 03, 04, 05, 06, 08, 09, 12, 13, 14, 15, 16, DB-01, DB-04, DB-09, DB-13.
+
+### Błędy znalezione przez testy
+
+- `secureRng`: zakres `2^48` przekraczał limit `randomInt`, więc każde losowanie paczki dnia kończyło się wyjątkiem.
+- **Awatary:** `proxy.ts` przekierowywał na logowanie wewnętrzne żądania `next/image` (bez ciasteczka). Pliki publiczne
+  są teraz wyłączone z proxy; dodany test E2E.
+- Dynamiczne klasy Tailwind w `StatTile` nie zostałyby wygenerowane — zastąpione jawną mapą.
+- E2E przekraczały limit 10 rejestracji na IP; każdy test działa teraz jako osobny klient.
+
+### Decyzje podjęte w trakcie
+
+- **Zmiana karty w slocie wypłaca naliczony dochód od razu do portfela** (skarbonka startuje od zera przy nowej stawce).
+- **Paczka dnia bez limitu sztuk** — jak w starej wersji. Pytanie do właściciela, czy ograniczyć do 1 dziennie.
+- **Karty z katalogu ładowane bez optymalizacji Vercel** (`unoptimized`): obrazy są już małe, a limit optymalizacji darmowego planu by nie wystarczył.
+- Obrazy kart nadal hostowane na `images.pokemontcg.io` (zewnętrzna zależność).
+- Limit prób opiera się na `x-forwarded-for`, który na Vercelu ustawia platforma; poza Vercelem nagłówek można podrobić.
+
+### Wyniki bramki
+
+| Polecenie | Wynik |
+|---|---|
+| `format:check`, `typecheck`, `build` | OK |
+| `lint` | **0 błędów, 0 ostrzeżeń** |
+| `npm test` | **155/155** |
+| `test:e2e` | **22/22** (desktop + mobile) |
+| `npm audit --omit=dev` | 0 podatności |
+
+### Znane ograniczenia (do kolejnych faz)
+
+- Na szerokości 1280 px pasek boczny zasłania lewy brzeg strony statystyk (faza 8).
+- Okno otwierania paczek jest tymczasowe (faza 5). Sekcja minigier zniknęła ze sklepu do fazy 7.
+- `lang="en"` przy polskim UI i brak nagłówków bezpieczeństwa (faza 8).
+- Współbieżność sprawdzona na PGlite (jedno połączenie); blokady wierszy nie były testowane na prawdziwym Postgresie z wieloma połączeniami.
