@@ -85,3 +85,30 @@ Endpointy zwracają `error.message` z Postgresa, `api/achievements` cały obiekt
 - **Hasło do bazy** zostało podane w rozmowie. Po przełączeniu produkcji (faza 4) należy je zmienić
   (Database → Settings) razem z rotacją klucza service-role.
 - Schemat `game`: RLS na wszystkich tabelach, brak polityk, schemat nie jest wystawiony przez REST API.
+
+## Aktualizacja 2026-11-03 — RLS włączony na produkcji
+
+Za zgodą właściciela włączono RLS na 15 tabelach w `public` (bez polityk, jedna transakcja).
+Cofnięcie: `alter table public."<tabela>" disable row level security`.
+
+| Sprawdzenie | Przed | Po |
+|---|---|---|
+| Klucz anon: `users`, `user_stats`, `cards` przez REST | 200, zwraca wiersze | 200, **0 wierszy** |
+| Klucz service-role: te same tabele | zwraca wiersze | zwraca wiersze |
+| Produkcja: `/api/sets`, `/api/achievements` | — | 200, 15 setów |
+
+Luka była realna: test przed zmianą pokazał, że klucz anon czytał `users`. Sprawdzano tylko liczbę wierszy.
+Crony działają jako właściciel tabel (`postgres`), więc RLS ich nie dotyczy; ich kolejny przebieg nie był obserwowany.
+
+### Nadal otwarte — HIGH
+
+Klucz anon nadal ma dostęp do dwóch rzeczy, których RLS na tabelach nie obejmuje:
+
+- **Widok `user_unclaimed_achievements_flag`** działa z uprawnieniami właściciela i zwraca `uid` wszystkich graczy.
+  Stare API przyjmuje `uid` bez weryfikacji (SEC-01), więc to wystarcza do przejęcia konta.
+  Naprawa: `alter view public.user_unclaimed_achievements_flag set (security_invoker = true)`.
+- **Funkcje przez RPC** wykonywalne przez `anon`: `add_hourly_income`, `delete_daily_sudoku`,
+  `delete_daily_minesweeper`, `choose_daily_pack_for_today`, `log_daily_pack_history`.
+  Naprawa: `revoke execute` od `public`, `anon`, `authenticated`.
+
+Obie zmiany czekają na decyzję właściciela.

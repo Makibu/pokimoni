@@ -38,7 +38,8 @@ Fakty = zweryfikowane w kodzie. Hipotezy oznaczone „(hipoteza)”.
   Zestaw o najniższym `id` alfabetycznie przechodzi zawsze, a im dalej w alfabecie, tym rzadziej.
   O wyniku decyduje więc kolejność alfabetyczna, a nie wagi.
 - **DB-10** Ta sama funkcja liczy „zużycie” z `daily_pack_history`, ale niczego do niej nie wstawia
-  (wstawia do `daily_pack`). Jeśli nic innego nie zapisuje historii, kara za powtórki nie działa (hipoteza).
+  (wstawia do `daily_pack`). W bazie istnieje funkcja `log_daily_pack_history` (zapewne trigger), więc historia
+  może być zapisywana; definicji nie sprawdzono. Hipoteza o niedziałającej karze za powtórki jest niepotwierdzona.
 - **DB-11** Strefy czasowe: crony resetu chodzą o 23:00 UTC (północ zimą, 1:00 latem w PL), a paczka dnia
   zmienia się o 00:00 UTC (`current_date`). Monety dzienne i paczka dnia przełączają się o różnych godzinach.
 - **DB-12** Dzienne resety oparte o flagi + cron: jeśli cron nie zadziała, nikt nie odbierze nagrody.
