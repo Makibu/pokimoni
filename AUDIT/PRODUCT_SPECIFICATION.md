@@ -66,7 +66,7 @@ do ustalenia symulacją ekonomii (rozdz. 4).
 
 - Paczka dla każdego z 15 setów; **3 poziomy = 3 klasy setów** (słaba / średnia / najlepsza), każdy
   z własną tabelą szans i ceną. Rezygnuję z osobnego wariantu „Premium” — trzy poziomy wystarczą,
-  a mniej opcji to czytelniejszy sklep. **[PROPOZYCJA — do akceptacji]**
+  a mniej opcji to czytelniejszy sklep. **[ZAAKCEPTOWANE]**
 - **Paczka dnia** — jeden set dziennie ze zniżką, wybierany losowo z wagami (klasa, rzadkość powtórek);
   naprawa wadliwego losowania (DB-09/DB-10).
 - Paczka = 5 kart; wagi rzadkości per pozycja; **god pack 0,05%** (same karty illustration rare+). **[USTALONE]**
@@ -215,7 +215,7 @@ innych aplikacji).
 paczek (albo mix), nigdy więcej niż ~10; środek ciężkości ~5 paczek. Oznacza to budżet dzienny
 **ok. 1000 monet** dla gracza „w połowie gry”, max ok. 1200.
 
-**Propozycja liczb [PROPOZYCJA]:**
+**Liczby [ZAAKCEPTOWANE 2026-11-03]:**
 
 | Pozycja | Wartość |
 |---|---|
@@ -253,7 +253,7 @@ Powrót po długiej przerwie = jedna pełna skarbonka (300). Wartości zweryfiku
 
 ## 6. Otwarte pytania
 
-1. Rozdz. 4 — akceptacja liczb ekonomii i rezygnacji z wariantu „Premium” (F4).
+Brak — liczby ekonomii i rezygnacja z wariantu „Premium” zaakceptowane 2026-11-03.
 
 Pozostałe pozycje oznaczone wcześniej jako propozycje zostały zaakceptowane 2026-11-03 (właściciel
 poprawił tylko: nick, hasło, profil jako pop-up, limit przy wymianie, doba o 10:00).

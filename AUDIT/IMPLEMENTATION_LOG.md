@@ -41,3 +41,42 @@ Stan bazowy: `master` @ `70d47d8`. Gałąź robocza: `phase-0` → PR do `rebuil
 - Ścieżek wymagających zalogowania w starej aplikacji (wymagałoby logowania na produkcyjne konto) —
   stary kod i tak jest zastępowany w fazach 2–3.
 - Przebiegu CI na GitHubie — pierwsze uruchomienie po wypchnięciu gałęzi.
+
+## Faza 1 — Baza i domena (2026-11-03)
+
+Gałąź: `phase-1` (od `phase-0`) → PR do `rebuild` po scaleniu fazy 0.
+
+| Krok | Commit | Co zrobiono |
+|---|---|---|
+| 1.2 | `d5a5557` | `src/domain/`: `rarity`, `game-day` (doba od 10:00 Europe/Warsaw), `economy` (zaakceptowane liczby, streak 7 dni, skarbonka 300), `packs` (wagi per slot, mnożnik trafień per poziom, god pack 0,05%, limit 9) |
+| 1.1 + 1.3 | `4b01a61` | `src/server/db/`: schemat Drizzle (24 tabele w schemacie `game`, RLS), migracja `drizzle/0000_init.sql`, seed katalogu, klient `postgres.js`; harness PGlite i testy schematu |
+
+### Decyzje podjęte w trakcie
+
+- **Losowanie: najpierw rzadkość, potem karta.** Stary kod ważył każdą kartę osobno, więc szansa
+  rzadkości rosła z liczbą kart tej rzadkości w secie. Teraz szanse odpowiadają tabeli wag niezależnie
+  od składu setu (zgodnie z kryterium akceptacji F4). Zmienia to odczuwalne szanse względem starej wersji.
+- **Poziomy paczek:** w slotach 4–5 szanse rzadkości „hit” (illustration rare i wyżej) mnożone ×1 / ×1,5 / ×2,5
+  dla poziomów 1 / 2 / 3. Wartości do strojenia symulacją w fazie 8.
+- **Nagrody osiągnięć:** nagrody < 500 monet zostają monetami; ≥ 500 zamieniono na darmowe paczki
+  najwyższego poziomu (`round(monety / 400)`), np. 2000 monet → 5 paczek.
+- **Odznaki:** jedyne źródło to baza; reguły przeniesione z `lib/badgesData.ts`. Odznaka 4 w starej bazie
+  nazywała się „Łowca Special Rare”, a kod sprawdzał Secret Rare — przyjęto nazwę i opis zgodne z regułą.
+- **Escrow wymian** pilnowany w serwisie (faza 6), nie kluczem obcym — FK blokowałby też zakończone oferty.
+- **Sloty i gablota** mają złożone FK do `user_cards` — baza nie pozwoli wstawić karty, której gracz nie ma.
+- `vite-tsconfig-paths` usunięty — Vite 8 rozwiązuje aliasy natywnie.
+
+### Wyniki bramki
+
+| Polecenie | Wynik |
+|---|---|
+| `format:check`, `typecheck`, `build` | OK |
+| `lint` | 0 błędów, 33 ostrzeżenia (bez zmian — stary kod) |
+| `npm test` | **49/49** (36 unit domeny, 13 integracyjnych na PGlite) |
+| `test:e2e` | 4/4 |
+
+### Nie zrobiono / do zrobienia
+
+- **Migracja nie jest jeszcze wgrana do Supabase** — wymaga `DATABASE_URL` (connection string poolera
+  z hasłem do bazy) w `.env.local`. Potrzebne od fazy 2; wgranie tworzy tylko schemat `game`, nie dotyka `public`.
+- Weryfikacja `pglite-socket` dla lokalnych E2E — przeniesiona do fazy 2 (pierwsze E2E z bazą).

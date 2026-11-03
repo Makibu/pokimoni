@@ -15,7 +15,7 @@ Ostatnia aktualizacja: 2026-11-03
 | IX. Docelowa architektura | DONE | `TARGET_ARCHITECTURE.md` — Drizzle zaakceptowany |
 | X. Plan refaktoryzacji | DONE | `REFACTORING_PLAN.md` — zaakceptowany |
 | XI. Faza 0 — fundamenty | DONE | `IMPLEMENTATION_LOG.md`; PR `phase-0` → `rebuild` |
-| XI. Faza 1 — baza i domena | NOT STARTED | |
+| XI. Faza 1 — baza i domena | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-1` |
 | XI. Fazy 2–9 | NOT STARTED | |
 
 ## Ustalenia
@@ -55,6 +55,7 @@ Ostatnia aktualizacja: 2026-11-03
 
 ## Otwarte pytania do właściciela
 
-1. Liczby ekonomii i rezygnacja z wariantu „Premium” (`PRODUCT_SPECIFICATION.md` rozdz. 4, F4).
+1. ~~Liczby ekonomii~~ — zaakceptowane 2026-11-03 (bez wariantu „Premium”).
 2. ~~Plan refaktoryzacji~~ — zaakceptowany 2026-11-03.
 3. Status RLS (przy resecie i tak zostanie włączony).
+4. `DATABASE_URL` (Supabase → Connect → Transaction pooler) w `.env.local` — potrzebne od fazy 2.
