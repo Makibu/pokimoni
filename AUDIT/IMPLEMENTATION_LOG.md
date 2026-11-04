@@ -176,3 +176,17 @@ Naprawione: BUG-01, 02, 03, 04, 05, 06, 08, 09, 12, 13, 14, 15, 16, DB-01, DB-04
 - Okno otwierania paczek jest tymczasowe (faza 5). Sekcja minigier zniknęła ze sklepu do fazy 7.
 - `lang="en"` przy polskim UI i brak nagłówków bezpieczeństwa (faza 8).
 - Współbieżność sprawdzona na PGlite (jedno połączenie); blokady wierszy nie były testowane na prawdziwym Postgresie z wieloma połączeniami.
+
+## Faza 4 — Przełączenie produkcji: przygotowanie (2026-11-04)
+
+- **Blokady na prawdziwym Postgresie** (pooler Supabase, kilka połączeń, tymczasowy gracz testowy, usunięty po teście):
+  5 równoległych odbiorów nagrody dziennej → 1 sukces; 6 równoległych zakupów przy 600 monetach → 4 sukcesy, saldo 0;
+  5 równoległych odbiorów osiągnięcia → 1 sukces; 5 równoległych wyborów paczki dnia → jeden wynik.
+  Dziennik zgadza się z saldem (500 startowe w teście wstawione bez wpisu + dziennik −500 = 0). Asercja dziennika w samym
+  skrypcie miała błąd w działaniu i zgłosiła FAIL; zgodność sprawdzono ręcznie na wypisanej wartości.
+- **Migracje** aktualne, katalog kompletny, stare tabele nietknięte.
+- **`rebuild`** przewinięte do `phase-3`. Pierwszy przebieg CI wykrył błąd typecheck na czystej kopii (brak `next-env.d.ts`);
+  naprawione przez `next typegen` w skrypcie `typecheck` (`ee1df1b`).
+- Repozytorium jest publiczne: dokumenty `AUDIT/` z opisem luk starej wersji są widoczne na wypchniętych gałęziach.
+
+Do zrobienia: scalenie do `master` (wymaga zmiennych na Vercelu), test produkcji, kopia `feedback`, usunięcie starych tabel i cronów.
