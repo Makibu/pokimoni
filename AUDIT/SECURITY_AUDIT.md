@@ -118,3 +118,18 @@ cofnięcie uprawnień to druga warstwa. Cofnięcia: `alter view ... reset (secur
 
 **SEC-01 nadal dotyczy starej aplikacji:** kto zna `uid`, może przejąć konto przez stare API. Znika przy przełączeniu (faza 4).
 Pierwszy przebieg cronów po zmianach nie był jeszcze obserwowany (kolejne: 23:00 UTC).
+
+## Aktualizacja 2026-11-04 — po przełączeniu produkcji
+
+- **SEC-01 zamknięte na produkcji:** stare ścieżki API zwracają 404, nowe bez sesji 401. Stare tabele usunięte.
+
+## SEC-10 — HIGH — Połączenie aplikacji z bazą bez szyfrowania (nowa wersja, wprowadzone w fazie 1)
+
+- **Dowód:** `postgres.js` bez opcji `ssl` i adres bez `sslmode` dawały zwykłe TCP do poolera (0 wywołań `tls.connect`).
+  Dotyczyło to ruchu Vercel → Supabase od przełączenia oraz skryptów uruchamianych lokalnie.
+- **Skutek:** ktoś na trasie sieciowej mógłby odczytać lub zmienić ruch: e-maile, hashe haseł, stan gry.
+  Nie sprawdzono, czy pooler uwierzytelnia hasłem jawnym, więc hasło do bazy traktujemy jako ujawnione.
+- **Poprawka:** `secureConnectionUrl` wymusza TLS dla serwerów zdalnych (gałąź `fix/db-connection`). Pomiar: `encrypted = true`.
+- **Pozostałe ryzyko — LOW:** certyfikat nie jest weryfikowany (`no-verify`), bo pooler używa CA Supabase.
+  Chroni to przed podsłuchem, ale nie przed aktywnym podszyciem się pod serwer. Pełna weryfikacja wymaga certyfikatu CA z panelu Supabase.
+- **Wymagane działanie właściciela:** zmiana hasła bazy po wdrożeniu poprawki.

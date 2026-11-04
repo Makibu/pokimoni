@@ -189,4 +189,60 @@ Naprawione: BUG-01, 02, 03, 04, 05, 06, 08, 09, 12, 13, 14, 15, 16, DB-01, DB-04
   naprawione przez `next typegen` w skrypcie `typecheck` (`ee1df1b`).
 - Repozytorium jest publiczne: dokumenty `AUDIT/` z opisem luk starej wersji są widoczne na wypchniętych gałęziach.
 
-Do zrobienia: scalenie do `master` (wymaga zmiennych na Vercelu), test produkcji, kopia `feedback`, usunięcie starych tabel i cronów.
+## Faza 4 — Przełączenie produkcji: deploy (2026-11-04)
+
+- Właściciel ustawił na Vercelu `DATABASE_URL` i `SESSION_SECRET`.
+- CI dla `2fba0e8` zielone ([przebieg](https://github.com/Makibu/pokimoni/actions/runs/41897614170)).
+  `master` przewinięty z `70d47d8` na `2fba0e8` (bez force). Nowa wersja na produkcji po 77 s.
+- **Test produkcji bez konta** (skrypt tymczasowy, statusy HTTP):
+  strony bez sesji i ze sfałszowanym ciasteczkiem → przekierowanie na `/login`; API bez sesji → 401;
+  dane rejestracji niepoprawne → 400; obce `Origin` → 403; logowanie na nieistniejące konto → 401;
+  23 z 24 starych ścieżek API → 404. Pozostała `/api/achievements` zwraca 401, bo ta nazwa istnieje też w nowym API
+  i wymaga sesji. Skrypt zgłosił to jako FAIL przez błąd na liście, nie w aplikacji.
+- **Baza:** w `game.auth_attempts` pojawiły się nowe wpisy po próbie logowania, więc produkcja zapisuje do nowego schematu
+  przez `DATABASE_URL`. `game.users` = 1, stare tabele bez zmian (4 użytkowników, 678 paczek).
+- **Nie zweryfikowano w tym teście:** `SESSION_SECRET`. `verifySessionToken` zamienia błąd braku sekretu na `null`,
+  więc odpowiedzi 401 i przekierowania nie dowodzą jego poprawności. Potwierdzi go dopiero udane logowanie.
+  Logowanie, otwarcie paczki i kolekcję na produkcji sprawdza właściciel na swoim koncie.
+
+- Właściciel potwierdził na produkcji logowanie, otwarcie paczki i kolekcję, więc `SESSION_SECRET` działa.
+
+## Faza 4 — Przełączenie produkcji: usunięcie starej wersji (2026-11-04)
+
+- Za osobną zgodą właściciela. Kopia `feedback` (4 wiersze) poza repozytorium, na dysku właściciela. Pełnej kopii świadomie nie zrobiono.
+- W jednej transakcji, po nazwach, bez `CASCADE`: 5 cronów, widok, 15 tabel, 5 funkcji.
+- Po operacji: `public` bez tabel, widoków i funkcji; `cron.job` puste; `game` nienaruszone; produkcja odpowiada poprawnie.
+
+## Poprawka po przełączeniu: połączenie z bazą (2026-11-04, gałąź `fix/db-connection`)
+
+Skrypt usuwający zawiesił się na kontroli końcowej. Odtworzenie go ujawniło dwa problemy w kliencie bazy.
+
+**1. Zawieszanie zapytań (`postgres.js` przez pooler Supabase).** Pomiar: 5 połączeń, po transakcji, 5 rund równoległych zapytań, limit 30 s.
+
+| Równoległych zapytań | `postgres.js` | `pg` |
+|---|---|---|
+| 4–5 | ok | ok |
+| 6, 8, 20 | zawieszone | ok (sprawdzone 20) |
+| 100 | nie testowano | ok |
+
+- Próg to dokładnie o jedno zapytanie więcej niż połączeń, czyli moment, w którym `postgres.js` zaczyna pipelining.
+  `max_pipeline: 1` i `fetch_types: false` nie pomagają, a `max_pipeline: 0` psuje `sql.begin`.
+- Mechanizmu po stronie poolera nie ustalono. Przyczyna pipeliningu to wniosek z progu i kodu klienta, nie bezpośredni pomiar.
+- **Wpływ na produkcję:** problemu nie zaobserwowano, test właściciela przeszedł. Ryzyko: `getShop` i `getStatistics` wysyłają
+  zapytania równolegle, a kilka żądań obsługiwanych naraz przez jedną instancję mogłoby przekroczyć 5 połączeń.
+
+**2. Brak szyfrowania (`SEC-10`).** Adres bez `sslmode` i `postgres.js` bez opcji `ssl` dawały zwykłe TCP (pomiar: 0 wywołań `tls.connect`).
+
+**Zmiana:** sterownik `pg` z `drizzle-orm/node-postgres`, `secureConnectionUrl` w aplikacji i `drizzle-kit`,
+limit czasu oczekiwania na połączenie 10 s, obsługa błędów bezczynnych połączeń.
+
+**Weryfikacja na prawdziwym poolerze** (usługi aplikacji, tymczasowy gracz, usunięty po teście): połączenie szyfrowane;
+30 równoległych żądań → 30 ok; 5 odbiorów nagrody → 1 sukces; 6 zakupów przy 600 monetach → 4 sukcesy, saldo 0;
+`db:migrate` działa przez `pg`.
+
+**Bramka:** format, lint i typecheck OK; 160/160 testów; build OK; E2E 22/22 (przez `pg`, do PGlite po gnieździe); `npm audit` prod 0.
+
+**Ograniczenia:** certyfikat poolera nie jest weryfikowany (`SEC-10`). `postgres` zostaje w `package-lock.json` jako zależność
+`drizzle-orm`, ale aplikacja go nie używa.
+
+Do zrobienia: scalenie poprawki do `master`, sprawdzenie produkcji, rotacja hasła bazy i klucza `service_role` przez właściciela.

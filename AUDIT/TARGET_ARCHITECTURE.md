@@ -14,7 +14,7 @@
 | Obszar | Teraz | Docelowo | Uzasadnienie |
 |---|---|---|---|
 | Framework | Next.js 15.4.6 | **Next.js 16** (aktualna stabilna), React 19.2 | Krytyczne advisory w 15.4; i tak przepisujemy większość, więc koszt skoku jest najniższy teraz. W 16 `middleware.ts` nazywa się `proxy.ts`. |
-| Dostęp do bazy | `supabase-js` (REST/PostgREST) kluczem service-role | **Drizzle ORM + `postgres` (postgres.js)** przez pooler Supabase | supabase-js **nie ma transakcji** — atomowe wymiany i zakupy wymagałyby całej logiki w PL/pgSQL. Drizzle daje transakcje w TS, typowany schemat, migracje bez Dockera i testy na PGlite. Supabase zostaje jako hostowany Postgres. |
+| Dostęp do bazy | `supabase-js` (REST/PostgREST) kluczem service-role | **Drizzle ORM + `pg`** przez pooler Supabase (początkowo `postgres.js`, zmienione 2026-11-04, zob. `IMPLEMENTATION_LOG.md`) | supabase-js **nie ma transakcji** — atomowe wymiany i zakupy wymagałyby całej logiki w PL/pgSQL. Drizzle daje transakcje w TS, typowany schemat, migracje bez Dockera i testy na PGlite. Supabase zostaje jako hostowany Postgres. |
 | Migracje | brak | **drizzle-kit** → pliki SQL w `drizzle/` | Odtwarzalny schemat; `drizzle-kit migrate` działa bez Dockera. |
 | Auth | jsonwebtoken, token w localStorage | **jose** + bcryptjs, ciasteczko `HttpOnly; Secure; SameSite=Lax` | `jose` działa w każdym runtime (Node i Edge), bez zależności od podatnego `jws`. |
 | Walidacja | brak | **zod** | Jeden schemat na wejście każdego endpointu; typy wywnioskowane. |
