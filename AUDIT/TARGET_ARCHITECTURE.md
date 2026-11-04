@@ -20,7 +20,7 @@
 | Walidacja | brak | **zod** | Jeden schemat na wejście każdego endpointu; typy wywnioskowane. |
 | Stan klienta | React Query + uid z localStorage | React Query + **fabryka kluczy**; tożsamość z sesji (serwer) | Usuwa 13 kopii boilerplate'u i niespójne klucze. |
 | Motyw | atrapa | **next-themes** (już w zależnościach) + tokeny CSS | Prawdziwy tryb ciemny. |
-| Animacje | framer-motion | **motion** (nowa nazwa tej samej biblioteki) | Kontynuacja, nowe otwieranie paczek. |
+| Animacje | framer-motion (nieużywana) | **CSS + Pointer Events, bez biblioteki** | Zmiana względem pierwszego planu: otwieranie paczek nie potrzebowało biblioteki, a `framer-motion` nie był nigdzie importowany, więc usunięty (faza 5). |
 | Testy | brak | **Vitest** (unit + integracja na **PGlite**), **Playwright** (E2E) | PGlite = Postgres w procesie testów, bez Dockera. |
 | CI | brak | **GitHub Actions**: lint, typecheck, test, build | Repo już na GitHubie. |
 | Hosting | Vercel + Supabase | bez zmian, funkcje w `fra1` (`vercel.json`) | Baza jest w `eu-central-1`; każde zapytanie z `iad1` przelatywało przez Atlantyk. |

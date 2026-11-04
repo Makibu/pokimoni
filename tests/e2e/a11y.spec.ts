@@ -34,9 +34,22 @@ for (const theme of ["light", "dark"] as const) {
             .getByRole("button", {name: /za 150 monet/})
             .first()
             .click();
+        await expect(page.getByRole("button", {name: /Otwórz za 150/})).toBeVisible();
+        await expectNoViolations(page, "pack offer");
         await page.getByRole("button", {name: /Otwórz za 150/}).click();
+        await expect(page.getByTestId("pack")).toBeEnabled();
+        await expectNoViolations(page, "sealed pack");
+        await page.getByTestId("pack").click();
+        await expect(page.getByRole("button", {name: "Następna karta"})).toBeVisible();
+        await expectNoViolations(page, "card reveal");
+        await page.getByRole("button", {name: "Pomiń"}).click();
         await expect(page.getByTestId("opened-card")).toHaveCount(5);
         await expectNoViolations(page, "opened pack");
+        await page.getByTestId("opened-card").first().click();
+        await expect(page.getByText("Twoje egzemplarze")).toBeVisible();
+        await expectNoViolations(page, "card preview");
+        await page.keyboard.press("Escape");
+        await expect(page.getByText("Twoje egzemplarze")).toBeHidden();
         await page.getByRole("button", {name: "Zamknij", exact: true}).first().click();
 
         const pages: [string, string][] = [

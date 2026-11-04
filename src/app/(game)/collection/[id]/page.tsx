@@ -109,7 +109,12 @@ export default function SetCollectionPage() {
                     {visibleCards.length > 0 ? (
                         <div className={CARD_GRID}>
                             {visibleCards.map((card) => (
-                                <CardTile key={card.id} {...card} visibleNames={settings.showHiddenPokemonNames} />
+                                <CardTile
+                                    key={card.id}
+                                    {...card}
+                                    setName={data.set.name}
+                                    visibleNames={settings.showHiddenPokemonNames}
+                                />
                             ))}
                         </div>
                     ) : (

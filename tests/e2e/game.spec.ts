@@ -15,6 +15,7 @@ test("daily reward, buying a pack and seeing it in the collection", async ({page
         .first()
         .click();
     await page.getByRole("button", {name: /Otwórz za 150/}).click();
+    await page.getByRole("button", {name: "Pomiń"}).click();
     await expect(page.getByTestId("opened-card")).toHaveCount(5);
     await expect(page.getByText("450", {exact: true}).first()).toBeVisible();
     await page.getByRole("button", {name: "Zamknij", exact: true}).first().click();
@@ -42,6 +43,7 @@ test("a card can be placed in an income slot and stays there", async ({page}, te
         .first()
         .click();
     await page.getByRole("button", {name: /Otwórz za 150/}).click();
+    await page.getByRole("button", {name: "Pomiń"}).click();
     await expect(page.getByTestId("opened-card")).toHaveCount(5);
     await page.getByRole("button", {name: "Zamknij", exact: true}).first().click();
 
@@ -69,6 +71,7 @@ test("the daily reward and daily pack are also available on the home page", asyn
 
     await page.getByRole("button", {name: /Kup paczkę dnia/}).click();
     await page.getByRole("button", {name: /Otwórz za \d+/}).click();
+    await page.getByRole("button", {name: "Pomiń"}).click();
     await expect(page.getByTestId("opened-card")).toHaveCount(5);
 });
 

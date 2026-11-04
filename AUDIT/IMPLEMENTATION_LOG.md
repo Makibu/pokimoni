@@ -326,3 +326,48 @@ Zrzuty: 360/768/1280/1920, oba motywy, strony, stany ładowania i okna dialogowe
 Funkcje działają w nowym regionie: `x-vercel-id` dla `/api/auth/me` to `arn1::fra1` (wcześniej `arn1::iad1`). Test produkcji bez konta przechodzi w całości (w tym 23/23 stare ścieżki → 404, logowanie na nieistniejące konto → 401 przez bazę). W przeglądarce strona logowania się hydratuje, przełączanie formularzy działa, fonty mają 130 KB.
 
 **Na produkcji nie sprawdzono:** rozgrywki na koncie, czeka na test właściciela. Zysku czasowego z `fra1` nie zmierzono na zalogowanych ścieżkach.
+
+## Faza 5 — nowe otwieranie paczek (2026-11-04)
+
+Gałąź `phase-5`. Zmienia tylko interfejs: zasady gry, API i baza bez zmian, bez migracji.
+
+**Przebieg dla gracza:** oferta z ceną → zakup (serwer zna już wynik, a monety schodzą w tym momencie) → rozcięcie paczki → karty po kolei → podsumowanie → podgląd karty, „Otwórz kolejną” albo „Zamknij”. „Pomiń” działa od rozcinania do ostatniej karty. Zamknięcie okna w połowie nie zabiera kart, bo są już na koncie.
+
+**Rozcinanie:** przeciągnięcie palcem lub myszą w dowolnym kierunku, na co najmniej 70% szerokości paczki. Krótkie przeciągnięcie nic nie robi. Kliknięcie, tapnięcie i Enter też rozcinają, żeby gest nie był jedyną drogą.
+
+**Efekty rzadkości (`revealEffect`):** zwykłe bez efektu; od `rare` niebieska poświata; od `ultra rare` złota poświata i błysk; karty z `HIT_RARITIES` tęczowa poświata, rozbłysk i dłuższe oczekiwanie przed odwróceniem. Nieznana rzadkość liczy się jak zwykła.
+
+**Karty:** zakryta karta odwraca się sama. Pierwsza akcja na zakrytej tylko ją odwraca, więc szybkie klikanie nie pomija kart bez ich pokazania. Odkrytą kartę można odrzucić przeciągnięciem, tapnięciem, przyciskiem albo klawiszem strzałki w prawo.
+
+**Podgląd:** `CardPreview` pokazuje dużą kartę, rzadkość, zestaw, dochód w slocie i liczbę egzemplarzy. Działa w podsumowaniu i, jako nowość względem pierwotnego zakresu, po kliknięciu posiadanej karty w kolekcji (F11).
+
+**Dostępność:** cała ścieżka z klawiatury, fokus przechodzi na paczkę i na przycisk kolejnej karty, region `aria-live` czyta nazwę i rzadkość każdej karty. Przy `prefers-reduced-motion` animacje znikają, a odliczanie `motionMs` wynosi 0.
+
+**Usunięte:**
+- `src/components/shop/OpenPackDialog.tsx` — tymczasowe okno;
+- `public/card_backside.png` — 2,1 MB, nieużywany, obca grafika ze znakiem autora; tył karty jest teraz własny, rysowany w CSS;
+- zależność `framer-motion` — nigdzie nieużywana; animacje to CSS i Pointer Events.
+
+**Błędy znalezione przy weryfikacji i poprawione:**
+- Przeciąganie myszą nie działało, gdy zaczynało się na obrazku: przeglądarka uruchamiała własne przeciąganie obrazka i przerywała gest. Złapał to E2E rzucania kartą; to samo dotyczyło logo na paczce, stąd `onDragStart` w obu miejscach i test cięcia zaczynanego na logo.
+- Poświata najrzadszych kart malowała się nad nagłówkiem i tekstem, a jej obrót zamiatał długą krawędzią po nazwie i rzadkości. Teraz jest okręgiem pod tekstem, a licznik i opis mają własne tło.
+- „NOWA”/„LIMIT” w podsumowaniu zasłaniały nazwę na karcie; przeniesione na dół karty.
+- Podgląd na 360×640 ucinał dane karty; obraz ogranicza teraz wysokość ekranu.
+- Pełnoekranowe okno miało zaokrąglone rogi, bo `tailwind-merge` nie rozpoznaje `rounded-section`.
+
+**Rozmiar (pierwsza wizyta, CPU ×4, łącze 1,6 Mb/s i 150 ms opóźnienia):**
+
+| Strona | JS przed | JS po | FCP przed | FCP po |
+|---|---|---|---|---|
+| `/login` | 208 KB | 208 KB | 824 ms | 816 ms |
+| `/` | 260 KB | 267 KB | 848 ms | 824 ms |
+| `/shop` | 260 KB | 267 KB | 808 ms | 820 ms |
+| `/collection` | 260 KB | 260 KB | 796 ms | 856 ms |
+| `/collection/[id]` | 265 KB | 266 KB | 820 ms | 816 ms |
+
+Okno paczki to osobny, doładowywany fragment (ok. 20 KB nieskompresowane), a jego style 5 KB. Różnice FCP mieszczą się w rozrzucie pojedynczego pomiaru. Pomiar nie objął animacji na słabym telefonie.
+
+**Bramka:** format, lint i typecheck OK; Vitest 267/267; build OK; E2E 54/54 na desktopie i Pixel 7, w tym prawdziwy dotyk na 360×640 i axe WCAG A/AA na wszystkich etapach; `npm audit --omit=dev` 0.
+Zrzuty: 360/390/1280, wszystkie etapy i poziomy rzadkości.
+
+**Nie sprawdzono:** fizycznego telefonu, czytnika ekranu, płynności animacji na słabym sprzęcie, działania na produkcji (przed wdrożeniem). Zawartość god packa i `LIMIT` sprawdzone na odpowiedzi udawanej w teście, bo prawdziwe wylosowanie ich w E2E zależałoby od losu.

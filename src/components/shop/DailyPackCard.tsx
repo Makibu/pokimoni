@@ -2,7 +2,7 @@
 
 import {Coins} from "lucide-react";
 import dynamic from "next/dynamic";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {LoadedImage} from "@/components/ui/loaded-image";
 import {LoadingRegion, Skeleton} from "@/components/ui/skeleton";
@@ -11,7 +11,8 @@ import {DAILY_PACK_DISCOUNT} from "@/domain/economy";
 import {usePlayer, useShop} from "@/features/game/use-game";
 import {cn} from "@/lib/utils";
 
-const OpenPackDialog = dynamic(() => import("@/components/shop/OpenPackDialog"));
+const loadPackOpening = () => import("@/features/pack-opening/PackOpeningDialog");
+const PackOpeningDialog = dynamic(loadPackOpening);
 
 const FRAME = "flex items-center gap-4 rounded-section bg-aqua p-4 md:gap-5 md:p-6";
 const PACK = "h-[122px] w-[88px] shrink-0 rotate-[5deg] rounded-[14px]";
@@ -33,6 +34,10 @@ export default function DailyPackCard({className}: {className?: string}) {
     const {data: shop, error, refetch} = useShop();
     const {data: player} = usePlayer();
     const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        void loadPackOpening();
+    }, []);
 
     if (!shop) {
         if (error) return <ErrorState className={className} message={error.message} onRetry={() => void refetch()} />;
@@ -78,7 +83,7 @@ export default function DailyPackCard({className}: {className?: string}) {
                 </Button>
             </div>
             {open && (
-                <OpenPackDialog
+                <PackOpeningDialog
                     pack={{
                         setId: dailyPack.id,
                         name: dailyPack.name,

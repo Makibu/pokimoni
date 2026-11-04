@@ -93,6 +93,8 @@ Rozcinanie gestem, odkrywanie po kolei z efektami rzadkości, podsumowanie z „
 karty, „Pomiń”, `prefers-reduced-motion`, 360 px+. Weryfikacja: E2E na 360 px i desktop, przejście klawiaturą,
 zrzuty ekranu do akceptacji właściciela.
 
+Stan: zbudowana na gałęzi `phase-5`, szczegóły w `IMPLEMENTATION_LOG.md`. Bez zmian zasad gry, API i bazy.
+
 ### Faza 6 — Funkcje społeczne (P1) — F15–F18
 
 | # | Zmiana | Weryfikacja |

@@ -6,17 +6,17 @@ import {useState} from "react";
 import PageHeader from "@/components/layout/PageHeader";
 import DailyPackCard from "@/components/shop/DailyPackCard";
 import DailyRewardCard from "@/components/shop/DailyRewardCard";
-import type {PackToOpen} from "@/components/shop/OpenPackDialog";
 import PackTile from "@/components/shop/PackTile";
 import ShopSkeleton from "@/components/shop/ShopSkeleton";
 import {ProgressBar} from "@/components/ui/progress-bar";
 import {ErrorState} from "@/components/ui/states";
 import {PACK_PRICES, type PackTier} from "@/domain/economy";
 import {usePlayer, useShop} from "@/features/game/use-game";
+import type {PackToOpen} from "@/features/pack-opening/flow";
 import {formatNumber} from "@/lib/format";
 import type {PackSource, ShopSet} from "@/server/services/packs";
 
-const OpenPackDialog = dynamic(() => import("@/components/shop/OpenPackDialog"));
+const PackOpeningDialog = dynamic(() => import("@/features/pack-opening/PackOpeningDialog"));
 
 const TIERS: PackTier[] = [1, 2, 3];
 
@@ -96,7 +96,7 @@ export default function ShopPage() {
                 </>
             )}
 
-            {packToOpen && <OpenPackDialog pack={packToOpen} onClose={() => setPackToOpen(null)} />}
+            {packToOpen && <PackOpeningDialog pack={packToOpen} onClose={() => setPackToOpen(null)} />}
         </div>
     );
 }
