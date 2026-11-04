@@ -15,7 +15,7 @@ import {cn} from "@/lib/utils";
 import type {CollectionCard} from "@/server/services/collection";
 import type {SlotNumber} from "@/server/services/wallet";
 
-const SlotPicker = dynamic(() => import("@/components/home/SlotPicker"));
+const SlotPicker = dynamic(() => import("@/components/home/SlotPicker"), {ssr: false});
 
 const SLOTS: SlotNumber[] = [1, 2];
 const SLOT_TILT: Record<SlotNumber, string> = {1: "-rotate-3", 2: "rotate-2"};

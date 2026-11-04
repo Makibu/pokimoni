@@ -5,8 +5,8 @@ import dynamic from "next/dynamic";
 import {useState} from "react";
 import {Button} from "@/components/ui/button";
 
-const FeedbackDialog = dynamic(() => import("@/components/home/FeedbackDialog"));
-const AppInfoDialog = dynamic(() => import("@/components/home/AppInfoDialog"));
+const FeedbackDialog = dynamic(() => import("@/components/home/FeedbackDialog"), {ssr: false});
+const AppInfoDialog = dynamic(() => import("@/components/home/AppInfoDialog"), {ssr: false});
 
 export default function HomeExtras() {
     const [open, setOpen] = useState<"feedback" | "info" | null>(null);

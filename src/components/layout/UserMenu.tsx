@@ -17,7 +17,7 @@ import {
 import {Skeleton} from "@/components/ui/skeleton";
 import {useLogout, useSession} from "@/features/account/use-session";
 
-const AccountDialog = dynamic(() => import("@/components/account/AccountDialog"));
+const AccountDialog = dynamic(() => import("@/components/account/AccountDialog"), {ssr: false});
 
 const AVATAR_SIZE = 44;
 

@@ -1,10 +1,9 @@
 "use client";
 
 import {Coins, XIcon} from "lucide-react";
-import dynamic from "next/dynamic";
 import {useCallback, useEffect, useReducer, useRef, useState} from "react";
 import {toast} from "sonner";
-import type {PreviewedCard} from "@/components/data-display/CardPreview";
+import CardPreview, {type PreviewedCard} from "@/components/data-display/CardPreview";
 import {Button} from "@/components/ui/button";
 import {Dialog, DialogClose, DialogContent, DialogTitle} from "@/components/ui/dialog";
 import type {PackTier} from "@/domain/economy";
@@ -15,8 +14,6 @@ import PackStage from "@/features/pack-opening/PackStage";
 import PackSummary from "@/features/pack-opening/PackSummary";
 import "@/features/pack-opening/pack-opening.css";
 import {motionMs} from "@/lib/motion";
-
-const CardPreview = dynamic(() => import("@/components/data-display/CardPreview"));
 
 const TEAR_MS = 650;
 

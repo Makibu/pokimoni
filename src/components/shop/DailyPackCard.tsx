@@ -12,7 +12,7 @@ import {usePlayer, useShop} from "@/features/game/use-game";
 import {cn} from "@/lib/utils";
 
 const loadPackOpening = () => import("@/features/pack-opening/PackOpeningDialog");
-const PackOpeningDialog = dynamic(loadPackOpening);
+const PackOpeningDialog = dynamic(loadPackOpening, {ssr: false});
 
 const FRAME = "flex items-center gap-4 rounded-section bg-aqua p-4 md:gap-5 md:p-6";
 const PACK = "h-[122px] w-[88px] shrink-0 rotate-[5deg] rounded-[14px]";

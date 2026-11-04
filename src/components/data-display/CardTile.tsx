@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import {useState} from "react";
 import {LoadedImage} from "@/components/ui/loaded-image";
 
-const CardPreview = dynamic(() => import("@/components/data-display/CardPreview"));
+const CardPreview = dynamic(() => import("@/components/data-display/CardPreview"), {ssr: false});
 
 type CardTileProps = {
     name: string;

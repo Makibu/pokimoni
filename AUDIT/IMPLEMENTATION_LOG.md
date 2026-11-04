@@ -376,3 +376,18 @@ Zrzuty: 360/390/1280, wszystkie etapy i poziomy rzadkości.
 Test produkcji bez konta przechodzi w całości (w tym 23/23 stare ścieżki → 404, logowanie na nieistniejące konto → 401 przez bazę). Usunięty `/card_backside.png` zwraca 404. `x-vercel-id` dla `/api/auth/me` nadal wskazuje `fra1`.
 
 **Na produkcji nie sprawdzono:** samego okna paczki, bo wymaga zalogowania, a test nie zakłada kont na produkcji. Czeka na test właściciela na koncie.
+
+**Poprawka po zgłoszeniu właściciela: migotanie okien.** Przy pierwszym użyciu okno paczki znikało na ułamek sekundy, razem ze stroną pod spodem, a potem wracało. Podobnie w innych oknach.
+
+Przyczyna: `dynamic()` z domyślnymi opcjami nie tworzy własnej granicy `Suspense` (`hasSuspenseBoundary = !opts.ssr || !!opts.loading`), więc wstrzymanie docierało do `loading.tsx` trasy, która na tę chwilę zastępowała całą stronę. `React.lazy` wstrzymuje się przy pierwszym renderze zawsze, nawet gdy plik jest już pobrany, dlatego samo wcześniejsze pobieranie nie pomagało, a miganie było widać też na szybkim łączu. Błąd dotyczył 7 okien, w tym starszych niż faza 5 (slot, ustawienia, zgłoszenie, informacje).
+
+Naprawa:
+- wszystkie doładowywane okna mają `{ssr: false}`, czyli własną granicę; otwierają się dopiero po kliknięciu, więc serwer ich nie renderuje;
+- podgląd karty w oknie paczki przychodzi razem z oknem, zamiast przy pierwszym kliknięciu;
+- reguła ESLint odrzuca `dynamic()` bez opcji, co dotyczy też przyszłych okien faz 6 i 7.
+
+Weryfikacja: `tests/e2e/lazy-dialogs.spec.ts` spowalnia pobieranie plików i co klatkę sprawdza, czy treść nie zniknęła. Na kodzie sprzed poprawki nie przechodził, po poprawce przechodzi na desktopie i Pixel 7.
+
+**Bramka:** format, lint i typecheck OK; Vitest 267/267; build OK; E2E 62/62; `npm audit --omit=dev` 0. JS na `/` i `/shop` 267 → 268 KB, reszta bez zmian.
+
+**Nie sprawdzono:** braku migania na fizycznym telefonie i na koncie właściciela. Możliwe, że właściciel widział też inne miganie niż to z okien; zwykłe przejścia między stronami nadal celowo pokazują placeholdery z `loading.tsx`.

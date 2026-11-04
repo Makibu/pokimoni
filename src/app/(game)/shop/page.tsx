@@ -16,7 +16,7 @@ import type {PackToOpen} from "@/features/pack-opening/flow";
 import {formatNumber} from "@/lib/format";
 import type {PackSource, ShopSet} from "@/server/services/packs";
 
-const PackOpeningDialog = dynamic(() => import("@/features/pack-opening/PackOpeningDialog"));
+const PackOpeningDialog = dynamic(() => import("@/features/pack-opening/PackOpeningDialog"), {ssr: false});
 
 const TIERS: PackTier[] = [1, 2, 3];
 
