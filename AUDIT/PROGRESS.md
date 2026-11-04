@@ -1,6 +1,6 @@
 # Postęp audytu
 
-Ostatnia aktualizacja: 2026-11-03
+Ostatnia aktualizacja: 2026-11-04
 
 | Etap | Status | Uwagi |
 |---|---|---|
@@ -19,6 +19,7 @@ Ostatnia aktualizacja: 2026-11-03
 | XI. Faza 2 — konta i sesje | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-2` |
 | XI. Faza 3 — rdzeń gry | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-3` |
 | XI. Faza 4 — przełączenie produkcji | BLOCKED | wymaga zgody właściciela |
+| XI. Faza 4.5 — system designu i przebudowa widoków | NOT STARTED | dodana 2026-11-04; czeka na kierunek wizualny |
 | XI. Fazy 5–9 | NOT STARTED | |
 
 ## Ustalenia
@@ -55,6 +56,8 @@ Ostatnia aktualizacja: 2026-11-03
   sprzedaży; otwieranie paczek do całkowitej przebudowy. Spisano specyfikację v1 do weryfikacji.
 
 - 2026-11-03: Drizzle ORM zaakceptowany (Next.js 16 przyjęty razem z architekturą).
+- 2026-11-04: właściciel przetestował lokalnie fazę 3 („działają”). Dodano fazę 4.5: pełna przebudowa UI/UX,
+  przed nowymi funkcjami; tryb ciemny przeniesiony z fazy 8.
 
 ## Otwarte pytania do właściciela
 
@@ -64,3 +67,4 @@ Ostatnia aktualizacja: 2026-11-03
 4. ~~`DATABASE_URL`~~ — ustawiony 2026-11-03.
 5. Zgoda na przełączenie produkcji (faza 4): usunięcie starych tabel i cronów, zmienne na Vercelu.
 6. Czy ograniczyć paczkę dnia do 1 sztuki dziennie?
+7. Faza 4.5: klimat gry, co najbardziej przeszkadza w obecnym wyglądzie, przykłady, które się podobają.

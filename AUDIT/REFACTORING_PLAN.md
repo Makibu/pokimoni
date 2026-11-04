@@ -58,11 +58,26 @@ Podstawa: `PRODUCT_SPECIFICATION.md` (F1–F20), `GAP_ANALYSIS.md`, `TARGET_ARCH
 
 | # | Zmiana | Weryfikacja |
 |---|---|---|
-| 4.1 | Zmienne na Vercel (`DATABASE_URL` poolera, `JWT_SECRET` nowy); migracje + seed na produkcyjnym projekcie | `drizzle-kit migrate` bez błędów |
+| 4.1 | Zmienne na Vercel (`DATABASE_URL` poolera, nowy `SESSION_SECRET`); migracje + seed na produkcyjnym projekcie | `drizzle-kit migrate` bez błędów |
 | 4.2 | Merge `rebuild` → `master`, deploy | smoke test na produkcji: rejestracja, paczka |
 | 4.3 | Wyłączenie cronów; **usunięcie starych tabel w `public`**; rotacja klucza service-role (nie będzie już używany) | lista tabel `public` pusta; crony nieaktywne |
 
 Od tej chwili kolejne fazy trafiają na produkcję normalnym PR-em do `master`.
+
+### Faza 4.5 — System designu i przebudowa widoków (P1) — dodana 2026-11-04 na prośbę właściciela
+
+Przed fazami 5–7, aby nowe ekrany od razu powstawały w docelowym stylu. Po fazie 4, aby przebudowa
+nie opóźniała usunięcia luk starej wersji z produkcji.
+
+| # | Zmiana | Weryfikacja |
+|---|---|---|
+| 4.5.1 | Kierunek wizualny: 2–3 propozycje głównego ekranu, wybór właściciela. Własna oprawa, bez kopiowania wyglądu istniejących aplikacji | akceptacja właściciela przed kodem |
+| 4.5.2 | System designu: tokeny kolorów, typografia, odstępy, wspólne komponenty, stany ładowania / puste / błędów | przegląd komponentów w obu motywach |
+| 4.5.3 | Tryb ciemny (jasny / ciemny / systemowy), przeniesiony z fazy 8 | E2E przełączania; kontrast w obu motywach |
+| 4.5.4 | Układ i nawigacja na desktopie i telefonie, w tym pasek boczny zasłaniający treść przy 1280 px | zrzuty 360/768/1280/1920 |
+| 4.5.5 | Przebudowa widoków: logowanie, strona główna, sklep, kolekcja, osiągnięcia, statystyki | E2E bez regresji, zrzuty do akceptacji właściciela |
+
+Zmiana dotyczy wyglądu i obsługi. Reguły gry i API pozostają bez zmian.
 
 ### Faza 5 — Nowe otwieranie paczek (P1) — F5
 
@@ -93,7 +108,7 @@ Każda gra: walidator w `domain/` z testami (wygrana, przegrana, próba oszustwa
 
 ### Faza 8 — Jakość produktu (P2/P3) — F2, F19
 
-Tryb ciemny; przegląd responsywności (360/768/1280/1920) i dostępności; `lang="pl"`, metadane i OG
+Końcowy przegląd responsywności (360/768/1280/1920) i dostępności; `lang="pl"`, metadane i OG
 strony logowania; nagłówki bezpieczeństwa; README (architektura, uruchomienie, decyzje, zrzuty);
 symulacja ekonomii jako test.
 
