@@ -321,3 +321,8 @@ Powrotne przejścia na `/shop` i `/collection` są wolniejsze o ok. 80–100 ms 
 Zrzuty: 360/768/1280/1920, oba motywy, strony, stany ładowania i okna dialogowe. Przycisk na adresach innych niż `localhost` sprawdzony ręcznie w przeglądarce.
 
 **Nie sprawdzono:** wyglądu na fizycznym telefonie, czytnika ekranu, działania na produkcji (przed wdrożeniem) oraz ścieżki god packa i „LIMIT” w nowym oknie paczki na zrzutach.
+
+**Wdrożenie (2026-11-04):** za zgodą właściciela `1a61348` trafił na `rebuild` (CI zielone) i na `master`, deployment `Production` = `success`. Bez migracji bazy.
+Funkcje działają w nowym regionie: `x-vercel-id` dla `/api/auth/me` to `arn1::fra1` (wcześniej `arn1::iad1`). Test produkcji bez konta przechodzi w całości (w tym 23/23 stare ścieżki → 404, logowanie na nieistniejące konto → 401 przez bazę). W przeglądarce strona logowania się hydratuje, przełączanie formularzy działa, fonty mają 130 KB.
+
+**Na produkcji nie sprawdzono:** rozgrywki na koncie, czeka na test właściciela. Zysku czasowego z `fra1` nie zmierzono na zalogowanych ścieżkach.
