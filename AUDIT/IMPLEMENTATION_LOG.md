@@ -245,4 +245,11 @@ limit czasu oczekiwania na połączenie 10 s, obsługa błędów bezczynnych po�
 **Ograniczenia:** certyfikat poolera nie jest weryfikowany (`SEC-10`). `postgres` zostaje w `package-lock.json` jako zależność
 `drizzle-orm`, ale aplikacja go nie używa.
 
-Do zrobienia: scalenie poprawki do `master`, sprawdzenie produkcji, rotacja hasła bazy i klucza `service_role` przez właściciela.
+**Wdrożenie:** `master` przewinięty na `7272fef` za zgodą właściciela, CI zielone, deployment `Production` = `success`.
+Test produkcji bez konta przechodzi w całości (23/23 stare ścieżki → 404). Logowanie na nieistniejące konto kończy się 401,
+a nie 500, więc produkcja łączy się z bazą nowym sterownikiem.
+
+**Nie zmierzono na Vercelu:** szyfrowania, bo tam nie ma dostępu do gniazda; wynika ono z tego samego kodu i tego samego adresu
+co w pomiarze lokalnym, jeśli `DATABASE_URL` na Vercelu ma tę samą postać. Logowanie i rozgrywka na `pg` na produkcji czekają na test właściciela.
+
+Do zrobienia: rotacja hasła bazy i klucza `service_role`, usunięcie starych zmiennych na Vercelu, test właściciela po redeployu.

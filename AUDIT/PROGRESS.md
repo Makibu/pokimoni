@@ -18,7 +18,7 @@ Ostatnia aktualizacja: 2026-11-04
 | XI. Faza 1 — baza i domena | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-1` |
 | XI. Faza 2 — konta i sesje | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-2` |
 | XI. Faza 3 — rdzeń gry | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-3` |
-| XI. Faza 4 — przełączenie produkcji | IN PROGRESS | produkcja na nowej wersji, stare obiekty usunięte; czeka poprawka połączenia z bazą (`fix/db-connection`) i rotacja kluczy |
+| XI. Faza 4 — przełączenie produkcji | IN PROGRESS | produkcja na `7272fef`, stare obiekty usunięte, połączenie z bazą poprawione; czeka rotacja kluczy i test właściciela |
 | XI. Faza 4.5 — system designu i przebudowa widoków | NOT STARTED | dodana 2026-11-04; czeka na kierunek wizualny |
 | XI. Fazy 5–9 | NOT STARTED | |
 
@@ -65,6 +65,6 @@ Ostatnia aktualizacja: 2026-11-04
 2. ~~Plan refaktoryzacji~~ — zaakceptowany 2026-11-03.
 3. ~~RLS i dostęp anon~~ — zamknięte 2026-11-03 (`SECURITY_AUDIT.md`).
 4. ~~`DATABASE_URL`~~ — ustawiony 2026-11-03.
-5. ~~Faza 4: przełączenie i usunięcie starych obiektów~~ — wykonane 2026-11-04. Otwarte: scalenie `fix/db-connection`, rotacja kluczy.
+5. ~~Faza 4: przełączenie i usunięcie starych obiektów~~ — wykonane 2026-11-04. Otwarte: rotacja kluczy po stronie właściciela.
 6. Czy ograniczyć paczkę dnia do 1 sztuki dziennie?
 7. Faza 4.5: klimat gry, co najbardziej przeszkadza w obecnym wyglądzie, przykłady, które się podobają.

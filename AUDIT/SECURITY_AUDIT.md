@@ -129,7 +129,7 @@ Pierwszy przebieg cronów po zmianach nie był jeszcze obserwowany (kolejne: 23:
   Dotyczyło to ruchu Vercel → Supabase od przełączenia oraz skryptów uruchamianych lokalnie.
 - **Skutek:** ktoś na trasie sieciowej mógłby odczytać lub zmienić ruch: e-maile, hashe haseł, stan gry.
   Nie sprawdzono, czy pooler uwierzytelnia hasłem jawnym, więc hasło do bazy traktujemy jako ujawnione.
-- **Poprawka:** `secureConnectionUrl` wymusza TLS dla serwerów zdalnych (gałąź `fix/db-connection`). Pomiar: `encrypted = true`.
+- **Poprawka:** `secureConnectionUrl` wymusza TLS dla serwerów zdalnych (`7272fef`, wdrożone 2026-11-04). Pomiar lokalny: `encrypted = true`.
 - **Pozostałe ryzyko — LOW:** certyfikat nie jest weryfikowany (`no-verify`), bo pooler używa CA Supabase.
   Chroni to przed podsłuchem, ale nie przed aktywnym podszyciem się pod serwer. Pełna weryfikacja wymaga certyfikatu CA z panelu Supabase.
 - **Wymagane działanie właściciela:** zmiana hasła bazy po wdrożeniu poprawki.
