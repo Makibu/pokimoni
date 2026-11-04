@@ -391,3 +391,5 @@ Weryfikacja: `tests/e2e/lazy-dialogs.spec.ts` spowalnia pobieranie plików i co 
 **Bramka:** format, lint i typecheck OK; Vitest 267/267; build OK; E2E 62/62; `npm audit --omit=dev` 0. JS na `/` i `/shop` 267 → 268 KB, reszta bez zmian.
 
 **Nie sprawdzono:** braku migania na fizycznym telefonie i na koncie właściciela. Możliwe, że właściciel widział też inne miganie niż to z okien; zwykłe przejścia między stronami nadal celowo pokazują placeholdery z `loading.tsx`.
+
+**Wdrożenie poprawki:** za zgodą właściciela `b8a0199` trafił na `rebuild` (CI zielone) i na `master`, deployment `Production` = `success` (2026-11-04T23:51:14Z). Bez migracji bazy. Test produkcji bez konta przechodzi w całości; `x-vercel-id` nadal wskazuje `fra1`. Okien na produkcji nie sprawdzono, bo wymagają zalogowania: czeka na test właściciela na koncie.

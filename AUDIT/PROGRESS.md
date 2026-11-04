@@ -20,7 +20,7 @@ Ostatnia aktualizacja: 2026-11-04
 | XI. Faza 3 — rdzeń gry | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-3` |
 | XI. Faza 4 — przełączenie produkcji | DONE | produkcja na `7272fef`, stare obiekty usunięte, połączenie z bazą poprawione; test i rotacja potwierdzone przez właściciela |
 | XI. Faza 4.5 — system designu i przebudowa widoków | DONE | kierunek B „Holo”; na produkcji `1a61348`, region `fra1`. Właściciel przeszedł do fazy 5, ale osobnego potwierdzenia testu na koncie nie ma (pytanie 9) |
-| XI. Faza 5 — nowe otwieranie paczek | IN PROGRESS | wdrożona za zgodą właściciela (`d323fd3`); czeka na test właściciela na koncie |
+| XI. Faza 5 — nowe otwieranie paczek | IN PROGRESS | wdrożona za zgodą właściciela (`d323fd3`), poprawka migania okien po zgłoszeniu właściciela (`b8a0199`); czeka na test właściciela na koncie |
 | XI. Fazy 6–9 | NOT STARTED | |
 
 ## Ustalenia
