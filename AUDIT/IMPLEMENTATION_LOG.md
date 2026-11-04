@@ -252,4 +252,11 @@ a nie 500, więc produkcja łączy się z bazą nowym sterownikiem.
 **Nie zmierzono na Vercelu:** szyfrowania, bo tam nie ma dostępu do gniazda; wynika ono z tego samego kodu i tego samego adresu
 co w pomiarze lokalnym, jeśli `DATABASE_URL` na Vercelu ma tę samą postać. Logowanie i rozgrywka na `pg` na produkcji czekają na test właściciela.
 
-Do zrobienia: rotacja hasła bazy i klucza `service_role`, usunięcie starych zmiennych na Vercelu, test właściciela po redeployu.
+## Faza 4 — Zamknięcie (2026-11-04)
+
+- Właściciel potwierdził, że po zmianie hasła i redeployu logowanie oraz paczka działają.
+- W bazie widać ten test: otwarcia paczek 3 → 4, karty 15 → 19, czyli zapis z produkcji przez `pg` działa.
+- `.env.local` łączy się z bazą przez TLS (`encrypted = true`). `public` puste, `cron.job` puste.
+- **Nie zweryfikowano niezależnie:** samej rotacji hasła i klucza `service_role` ani usunięcia starych zmiennych na Vercelu
+  (brak dostępu; przyjęto deklarację właściciela). GitHub nie pokazuje deploymentu `Production` nowszego niż `7272fef` z 20:00 UTC,
+  ale ręczny redeploy nie musi być tam widoczny.

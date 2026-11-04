@@ -132,4 +132,4 @@ Pierwszy przebieg cronów po zmianach nie był jeszcze obserwowany (kolejne: 23:
 - **Poprawka:** `secureConnectionUrl` wymusza TLS dla serwerów zdalnych (`7272fef`, wdrożone 2026-11-04). Pomiar lokalny: `encrypted = true`.
 - **Pozostałe ryzyko — LOW:** certyfikat nie jest weryfikowany (`no-verify`), bo pooler używa CA Supabase.
   Chroni to przed podsłuchem, ale nie przed aktywnym podszyciem się pod serwer. Pełna weryfikacja wymaga certyfikatu CA z panelu Supabase.
-- **Wymagane działanie właściciela:** zmiana hasła bazy po wdrożeniu poprawki.
+- **Działanie właściciela:** zmiana hasła bazy po wdrożeniu poprawki, zgłoszona 2026-11-04 (niezweryfikowana niezależnie).
