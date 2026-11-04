@@ -20,7 +20,7 @@ Ostatnia aktualizacja: 2026-11-04
 | XI. Faza 3 — rdzeń gry | DONE | `IMPLEMENTATION_LOG.md`; gałąź `phase-3` |
 | XI. Faza 4 — przełączenie produkcji | DONE | produkcja na `7272fef`, stare obiekty usunięte, połączenie z bazą poprawione; test i rotacja potwierdzone przez właściciela |
 | XI. Faza 4.5 — system designu i przebudowa widoków | DONE | kierunek B „Holo”; na produkcji `1a61348`, region `fra1`. Właściciel przeszedł do fazy 5, ale osobnego potwierdzenia testu na koncie nie ma (pytanie 9) |
-| XI. Faza 5 — nowe otwieranie paczek | IN PROGRESS | gotowa na gałęzi `phase-5`, bramka przechodzi; czeka na akceptację właściciela i zgodę na wdrożenie |
+| XI. Faza 5 — nowe otwieranie paczek | IN PROGRESS | wdrożona za zgodą właściciela (`d323fd3`); czeka na test właściciela na koncie |
 | XI. Fazy 6–9 | NOT STARTED | |
 
 ## Ustalenia
@@ -74,4 +74,5 @@ Ostatnia aktualizacja: 2026-11-04
 7. ~~Faza 4.5: kierunek wizualny~~ — wybrany 2026-11-04: B „Holo”.
 8. ~~Faza 4.5: zgoda na wdrożenie i region `fra1`~~ — udzielona i wykonana 2026-11-04.
 9. Faza 4.5: test na produkcji na koncie właściciela (brak wyraźnego potwierdzenia).
-10. Faza 5: akceptacja wyglądu i zgoda na wdrożenie.
+10. ~~Faza 5: zgoda na wdrożenie~~ — udzielona i wykonana 2026-11-05 (czasu polskiego).
+11. Faza 5: test na produkcji na koncie właściciela.

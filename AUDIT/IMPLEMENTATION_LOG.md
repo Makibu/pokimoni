@@ -371,3 +371,8 @@ Okno paczki to osobny, doładowywany fragment (ok. 20 KB nieskompresowane), a je
 Zrzuty: 360/390/1280, wszystkie etapy i poziomy rzadkości.
 
 **Nie sprawdzono:** fizycznego telefonu, czytnika ekranu, płynności animacji na słabym sprzęcie, działania na produkcji (przed wdrożeniem). Zawartość god packa i `LIMIT` sprawdzone na odpowiedzi udawanej w teście, bo prawdziwe wylosowanie ich w E2E zależałoby od losu.
+
+**Wdrożenie:** za zgodą właściciela `d323fd3` trafił na `rebuild` (CI zielone) i na `master`, deployment `Production` = `success` (2026-11-04T23:11:54Z). Bez migracji bazy.
+Test produkcji bez konta przechodzi w całości (w tym 23/23 stare ścieżki → 404, logowanie na nieistniejące konto → 401 przez bazę). Usunięty `/card_backside.png` zwraca 404. `x-vercel-id` dla `/api/auth/me` nadal wskazuje `fra1`.
+
+**Na produkcji nie sprawdzono:** samego okna paczki, bo wymaga zalogowania, a test nie zakłada kont na produkcji. Czeka na test właściciela na koncie.
