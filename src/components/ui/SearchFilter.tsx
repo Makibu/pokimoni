@@ -1,21 +1,47 @@
 "use client";
 
-import {useState} from "react";
+import {Filter, Search} from "lucide-react";
+import {Button} from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {Button} from "@/components/ui/button";
-import {ArrowDown, ArrowUp, Filter} from "lucide-react";
+import {Input} from "@/components/ui/input";
 
-type SearchFilterProps = {
-    onSearch: (query: string) => void;
-};
+export function SearchFilter({value, onChange}: {value: string; onChange: (query: string) => void}) {
+    return (
+        <div className="relative min-w-0 flex-1 sm:max-w-80">
+            <Search
+                aria-hidden="true"
+                className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground"
+            />
+            <Input
+                type="search"
+                aria-label="Szukaj karty"
+                placeholder="Szukaj karty..."
+                value={value}
+                onChange={(event) => onChange(event.target.value)}
+                className="rounded-full pl-10"
+            />
+        </div>
+    );
+}
+
+const SORT_OPTIONS = [
+    {value: "rarity-asc", label: "Rzadkość: od najczęstszych"},
+    {value: "rarity-desc", label: "Rzadkość: od najrzadszych"},
+    {value: "name-asc", label: "Nazwa: A–Z"},
+    {value: "name-desc", label: "Nazwa: Z–A"},
+    {value: "newest", label: "Od najnowszych"},
+    {value: "oldest", label: "Od najstarszych"},
+];
 
 type CardFilterProps = {
     rarityList: string[];
@@ -27,26 +53,6 @@ type CardFilterProps = {
     showOwnedOnly: boolean;
     setShowOwnedOnly: (value: boolean) => void;
 };
-
-export function SearchFilter({onSearch}: SearchFilterProps) {
-    const [value, setValue] = useState("");
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const query = e.target.value;
-        setValue(query);
-        onSearch(query);
-    };
-
-    return (
-        <input
-            type="text"
-            value={value}
-            onChange={handleChange}
-            placeholder="Szukaj karty..."
-            className="w-80 px-4 py-2 rounded-xl bg-white border-2 border-gray-400 shadow-md focus:outline-none"
-        />
-    );
-}
 
 export function CardFilter({
     rarityList,
@@ -60,116 +66,52 @@ export function CardFilter({
 }: CardFilterProps) {
     const allSelected = activeFilters.length === rarityList.length;
 
-    const toggleFilter = (rarity: string) => {
-        if (activeFilters.includes(rarity)) {
-            setActiveFilters(activeFilters.filter((r) => r !== rarity));
-        } else {
-            setActiveFilters([...activeFilters, rarity]);
-        }
-    };
-
-    const toggleAll = () => {
-        if (allSelected) {
-            setActiveFilters([]);
-        } else {
-            setActiveFilters(rarityList);
-        }
-    };
+    function toggleFilter(rarity: string) {
+        setActiveFilters(
+            activeFilters.includes(rarity)
+                ? activeFilters.filter((active) => active !== rarity)
+                : [...activeFilters, rarity],
+        );
+    }
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button className="flex items-center gap-2" variant={"outline"}>
-                    <Filter className="h-4 w-4" />
+                <Button variant="outline">
+                    <Filter aria-hidden="true" />
                     Filtry
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-64">
+            <DropdownMenuContent align="end" className="w-72 max-w-[calc(100vw-2rem)]">
                 <DropdownMenuLabel>Sortowanie</DropdownMenuLabel>
-                <div className="flex flex-col gap-2">
-                    {/* Sortowanie rzadkość, nazwa, nowość */}
-                    <div className="flex items-center relative px-6">
-                        <span className="text-sm">Rzadkość</span>
-                        <div className="absolute right-6 flex gap-1">
-                            <Button
-                                size={"icon"}
-                                className="w-5 h-5"
-                                onClick={() => setSort("rarity-asc")}
-                                variant={sort === "rarity-asc" ? "default" : "outline"}
-                            >
-                                <ArrowUp className="scale-80" />
-                            </Button>
-                            <Button
-                                size={"icon"}
-                                className="w-5 h-5"
-                                onClick={() => setSort("rarity-desc")}
-                                variant={sort === "rarity-desc" ? "default" : "outline"}
-                            >
-                                <ArrowDown className="scale-80" />
-                            </Button>
-                        </div>
-                    </div>
-                    <div className="flex items-center relative px-6">
-                        <span className="text-sm">Nazwa</span>
-                        <div className="absolute right-6 flex gap-1">
-                            <Button
-                                size="icon"
-                                className="w-5 h-5"
-                                onClick={() => setSort(sort === "name-asc" ? "" : "name-asc")}
-                                variant={sort === "name-asc" ? "default" : "outline"}
-                            >
-                                <span className="scale-80">A</span>
-                            </Button>
-                            <Button
-                                size="icon"
-                                className="w-5 h-5"
-                                onClick={() => setSort(sort === "name-desc" ? "" : "name-desc")}
-                                variant={sort === "name-desc" ? "default" : "outline"}
-                            >
-                                <span className="scale-80">Z</span>
-                            </Button>
-                        </div>
-                    </div>
-                    <div className="flex items-center relative px-6">
-                        <span className="text-sm">Nowość</span>
-                        <div className="absolute right-6 flex gap-1">
-                            <Button
-                                size={"icon"}
-                                className="w-5 h-5"
-                                onClick={() => setSort(sort === "newest" ? "" : "newest")}
-                                variant={sort === "newest" ? "default" : "outline"}
-                            >
-                                <ArrowUp className="scale-80" />
-                            </Button>
-                            <Button
-                                size={"icon"}
-                                className="w-5 h-5"
-                                onClick={() => setSort(sort === "oldest" ? "" : "oldest")}
-                                variant={sort === "oldest" ? "default" : "outline"}
-                            >
-                                <ArrowDown className="scale-80" />
-                            </Button>
-                        </div>
-                    </div>
-                </div>
+                <DropdownMenuRadioGroup value={sort} onValueChange={setSort}>
+                    {SORT_OPTIONS.map((option) => (
+                        <DropdownMenuRadioItem
+                            key={option.value}
+                            value={option.value}
+                            onSelect={(event) => event.preventDefault()}
+                        >
+                            {option.label}
+                        </DropdownMenuRadioItem>
+                    ))}
+                </DropdownMenuRadioGroup>
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuLabel>Filtry</DropdownMenuLabel>
+                <DropdownMenuLabel>Rzadkość</DropdownMenuLabel>
                 <DropdownMenuCheckboxItem
-                    onClick={toggleAll}
-                    onSelect={(e) => e.preventDefault()}
                     checked={allSelected}
+                    onCheckedChange={() => setActiveFilters(allSelected ? [] : rarityList)}
+                    onSelect={(event) => event.preventDefault()}
                 >
                     {allSelected ? "Odznacz wszystkie" : "Zaznacz wszystkie"}
                 </DropdownMenuCheckboxItem>
-                <DropdownMenuSeparator className="mx-2 bg-gray-200" />
                 {rarityList.map((rarity) => (
                     <DropdownMenuCheckboxItem
-                        onSelect={(e) => e.preventDefault()}
                         key={rarity}
                         checked={activeFilters.includes(rarity)}
                         onCheckedChange={() => toggleFilter(rarity)}
+                        onSelect={(event) => event.preventDefault()}
                     >
                         <span className="capitalize">{rarity}</span>
                     </DropdownMenuCheckboxItem>
@@ -177,18 +119,17 @@ export function CardFilter({
 
                 <DropdownMenuSeparator />
 
-                {/* Nowy checkbox – pokaż tylko zdobyte */}
                 <DropdownMenuCheckboxItem
-                    onSelect={(e) => e.preventDefault()}
                     checked={showOwnedOnly}
-                    onCheckedChange={(val) => setShowOwnedOnly(!!val)}
+                    onCheckedChange={(checked) => setShowOwnedOnly(!!checked)}
+                    onSelect={(event) => event.preventDefault()}
                 >
                     Pokaż tylko zdobyte
                 </DropdownMenuCheckboxItem>
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()} onClick={resetFilters}>
+                <DropdownMenuItem onSelect={(event) => event.preventDefault()} onClick={resetFilters}>
                     Resetuj filtry
                 </DropdownMenuItem>
             </DropdownMenuContent>

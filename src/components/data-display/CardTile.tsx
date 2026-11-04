@@ -1,4 +1,6 @@
-import Image from "next/image";
+"use client";
+
+import {LoadedImage} from "@/components/ui/loaded-image";
 
 type CardTileProps = {
     name: string;
@@ -7,68 +9,46 @@ type CardTileProps = {
     income: number;
     quantity: number;
     visibleNames?: boolean;
-    className?: string;
-    isInIndex?: boolean;
 };
 
-export default function CardTile({
-    name,
-    rarity,
-    imageSmall,
-    income,
-    quantity,
-    visibleNames,
-    className = "",
-    isInIndex,
-}: CardTileProps) {
+export default function CardTile({name, rarity, imageSmall, income, quantity, visibleNames}: CardTileProps) {
     const isOwned = quantity > 0;
     const showName = isOwned || visibleNames;
 
     return (
-        <div className={`rounded-xl flex flex-col justify-center relative group shadow-sm ${className}`}>
-            {isOwned ? (
-                <div className={`aspect-[245/342] ${isInIndex ? "w-[150px] md:w-[200px]" : ""}`}>
-                    <Image src={imageSmall} alt={name} width={245} height={342} unoptimized />
-                </div>
-            ) : (
-                <div
-                    className={`aspect-[245/342] ${isInIndex ? "w-[150px] md:w-[200px]" : ""} bg-gray-700 flex items-center justify-center rounded-xl px-2 border-12 border-gray-400 relative`}
-                >
-                    <span
-                        className={`text-gray-400 break-all text-center ${visibleNames ? "text-xl md:text-2xl" : "text-2xl md:text-5xl"}`}
-                    >
-                        {visibleNames ? name : "???"}
-                    </span>
-                    <span className={"absolute bottom-6 text-gray-400 text-base md:text-xl text-center capitalize"}>
-                        {rarity}
-                    </span>
-                </div>
-            )}
-            <div className="absolute w-full bottom-0 left-0 z-10 overflow-hidden rounded-b-md">
-                <div className="absolute inset-0 bg-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-md">
-                    <div className="relative px-3 py-2">
-                        <h2 className="text-lg font-semibold">{showName ? name : "???"}</h2>
-                        <div className="text-gray-800 -mt-1 capitalize">{rarity}</div>
+        // Sets have hundreds of cards: the browser skips drawing the ones outside the screen.
+        <div className="flex flex-col gap-2 [contain-intrinsic-size:auto_300px] [content-visibility:auto]">
+            <div className="relative">
+                {isOwned ? (
+                    <LoadedImage
+                        src={imageSmall}
+                        alt={name}
+                        width={245}
+                        height={342}
+                        className="aspect-[245/342] rounded-[14px]"
+                    />
+                ) : (
+                    <div className="flex aspect-[245/342] items-center justify-center rounded-[14px] border-2 border-dashed border-input bg-secondary p-2 text-center">
+                        <span aria-hidden="true" className="font-display text-3xl font-bold text-muted-foreground">
+                            ?
+                        </span>
                     </div>
-                </div>
+                )}
+                <span className="absolute top-1.5 right-1.5 rounded-full bg-card px-2 py-0.5 text-xs font-bold text-foreground">
+                    +{income}/h
+                </span>
+                {quantity > 1 && (
+                    <span className="absolute bottom-1.5 left-1.5 rounded-full bg-primary px-2 py-0.5 text-xs font-bold text-primary-foreground">
+                        ×{quantity}
+                    </span>
+                )}
             </div>
-            <div
-                className={
-                    "absolute -top-4 -right-4 bg-white/90 aspect-square p-2 w-12 flex justify-center items-center gap-[1px] rounded-full z-10 shadow-md border-2 border-yellow-300"
-                }
-            >
-                <span className={"font-semibold"}>{income}</span>
-                <sub className={"text-muted-foreground text-[9px]"}>/hr</sub>
+            <div className="min-w-0 px-0.5">
+                <p className="truncate text-sm font-bold" title={showName ? name : undefined}>
+                    {showName ? name : "???"}
+                </p>
+                <p className="truncate text-xs text-muted-foreground capitalize">{rarity}</p>
             </div>
-            {quantity > 1 && (
-                <div
-                    className={
-                        "absolute -bottom-2 -left-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-full z-20 shadow"
-                    }
-                >
-                    ×{quantity}
-                </div>
-            )}
         </div>
     );
 }

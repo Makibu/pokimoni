@@ -1,32 +1,26 @@
 "use client";
 
-import React from "react";
 import {ChevronDown, ChevronUp} from "lucide-react";
 
+const buttonClasses =
+    "flex size-11 items-center justify-center rounded-full bg-card shadow-(--lift) transition-colors hover:bg-accent";
+
 export default function ScrollButton() {
-    const scrollToTop = () => {
-        window.scrollTo({top: 0, behavior: "smooth"});
-    };
-
-    const scrollToBottom = () => {
-        window.scrollTo({top: document.body.scrollHeight, behavior: "smooth"});
-    };
-
     return (
-        <div className="fixed right-4 bottom-4 flex flex-col gap-2 z-50">
+        <div className="fixed right-4 bottom-24 z-30 flex flex-col gap-2 lg:bottom-6">
             <button
-                onClick={scrollToTop}
-                className="bg-white/50 backdrop-blur-md p-1 rounded-full hover:bg-white transition cursor-pointer flex justify-center items-center shadow-sm"
-                aria-label="Scroll to top"
+                className={buttonClasses}
+                aria-label="Przewiń na górę"
+                onClick={() => window.scrollTo({top: 0, behavior: "smooth"})}
             >
-                <ChevronUp />
+                <ChevronUp aria-hidden="true" />
             </button>
             <button
-                onClick={scrollToBottom}
-                className="bg-white/50 backdrop-blur-md p-1 rounded-full hover:bg-white transition cursor-pointer flex justify-center items-center shadow-sm"
-                aria-label="Scroll to bottom"
+                className={buttonClasses}
+                aria-label="Przewiń na dół"
+                onClick={() => window.scrollTo({top: document.body.scrollHeight, behavior: "smooth"})}
             >
-                <ChevronDown />
+                <ChevronDown aria-hidden="true" />
             </button>
         </div>
     );

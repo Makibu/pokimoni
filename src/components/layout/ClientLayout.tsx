@@ -1,22 +1,18 @@
 "use client";
 
+import {ThemeProvider} from "next-themes";
 import ReactQueryClientProvider from "@/components/providers/ReactQueryClientProvider";
+import {Toaster} from "@/components/ui/sonner";
 import SessionGuard from "@/features/account/SessionGuard";
-import Navbar from "@/components/layout/Navbar";
-import {Toaster} from "sonner";
-import Sidebar from "@/components/layout/Sidebar";
-import {TouchProvider} from "@/components/ui/hybrid-tooltip";
 
 export default function ClientLayout({children}: {children: React.ReactNode}) {
     return (
-        <ReactQueryClientProvider>
-            <SessionGuard />
-            <TouchProvider>
-                <Navbar />
-                <Sidebar />
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+            <ReactQueryClientProvider>
+                <SessionGuard />
                 {children}
-                <Toaster position="bottom-right" richColors expand />
-            </TouchProvider>
-        </ReactQueryClientProvider>
+                <Toaster position="bottom-right" mobileOffset={{bottom: "88px"}} richColors expand />
+            </ReactQueryClientProvider>
+        </ThemeProvider>
     );
 }

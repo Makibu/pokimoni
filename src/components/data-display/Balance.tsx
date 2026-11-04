@@ -1,20 +1,21 @@
 "use client";
 
-import {Coins} from "lucide-react";
+import {Skeleton} from "@/components/ui/skeleton";
 import {usePlayer} from "@/features/game/use-game";
+import {formatNumber} from "@/lib/format";
 
 export default function Balance() {
     const {data: player} = usePlayer();
 
+    if (!player) return <Skeleton className="h-6 w-28 rounded-full" />;
+
     return (
-        <div
-            className={
-                "flex justify-center items-center gap-1 bg-white/80 rounded-xl pl-4 pr-3 shadow-sm h-fit py-1 backdrop-blur-md border-[1px] border-blue-200"
-            }
-        >
-            <Coins className={"text-yellow-500 h-5"} />
-            <span>{player?.coins ?? 0}</span>
-            <span className={"text-[12px] text-green-500"}>+{player?.piggyBank.incomePerHour ?? 0}/h</span>
+        <div className="flex items-baseline gap-1.5 sm:px-3">
+            <span className="font-display text-lg font-bold tabular-nums sm:text-base sm:font-medium">
+                {formatNumber(player.coins)}
+            </span>
+            <span className="sr-only">monet, dochód</span>
+            <span className="text-[13px] font-semibold text-income">+{player.piggyBank.incomePerHour}/h</span>
         </div>
     );
 }

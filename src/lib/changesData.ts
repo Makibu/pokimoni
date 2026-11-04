@@ -6,25 +6,33 @@ type Change = {
 
 export const changesData: Change = [
     {
+        type: "Design",
+        title: "🎨 Design",
+        options: [
+            "Nowy wygląd całej gry: Holo",
+            "Nowe logowanie, start, sklep, kolekcja, osiągnięcia i statystyki",
+            "Działa na telefonie, tablecie i komputerze",
+        ],
+    },
+    {
         type: "Added",
         title: "✨ Nowe funkcje",
-        options: ["Dodano pole 'wszystkie karty' w statystykach", "Nowa gra 'Saper' !!! 💥💥💥"],
+        options: [
+            "Motyw jasny, ciemny lub systemowy (Ustawienia)",
+            "Nagroda dzienna i paczka dnia są też na stronie startowej",
+            "Kartę można zdjąć ze slotu osobnym przyciskiem",
+        ],
     },
     {
         type: "Fixed",
         title: "🔧 Poprawki",
         options: [
-            "Zmienione szanse na trudności sudoku, większe szanse na medium i hard",
-            "Teraz w sklepie wyświetla się unikatowa ilość kart w postępie",
-            "Postęp osiągnięć jest teraz liczony poprawnie w statystykach",
+            "Strony ładują się szybciej i pokazują podgląd w trakcie ładowania",
+            "Nazwy kart są widoczne także na ekranach dotykowych",
+            "Pasek boczny nie zasłania już statystyk",
         ],
-    },
-    {
-        type: "Design",
-        title: "🎨 Design",
-        options: ["Loga paczek już nie nachodzą na napisy"],
     },
 ];
 
-export const changeDate: string = "10 października 2025";
-export const version: string = "v1.0.2";
+export const changeDate: string = "4 listopada 2026";
+export const version: string = "v2.0.0";

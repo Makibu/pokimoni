@@ -1,38 +1,49 @@
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
+import {LoadedImage} from "@/components/ui/loaded-image";
+import {ProgressBar} from "@/components/ui/progress-bar";
+import {usePrefetchSet} from "@/features/game/use-game";
+import {cn} from "@/lib/utils";
 import type {CollectionSet} from "@/server/services/collection";
 
 export default function SetTile({id, name, total, series, logo, collected}: CollectionSet) {
+    const prefetchSet = usePrefetchSet();
+    const complete = total > 0 && collected >= total;
+
     return (
-        <div
-            className={
-                "w-48 md:w-72 h-72 md:h-[400px] border-2 rounded-xl flex flex-col justify-center p-4 relative group bg-white/60 shadow-sm backdrop-blur-lg"
-            }
+        <Link
+            href={`/collection/${id}`}
+            onPointerEnter={() => prefetchSet(id)}
+            onTouchStart={() => prefetchSet(id)}
+            onFocus={() => prefetchSet(id)}
+            className={cn(
+                "block rounded-tile transition-transform motion-safe:hover:-translate-y-1",
+                complete ? "holo-rim p-1" : "bg-card",
+            )}
         >
-            <Image src={logo} alt={name} width={300} height={300} unoptimized />
-
-            <div className="absolute w-full bottom-0 left-0 z-10 overflow-hidden rounded-b-md">
-                <div className="absolute inset-0 bg-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-md"></div>
-
-                <div className="relative px-3 py-2">
-                    <h2 className="text-base md:text-lg font-semibold">{name}</h2>
-                    <div className="flex justify-between text-gray-800 -mt-1 text-sm md:text-base">
-                        <h3>{series}</h3>
-                        <span>
-                            {collected}/{total}
-                        </span>
-                    </div>
+            <div className="flex h-full flex-col gap-3 rounded-[18px] bg-card p-3 md:p-4">
+                <div className="rounded-md bg-white p-3">
+                    <LoadedImage
+                        src={logo}
+                        alt=""
+                        width={240}
+                        height={120}
+                        fit="contain"
+                        className="h-20 w-full rounded-sm md:h-24"
+                    />
+                </div>
+                <div className="min-w-0">
+                    <h2 className="truncate font-bold">{name}</h2>
+                    <p className="truncate text-sm text-muted-foreground">{series}</p>
+                </div>
+                <div className="mt-auto flex flex-col gap-1">
+                    <p className="text-sm font-semibold tabular-nums">
+                        {collected} z {total}
+                    </p>
+                    <ProgressBar value={collected} max={total} />
                 </div>
             </div>
-
-            <div className="absolute inset-0 rounded-xl bg-black/50 opacity-0 group-hover:opacity-100 focus-within:opacity-100 flex items-center justify-center transition-opacity z-0">
-                <Link
-                    href={`/collection/${id}`}
-                    className="px-4 py-2 bg-white text-black font-semibold rounded-lg shadow hover:bg-gray-200 transition-colors"
-                >
-                    Zobacz karty
-                </Link>
-            </div>
-        </div>
+        </Link>
     );
 }

@@ -260,3 +260,64 @@ co w pomiarze lokalnym, jeśli `DATABASE_URL` na Vercelu ma tę samą postać. L
 - **Nie zweryfikowano niezależnie:** samej rotacji hasła i klucza `service_role` ani usunięcia starych zmiennych na Vercelu
   (brak dostępu; przyjęto deklarację właściciela). GitHub nie pokazuje deploymentu `Production` nowszego niż `7272fef` z 20:00 UTC,
   ale ręczny redeploy nie musi być tam widoczny.
+
+## Faza 4.5 — System designu i przebudowa widoków (2026-11-04)
+
+Gałąź `phase-4.5`. Właściciel wybrał klimat „jasny i kolorowy” i kierunek B „Holo”.
+
+**Co powstało**
+
+- Tokeny kolorów, typografia (Unbounded + Onest), promienie, wspólne stany: `Skeleton`, `ErrorState`, `EmptyState`, `LoadedImage`.
+- Prawdziwy tryb jasny / ciemny / systemowy, domyślnie jasny.
+- Nowy układ: pływający nagłówek na desktopie, dolny pasek nawigacji na telefonie, `(game)/layout.tsx`, strona 404 i ekrany błędów.
+- Nowy wygląd: logowanie, start, sklep, kolekcja, zestaw, osiągnięcia, statystyki, profil, ustawienia, wybór karty do slotu, otwieranie paczki, zgłoszenia, informacje o aplikacji.
+- `loading.tsx` i placeholdery na każdej stronie, które wyglądają jak docelowa treść.
+- Dane: `queryOptions`, `staleTime` 30 s, wcześniejsze pobieranie przy nawigacji, natychmiastowa aktualizacja pamięci podręcznej po akcjach.
+
+Reguły gry i API bez zmian. Nowe funkcje z faz 5–7 nie istnieją jeszcze w kodzie, więc nie mają atrap w interfejsie.
+
+**Usunięte:** stare `Navbar`, `Sidebar`, `TabHeader`, `LoadingIndicator`, `PacksCarousel`, nieużywane komponenty UI, `useIsMobile`,
+tła i animacja Lottie (`public/`), banery, zależności `lottie-react` i cztery paczki Radix.
+
+**Naprawy znalezione przy okazji**
+
+- Przewijanie kółkiem przejęte przez karuzelę sklepu → siatka na desktopie, zwykłe przewijanie niżej.
+- Opisy odznak tylko w dymkach, niedostępne dotykiem → widoczny tekst.
+- Ukryte paski przewijania → cienkie i widoczne.
+- Niewidoczne placeholdery (kolor jak tło sceny) → osobny kolor i test.
+- **Martwe przyciski na dev serwerze pod adresem innym niż `localhost`** (zgłoszone przez właściciela): Next 16 odrzuca wtedy gniazdo HMR,
+  strona się nie hydratuje i kliknięcia nic nie robią. Odtworzone na `127.0.0.1:3000` i `192.168.1.20:3000`.
+  Naprawa: `allowedDevOrigins` w `next.config.ts`, działa tylko w trybie dev. Produkcji błąd nie dotyczył. E2E tego nie wykryło, bo działa na buildzie produkcyjnym.
+
+**Szybkość** (`tests/perf/measure.spec.ts`: Pixel 7, CPU ×4, 150 ms, 200 kB/s, bez grafik kart; PGlite lokalnie)
+
+| Pierwsze wejście | Pierwsze malowanie (ms) | Największy element (ms) | Treść z danych (ms) |
+|---|---|---|---|
+| `/login` | 908 → 824 | 908 → 824 | bez porównania (zmiana sposobu pomiaru) |
+| `/` | 856 → 848 | 856 → 2904 | 3257 → 2905 |
+| `/shop` | 896 → 808 | 2352 → 808 | 2348 → 2829 |
+| `/collection` | 880 → 796 | 2400 → 796 | 2396 → 2749 |
+| `/collection/[id]` | 872 → 820 | 2808 → 3308 | 2814 → 3307 |
+| `/achievements` | 964 → 824 | 2552 → 824 | 2544 → 2863 |
+| `/statistics` | 892 → 860 | 2808 → 860 | 2800 → 2865 |
+
+| Rozmiar | Przed | Po |
+|---|---|---|
+| JS na stronach gry | 369–372 KB | 260–265 KB |
+| JS logowania | 259 KB | 208 KB |
+| CSS | 15 KB | 11 KB |
+| Fonty | 49 KB | 132 KB |
+| Grafika tła logowania | 192 KB | 0 KB |
+
+Przejścia w aplikacji: pierwsze 281–379 ms (było 329–388), kolejne 143–257 ms (było 125–164).
+
+**Wniosek:** układ strony widać od razu, a nie po ok. 2,5 s. Treść z danych przy pierwszej wizycie na wolnym łączu pojawia się o 0,1–0,5 s później niż przed przebudową, poza stroną główną.
+Główna przyczyna to fonty: po ograniczeniu Unbounded do wagi 700 spadły z 227 do 132 KB, a reszta różnicy dotyczy tylko pierwszej wizyty. Własne przycinanie fontów odłożone jako zbyt złożone wobec zysku.
+Powrotne przejścia na `/shop` i `/collection` są wolniejsze o ok. 80–100 ms przy CPU ×4.
+
+**Region funkcji:** `vercel.json` ustawia `fra1`, bo funkcje działały w `iad1`, a baza jest w `eu-central-1`. Lokalny pomiar tego nie pokaże; po wdrożeniu do sprawdzenia nagłówek `x-vercel-id`.
+
+**Bramka:** format, lint i typecheck OK; Vitest 246/246; build OK; E2E 36/36 (desktop + Pixel 7), w tym axe WCAG A/AA na wszystkich stronach w obu motywach; `npm audit --omit=dev` 0.
+Zrzuty: 360/768/1280/1920, oba motywy, strony, stany ładowania i okna dialogowe. Przycisk na adresach innych niż `localhost` sprawdzony ręcznie w przeglądarce.
+
+**Nie sprawdzono:** wyglądu na fizycznym telefonie, czytnika ekranu, działania na produkcji (przed wdrożeniem) oraz ścieżki god packa i „LIMIT” w nowym oknie paczki na zrzutach.

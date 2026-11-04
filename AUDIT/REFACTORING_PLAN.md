@@ -79,6 +79,14 @@ nie opóźniała usunięcia luk starej wersji z produkcji.
 
 Zmiana dotyczy wyglądu i obsługi. Reguły gry i API pozostają bez zmian.
 
+Wybrany kierunek: B „Holo”. Ustalenia przy realizacji:
+
+- 5 zestawów na poziom mieści się na desktopie w siatce, więc znika karuzela z przejmowaniem kółka myszy; niżej zwykłe przewijanie w poziomie.
+- Opisy odznak są widocznym tekstem zamiast dymków, które nie działały dotykiem.
+- Kafelki strony głównej są pastelowe, bez banerów z grafikami Pokémon.
+- Obrazki kart pozostają bez optymalizacji Vercela (limit darmowego planu); mają placeholder, płynne pojawianie się i tekst zastępczy.
+- Funkcje z faz 5–7 nie istnieją jeszcze w kodzie, więc nie ma ich atrap w interfejsie (np. dzwonka). Powstaną od razu w tym stylu.
+
 ### Faza 5 — Nowe otwieranie paczek (P1) — F5
 
 Rozcinanie gestem, odkrywanie po kolei z efektami rzadkości, podsumowanie z „NOWA”/„LIMIT”, podgląd

@@ -23,7 +23,7 @@
 | Animacje | framer-motion | **motion** (nowa nazwa tej samej biblioteki) | Kontynuacja, nowe otwieranie paczek. |
 | Testy | brak | **Vitest** (unit + integracja na **PGlite**), **Playwright** (E2E) | PGlite = Postgres w procesie testów, bez Dockera. |
 | CI | brak | **GitHub Actions**: lint, typecheck, test, build | Repo już na GitHubie. |
-| Hosting | Vercel + Supabase | bez zmian | — |
+| Hosting | Vercel + Supabase | bez zmian, funkcje w `fra1` (`vercel.json`) | Baza jest w `eu-central-1`; każde zapytanie z `iad1` przelatywało przez Atlantyk. |
 
 **Alternatywa odrzucona:** zostać przy supabase-js i pisać operacje jako funkcje PL/pgSQL wołane przez RPC.
 Działa, ale logika gry (paczki, wymiany, zadania, minigry) w SQL jest trudniejsza do czytania,
