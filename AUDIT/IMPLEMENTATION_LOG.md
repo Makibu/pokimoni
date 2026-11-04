@@ -311,7 +311,7 @@ tła i animacja Lottie (`public/`), banery, zależności `lottie-react` i cztery
 
 Przejścia w aplikacji: pierwsze 281–379 ms (było 329–388), kolejne 143–257 ms (było 125–164).
 
-**Wniosek:** układ strony widać od razu, a nie po ok. 2,5 s. Treść z danych przy pierwszej wizycie na wolnym łączu pojawia się o 0,1–0,5 s później niż przed przebudową, poza stroną główną.
+**Wniosek:** największy element sklepu, kolekcji, osiągnięć i statystyk maluje się po ok. 0,8 s zamiast ok. 2,5 s, bo nagłówek i placeholdery są od razu w HTML; na stronie głównej i w zestawie dalej zależy od danych. Treść z danych przy pierwszej wizycie na wolnym łączu pojawia się o 0,1–0,5 s później niż przed przebudową, poza stroną główną.
 Główna przyczyna to fonty: po ograniczeniu Unbounded do wagi 700 spadły z 227 do 132 KB, a reszta różnicy dotyczy tylko pierwszej wizyty. Własne przycinanie fontów odłożone jako zbyt złożone wobec zysku.
 Powrotne przejścia na `/shop` i `/collection` są wolniejsze o ok. 80–100 ms przy CPU ×4.
 
