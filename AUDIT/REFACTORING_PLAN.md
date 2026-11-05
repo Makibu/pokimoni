@@ -132,6 +132,8 @@ Stan: zbudowane lokalnie na gałęzi `phase-8`, czeka na odbiór. Szczegóły w 
 
 Ponowny audyt wg etapów I–VI, porównanie przed/po, `FINAL_REPORT.md`, `TEST_REPORT.md`.
 
+Stan: gotowe lokalnie na gałęzi `phase-9`, czeka na odbiór. Bez migracji.
+
 ## Ryzyka
 
 | Ryzyko | Skutek | Ograniczenie |

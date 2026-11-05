@@ -7,9 +7,9 @@ Ostatnia aktualizacja: 2026-11-05
 | I. Rekonesans repo, stack, stan git | DONE | `PROJECT_OVERVIEW.md` |
 | I. Lint / typecheck / build / audit | DONE | wszystko przechodzi; 7 podatnych zależności |
 | II. Code review | DONE (statycznie) | `CODE_REVIEW.md` — BUG-01..16, DB-01..08, ARCH, PERF |
-| III. Audyt bezpieczeństwa | IN PROGRESS | `SECURITY_AUDIT.md`; RLS sprawdzony: wyłączony na `public` |
-| IV. Wydajność | NOT STARTED | tylko obserwacje statyczne; pomiary po postawieniu środowiska dev |
-| V. SEO / UX / responsywność | NOT STARTED | E2E działa na PGlite; przegląd UX po podpięciu widoków w fazie 3 |
+| III. Audyt bezpieczeństwa | DONE | `SECURITY_AUDIT.md`, ponowiony w `FINAL_REPORT.md` |
+| IV. Wydajność | DONE | pomiary w dzienniku faz i `FINAL_REPORT.md` |
+| V. SEO / UX / responsywność | DONE | przegląd w fazie 8, ponowiony w fazie 9; bez fizycznego telefonu i czytnika ekranu |
 | VII. Wywiad produktowy + specyfikacja | DONE | `PRODUCT_SPECIFICATION.md`; otwarte tylko liczby ekonomii i „Premium” |
 | VIII. Gap analysis | DONE | `GAP_ANALYSIS.md` |
 | IX. Docelowa architektura | DONE | `TARGET_ARCHITECTURE.md` — Drizzle zaakceptowany |
@@ -22,9 +22,9 @@ Ostatnia aktualizacja: 2026-11-05
 | XI. Faza 4.5 — system designu i przebudowa widoków | DONE | kierunek B „Holo”; na produkcji `1a61348`, region `fra1`. Właściciel przeszedł do fazy 5, ale osobnego potwierdzenia testu na koncie nie ma (pytanie 9) |
 | XI. Faza 5 — nowe otwieranie paczek | DONE | na produkcji `d323fd3` i poprawka migania okien `b8a0199`; właściciel potwierdził na produkcji, że miganie zniknęło |
 | XI. Faza 6 — funkcje społeczne | DONE | na produkcji `b87f13c`, bez migracji. Właściciel przeszedł do fazy 7 („Spoko”, 2026-11-05), ale wyraźnego potwierdzenia testu na dwóch kontach nie ma (pytanie 12) |
-| XI. Faza 7 — zadania i minigra dnia | WDROŻONE | na produkcji `aee5151`, bez migracji (zgoda właściciela 2026-11-05). Czeka na zagranie na koncie, bo tylko tak można potwierdzić `sharp` na Vercelu (pytanie 14) |
-| XI. Faza 8 — jakość produktu | WDROŻONE | na produkcji `264c861`, bez migracji (zgoda właściciela 2026-11-05). CSP podczas gry na koncie niesprawdzone na produkcji (pytanie 16) |
-| XI. Faza 9 | NOT STARTED | |
+| XI. Faza 7 — zadania i minigra dnia | DONE | na produkcji, właściciel zagrał 2026-11-05 („Tak, działa”): Puzzle, wygrana. `sharp` na Vercelu dalej niepotwierdzony (pytanie 14) |
+| XI. Faza 8 — jakość produktu | DONE | na produkcji `264c861`, bez migracji; właściciel potwierdził działanie na koncie 2026-11-05 |
+| XIII. Faza 9 — audyt końcowy | W ODBIORZE | lokalnie na gałęzi `phase-9`, bez migracji, niewdrożone. `FINAL_REPORT.md`, `TEST_REPORT.md`. Czeka na zgodę na wdrożenie (pytanie 18) |
 
 ## Ustalenia
 
@@ -78,11 +78,13 @@ Ostatnia aktualizacja: 2026-11-05
 6. ~~Czy ograniczyć paczkę dnia do 1 sztuki dziennie?~~ — nie, właściciel zdecydował 2026-11-05: bez limitu.
 7. ~~Faza 4.5: kierunek wizualny~~ — wybrany 2026-11-04: B „Holo”.
 8. ~~Faza 4.5: zgoda na wdrożenie i region `fra1`~~ — udzielona i wykonana 2026-11-04.
-9. Faza 4.5: test na produkcji na koncie właściciela (brak wyraźnego potwierdzenia).
+9. ~~Faza 4.5: test na produkcji~~ — baza pokazuje grę na koncie, a właściciel potwierdził działanie 2026-11-05.
 10. ~~Faza 5: zgoda na wdrożenie~~ — udzielona i wykonana 2026-11-05 (czasu polskiego).
 11. ~~Faza 5: test na produkcji~~ — właściciel otwierał paczki i potwierdził brak migania. Działania z czytnikiem ekranu nie sprawdzono.
-12. Faza 6: zgoda na wdrożenie udzielona i wykonana 2026-11-05. Właściciel przeszedł dalej, ale test na dwóch kontach nie został wyraźnie potwierdzony.
+12. Faza 6: wdrożona 2026-11-05. Właściciel napisał „Wszystko przetestowane i działa”, ale odczyt po tej wiadomości nadal pokazuje 1 konto, 0 zaproszeń, 0 wymian i ostatnią rejestrację z 2026-11-04. **Baza nie potwierdza testu na dwóch kontach**; do wyjaśnienia z właścicielem (FIN-03).
 13. Faza 6: decyzje podjęte przy budowie, do potwierdzenia: wycofanie własnego zaproszenia, ciche odrzucenie zaproszenia, osobna zakładka „Znajomi” (`PRODUCT_SPECIFICATION.md`, F15–F18). Właściciel nie zgłosił uwag.
-14. Faza 7: czy po zagraniu na produkcji obrazki w „Kto to Pokémon?” się wyświetlają i nagroda trafia na konto? To jedyne potwierdzenie działania `sharp` na Vercelu. Ciemny cień i zasady gry zostały przyjęte przy zgodzie na wdrożenie, bo właściciel nie zgłosił uwag; można je jeszcze zmienić.
+14. Faza 7: właściciel odpowiedział „Tak, działa”, ale tego dnia wypadło Puzzle, więc obrazki „Kto to Pokémon?” i `sharp` na Vercelu są **nadal niepotwierdzone** (FIN-02). Odczyt po wiadomości „Wszystko przetestowane i działa” pokazuje 0 prób tej gry i jeden dzień minigry (Puzzle). Do sprawdzenia, gdy ta gra wypadnie. Ciemny cień i zasady gry zostały przyjęte przy zgodzie na wdrożenie; można je jeszcze zmienić.
 15. ~~Faza 8: pojemność skarbonki~~ — właściciel zdecydował 2026-11-05: zostaje 300, mimo że symulacja pokazała ok. 1200 monet dziennie zamiast ok. 1000.
-16. Faza 8: wdrożenie wykonane za zgodą właściciela. Do sprawdzenia na koncie: czy gra działa z nowymi nagłówkami, a podgląd linku wygląda dobrze w komunikatorze.
+16. ~~Faza 8: działanie z nowymi nagłówkami~~ — właściciel potwierdził 2026-11-05. Telefon i podgląd linku w komunikatorze nie były potwierdzone osobno.
+17. ~~Saldo konta różne od dziennika monet~~ — właściciel potwierdził 2026-11-05: ręcznie dodał sobie monety do testów (FIN-04).
+18. Faza 9: zgoda na wdrożenie poprawek z audytu.

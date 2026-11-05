@@ -1,5 +1,7 @@
 # Code review — wstępne znaleziska (2026-11-03)
 
+Dokument opisuje stan sprzed przebudowy. Co stało się z każdym ustaleniem: `FINAL_REPORT.md`, rozdział 3.
+
 Fakty = zweryfikowane w kodzie. Hipotezy oznaczone „(hipoteza)”.
 
 ## Błędy funkcjonalne

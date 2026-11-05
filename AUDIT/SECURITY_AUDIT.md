@@ -135,3 +135,14 @@ Pierwszy przebieg cronów po zmianach nie był jeszcze obserwowany (kolejne: 23:
 - **Pozostałe ryzyko — LOW:** certyfikat nie jest weryfikowany (`no-verify`), bo pooler używa CA Supabase.
   Chroni to przed podsłuchem, ale nie przed aktywnym podszyciem się pod serwer. Pełna weryfikacja wymaga certyfikatu CA z panelu Supabase.
 - **Działanie właściciela:** zmiana hasła bazy po wdrożeniu poprawki, zgłoszona 2026-11-04 (niezweryfikowana niezależnie).
+
+## Aktualizacja 2026-11-05 — audyt końcowy
+
+Stan wszystkich ustaleń i pozostałe ryzyka: `FINAL_REPORT.md`. Nowe znaleziska naprawione lokalnie na `phase-9`, jeszcze niewdrożone:
+
+- **SEC-11 — LOW:** brak limitu prób obecnego hasła przy zmianie emaila i usunięciu konta. Skradziona sesja pozwalała zgadywać hasło bez ograniczeń.
+- **SEC-12 — LOW:** komunikat błędu zapytania w logach serwera zawierał parametry, czyli np. hash hasła. Dostęp do logów ma tylko właściciel.
+- **SEC-13 — LOW:** brak limitu feedbacku.
+- **SEC-14 — INFO:** `Origin: null` dawał 500 zamiast 403. Żądanie i tak było odrzucane.
+
+Odczyt z bazy: 0 tabel w `public`, RLS na 24 z 24 tabel `game`, `anon` i `authenticated` bez uprawnień do schematu `game`, 0 cronów. Historia gita bez prawdziwych sekretów.

@@ -570,3 +570,30 @@ Właściciel uruchomił fazę słowami „Tak, zaczynaj faza 8”. Testu fazy 7 
 **Sprawdzone na produkcji bez konta:** skrypty kontrolne faz 4 i 7 przechodzą, a region to `fra1`. Wszystkie nagłówki są na stronie logowania, a pliki `_next/static` nie mają CSP. Tytuł, obrazek podglądu, `robots.txt`, `sitemap.xml` i ikony odpowiadają poprawnie. W przeglądarce strona logowania działa z CSP: formularz się przełącza, czcionki się ładują, konsola bez naruszeń. Jedyny błąd w konsoli to oczekiwane 401 z `/api/auth/me` dla gościa.
 
 **Dalej niesprawdzone:** CSP na zalogowanych stronach produkcji (na buildzie lokalnym sprawdza to `security.spec.ts`), limit trasy obrazka na prawdziwej bazie, podgląd linku w komunikatorze, fizyczny telefon, czytnik ekranu.
+
+## Faza 9 — audyt końcowy (2026-11-05, gałąź `phase-9`)
+
+**Zakres:** ponowny audyt wszystkich obszarów, porównanie przed i po, poprawki znalezisk. Stan: lokalnie, niewdrożone, bez migracji. Wnioski w `FINAL_REPORT.md`, wyniki testów w `TEST_REPORT.md`.
+
+**Poprawki:**
+
+- Limit 10 błędnych prób obecnego hasła na 15 minut przy zmianie emaila lub hasła i usunięciu konta (`requireCurrentPassword`).
+- Limit 10 wiadomości feedbacku na 15 minut, nowy `services/feedback.ts`.
+- Logi: przy błędzie zapytania tylko kod i opis. Komunikat Drizzle zawiera parametry zapytania, a błąd Postgresa może cytować wiersz, więc hash hasła mógł trafić do logów Vercela.
+- `Origin: null` daje 403 zamiast 500.
+- Obrazek minigry przeniesiony do `services/clue-picture.ts`, żeby trasa nie omijała warstwy serwisów.
+- `startMinigame` sprawdza trwającą grę przed wczytaniem całego katalogu.
+- `claimAchievement` najpierw blokuje stan gracza, jak pozostałe operacje na monetach. Zakleszczenia tu nie znalazłem, ale README obiecuje ten porządek. **Żaden test tego nie sprawdza**, bo PGlite ma jedno połączenie.
+- Lista zmian w oknie „Informacje o aplikacji” opisywała stan sprzed faz 5–7. Teraz `v2.1.0`.
+- Nieaktualny komentarz przy `minigame_days.payload`.
+- Niestabilny test klawiatury w `pack-opening.spec.ts`: przyczyna ustalona, to wyścig w teście, opis w `TEST_REPORT.md`.
+
+**Odczyt z bazy produkcyjnej:** dwa skrypty poza repo, transakcja `READ ONLY`, wypisywane tylko liczby i nazwy obiektów. Nic nie zapisano. Wynik: struktura i uprawnienia zgodne z planem, jedna rozbieżność salda, którą właściciel wyjaśnił jako własną ręczną zmianę do testów (FIN-04), brak użycia funkcji społecznych (FIN-03), jedyna rozegrana gra to Puzzle (FIN-02).
+
+**Historia gita:** przeszukana pod kątem wartości z `.env.local` i wzorców sekretów, wypisywane tylko nazwy i liczby. Nic prawdziwego nie znaleziono.
+
+**Celowo bez poprawki:** atomowy limit logowania (FIN-05), czyszczenie `auth_attempts` (FIN-08), `global-error.tsx` (FIN-10). Ryzyko jest małe, a każda z tych zmian dokładałaby kod do małego projektu.
+
+**Bramka:** format, lint, typy OK; Vitest 523/523; `drizzle-kit generate` bez zmian; build OK; E2E 107 zaliczonych, 3 pominięte celowo; `npm audit --omit=dev` 0; `responsive-screens` 4/4. JS bez zmian względem fazy 8.
+
+**Nie sprawdzono:** działania poprawek na produkcji (przed wdrożeniem), CI (nic nie wypchnięto), równoległych połączeń, fizycznego telefonu, czytnika ekranu.
