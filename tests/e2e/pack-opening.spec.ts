@@ -177,17 +177,10 @@ test.describe("reduced motion", () => {
 
         await expect(cardCounter(page)).toHaveText("Karta 1 z 5");
         await expect(page.getByRole("button", {name: "Następna karta"})).toBeFocused();
-        await page.keyboard.press("Enter");
-        await expect(cardCounter(page)).toHaveText("Karta 2 z 5");
-        await page.keyboard.press("ArrowRight");
-        await expect(cardCounter(page)).toHaveText("Karta 3 z 5");
-        await page.keyboard.press("Space");
-        await expect(cardCounter(page)).toHaveText("Karta 4 z 5");
-        await page.keyboard.press("Enter");
-        await expect(cardCounter(page)).toHaveText("Karta 5 z 5");
-        await page.keyboard.press("Enter");
 
-        await expect(page.getByTestId("opened-card")).toHaveCount(5);
+        // A key pressed on a face-down card only turns it over, so each press waits for the card to be face up.
+        const keys = ["Enter", "ArrowRight", "Space", "Enter", "Enter"];
+        await revealAll(page, async () => page.keyboard.press(keys.shift() as string));
     });
 
     test("skipping goes straight to the summary, and closing early keeps the cards", async ({page}, testInfo) => {

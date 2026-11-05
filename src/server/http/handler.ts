@@ -1,3 +1,4 @@
+import {DrizzleQueryError} from "drizzle-orm/errors";
 import {type NextRequest, NextResponse} from "next/server";
 import {z, ZodError} from "zod";
 import type {Account} from "@/lib/validation/account";
@@ -12,13 +13,32 @@ function errorResponse(status: number, code: string, message: string) {
     return NextResponse.json<ApiErrorBody>({error: {code, message}}, {status});
 }
 
+function hostOf(origin: string): string | null {
+    try {
+        return new URL(origin).host;
+    } catch {
+        // Browsers send the literal "null" from sandboxed frames and some redirects.
+        return null;
+    }
+}
+
 /** Rejects state-changing requests sent from another site (CSRF protection on top of SameSite cookies). */
 function assertSameOrigin(req: NextRequest) {
     if (req.method === "GET" || req.method === "HEAD") return;
     const origin = req.headers.get("origin");
     if (!origin) return;
     const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
-    if (new URL(origin).host !== host) throw new AppError(403, "forbidden_origin", "Niedozwolone żądanie");
+    if (hostOf(origin) !== host) throw new AppError(403, "forbidden_origin", "Niedozwolone żądanie");
+}
+
+/** A failed query's message lists its parameters, and a database error can quote the row, so neither gets logged. */
+function logUnexpected(error: unknown) {
+    if (error instanceof DrizzleQueryError) {
+        const cause = error.cause as {code?: string; message?: string} | undefined;
+        console.error("Database query failed:", cause?.code, cause?.message);
+        return;
+    }
+    console.error(error);
 }
 
 /** Wraps a route handler: same-origin check and uniform error responses without internal details. */
@@ -32,7 +52,7 @@ export function route<Context = unknown>(handler: (req: NextRequest, context: Co
             if (error instanceof ZodError) {
                 return errorResponse(400, "invalid_input", error.issues[0]?.message ?? "Niepoprawne dane");
             }
-            console.error(error);
+            logUnexpected(error);
             return errorResponse(500, "internal_error", "Coś poszło nie tak. Spróbuj ponownie później");
         }
     };

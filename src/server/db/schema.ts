@@ -360,7 +360,7 @@ export const minigameDays = game
         gameDay: date("game_day").primaryKey(),
         game: minigameEnum("game").notNull(),
         difficulty: difficultyEnum("difficulty").notNull(),
-        // Contains answers / seeds. Never sent to the client.
+        // Empty: the day only sets the variant, and every player gets their own cards.
         payload: jsonb("payload").notNull(),
     })
     .enableRLS();

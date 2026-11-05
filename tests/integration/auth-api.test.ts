@@ -170,6 +170,20 @@ describe("POST /api/auth/register", () => {
     });
 });
 
+describe("requests with an unusable Origin header", () => {
+    it("rejects the literal null origin as forbidden, not as a server error", async () => {
+        const res = await register(
+            request("POST", "/api/auth/register", {
+                body: {username: "null_origin", email: "null@example.com", password: PASSWORD},
+                headers: {origin: "null"},
+            }),
+            noContext,
+        );
+        expect(res.status).toBe(403);
+        expect((await res.json()).error.code).toBe("forbidden_origin");
+    });
+});
+
 describe("POST /api/auth/login", () => {
     it("signs in with a case-insensitive email", async () => {
         const player = await registerPlayer();
@@ -283,6 +297,46 @@ describe("PATCH /api/auth/me", () => {
             noContext,
         );
         expect(ok.status).toBe(200);
+    });
+
+    it("locks password checks after 10 wrong guesses, even with the correct password", async () => {
+        const player = await registerPlayer();
+        const body = {email: `guessed_${counter}@example.com`};
+        for (let i = 0; i < 10; i++) {
+            const wrong = await patchMe(
+                request("PATCH", "/api/auth/me", {cookie: player.cookie, body: {...body, currentPassword: "guess"}}),
+                noContext,
+            );
+            expect(wrong.status).toBe(403);
+        }
+        const locked = await patchMe(
+            request("PATCH", "/api/auth/me", {cookie: player.cookie, body: {...body, currentPassword: PASSWORD}}),
+            noContext,
+        );
+        expect(locked.status).toBe(429);
+
+        const deletion = await deleteMe(
+            request("DELETE", "/api/auth/me", {cookie: player.cookie, body: {password: PASSWORD}}),
+            noContext,
+        );
+        expect(deletion.status).toBe(429);
+    });
+
+    it("forgets wrong guesses after the correct password", async () => {
+        const player = await registerPlayer();
+        let change = 0;
+        const guess = (currentPassword: string) =>
+            patchMe(
+                request("PATCH", "/api/auth/me", {
+                    cookie: player.cookie,
+                    body: {email: `forgiven_${++change}_${player.account.id}@example.com`, currentPassword},
+                }),
+                noContext,
+            );
+        for (let i = 0; i < 9; i++) expect((await guess("guess")).status).toBe(403);
+        expect((await guess(PASSWORD)).status).toBe(200);
+        for (let i = 0; i < 10; i++) expect((await guess("guess")).status).toBe(403);
+        expect((await guess(PASSWORD)).status).toBe(429);
     });
 
     it("does not ask for a password when the same email is resent", async () => {

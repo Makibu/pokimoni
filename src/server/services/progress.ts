@@ -140,6 +140,7 @@ export async function listAchievements(db: Db, userId: string): Promise<Achievem
 /** Grants the reward of an unlocked achievement exactly once, even under concurrent requests. */
 export async function claimAchievement(db: Db, userId: string, achievementId: number, now = new Date()) {
     return db.transaction(async (tx) => {
+        await tx.select().from(playerState).where(eq(playerState.userId, userId)).for("update");
         const [claimed] = await tx
             .update(userAchievements)
             .set({claimedAt: now})

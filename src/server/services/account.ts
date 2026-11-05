@@ -25,6 +25,17 @@ const tooManyAttempts = () =>
 const invalidCredentials = () => new AppError(401, "invalid_credentials", "Nieprawidłowy email lub hasło");
 const wrongPassword = () => new AppError(403, "wrong_password", "Nieprawidłowe hasło");
 
+/** A stolen session must not be enough to guess the password that protects the account's email and deletion. */
+async function requireCurrentPassword(db: Db, user: UserRow, password: string) {
+    const key = `password-check:user:${user.id}`;
+    if (await isRateLimited(db, key, LIMITS.passwordChecksPerUser)) throw tooManyAttempts();
+    if (!(await verifyPassword(password, user.passwordHash))) {
+        await recordAttempt(db, key);
+        throw wrongPassword();
+    }
+    await clearAttempts(db, key);
+}
+
 function duplicateError(constraint: string): AppError {
     return constraint.includes("email")
         ? new AppError(409, "email_taken", "Ten adres email jest już zajęty")
@@ -99,7 +110,7 @@ export async function updateAccount(db: Db, userId: string, input: UpdateAccount
         if (!input.currentPassword) {
             throw new AppError(400, "current_password_required", "Podaj obecne hasło, aby zmienić email lub hasło");
         }
-        if (!(await verifyPassword(input.currentPassword, user.passwordHash))) throw wrongPassword();
+        await requireCurrentPassword(db, user, input.currentPassword);
     }
 
     const changes: Partial<typeof users.$inferInsert> = {};
@@ -135,7 +146,7 @@ export async function updateAccount(db: Db, userId: string, input: UpdateAccount
 export async function deleteAccount(db: Db, userId: string, password: string): Promise<void> {
     const [user] = await db.select().from(users).where(eq(users.id, userId));
     if (!user) throw new AppError(404, "not_found", "Nie znaleziono konta");
-    if (!(await verifyPassword(password, user.passwordHash))) throw wrongPassword();
+    await requireCurrentPassword(db, user, password);
     await db.transaction(async (tx) => {
         await tx.delete(notifications).where(sql`${notifications.payload}->>'actorId' = ${userId}`);
         await tx.delete(users).where(eq(users.id, userId));

@@ -90,6 +90,10 @@ export async function getMinigame(db: Db, userId: string, now = new Date(), rng:
 /** Starts the day's only attempt. Starting again returns the running game, so no one gets a new deal. */
 export async function startMinigame(db: Db, userId: string, now = new Date(), rng: Rng = secureRng) {
     const day = gameDayOf(now);
+    // Before the whole catalog gets loaded, so repeating this request costs almost nothing.
+    const running = await loadAttempt(db, userId, day);
+    if (running) return todayFrom(running);
+
     const variant = await ensureMinigameDay(db, day, rng);
 
     const catalog: CatalogCard[] = await db

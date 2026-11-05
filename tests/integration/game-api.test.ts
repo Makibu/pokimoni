@@ -184,6 +184,18 @@ describe("POST /api/feedback", () => {
         expect(rows).toMatchObject([{description: "Znalazłem błąd"}]);
     });
 
+    it("limits how many messages a player can send", async () => {
+        const {id, cookie} = await newPlayer();
+        const send = () =>
+            sendFeedback(request("POST", "/api/feedback", {cookie, body: {description: "Pomysł"}}), none);
+        for (let i = 0; i < 10; i++) expect((await send()).status).toBe(201);
+
+        const res = await send();
+        expect(res.status).toBe(429);
+        expect((await res.json()).error.code).toBe("too_many_attempts");
+        expect(await t.db.select().from(feedback).where(eq(feedback.userId, id))).toHaveLength(10);
+    });
+
     it.each([
         ["empty", "   "],
         ["too long", "x".repeat(2001)],

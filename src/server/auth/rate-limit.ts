@@ -8,6 +8,9 @@ export const LIMITS = {
     loginPerEmail: 10,
     loginPerIp: 50,
     registerPerIp: 10,
+    /** Wrong current passwords when changing the email or password, or deleting the account. */
+    passwordChecksPerUser: 10,
+    feedbackPerUser: 10,
     friendRequestsPerUser: 30,
     playerSearchPerUser: 60,
     tradeOffersPerUser: 30,
