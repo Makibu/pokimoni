@@ -1,3 +1,4 @@
+import "./zod-config";
 import {z} from "zod";
 import {MAX_PROFILE_STATS, MAX_SHOWCASE_CARDS, PROFILE_STATS} from "@/domain/profile";
 import {usernameSchema} from "./account";

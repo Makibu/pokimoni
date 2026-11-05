@@ -1,3 +1,4 @@
+import "./zod-config";
 import {z} from "zod";
 
 // Shared by API handlers and forms.

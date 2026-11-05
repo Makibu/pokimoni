@@ -515,3 +515,52 @@ Pomiar sprzed ostatniej poprawki blokady, która dotyczy tylko serwera. Różnic
 **Sprawdzone na produkcji bez konta:** strony bez sesji przekierowują na logowanie, API wymaga sesji (401), także podrobione ciasteczko; 23/23 starych tras daje 404; złe dane 400, obcy Origin 403, logowanie na nieistniejące konto dochodzi do bazy i daje 401. Nowe trasy fazy 7 bez sesji dają 401, a `/minigame` przekierowuje. Trzy ilustracje bloczka odpowiadają 200. Region funkcji: `fra1`.
 
 **Dalej niesprawdzone:** gra na koncie na produkcji, w tym `sharp` na Linuksie Vercela (trasa obrazka wymaga sesji), a także zapis zadań i nagród w prawdziwej bazie i blokady na prawdziwym Postgresie. Właściciel przyjął ciemny cień i zasady gry, nie zgłaszając uwag przy zgodzie na wdrożenie.
+
+## Faza 8 — jakość produktu (2026-11-05, gałąź `phase-8`)
+
+Właściciel uruchomił fazę słowami „Tak, zaczynaj faza 8”. Testu fazy 7 na koncie nie potwierdził, więc pytanie 14 zostaje otwarte.
+
+**Zakres:** nagłówki bezpieczeństwa, limit trasy obrazka, metadane i udostępnianie, symulacja ekonomii, przegląd responsywności, README. Stan: lokalnie, niewdrożone. Bez migracji.
+
+**Bezpieczeństwo (SEC-08):**
+- `next.config.ts` ustawia `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy` i CSP (w produkcji). HSTS dodaje już Vercel.
+- CSP bez nonce: nonce wymusza renderowanie każdej strony na żądanie i traci statyczny szkielet, który daje szybkie pierwsze malowanie. Skrypty inline Nexta wymagają więc `'unsafe-inline'`, ale aplikacja nie renderuje surowego HTML, a polityka nadal blokuje obce skrypty, osadzanie w ramkach, cele formularzy i połączenia z innymi hostami.
+- Test `security.spec.ts` przechodzi przez grę i sprawdza, czy CSP nic nie blokuje. Wykrył sondowanie `new Function` w bibliotece zod. Błąd był wyłapywany, ale przeglądarka zgłaszała naruszenie. Rozwiązanie: `config({jitless: true})` w `lib/validation/zod-config.ts`.
+- `GET /api/minigame/picture` ma limit 60 żądań na gracza na 15 minut. Po przekroczeniu odpowiada 429 bez sięgania po obrazek.
+
+**Metadane:** szablon tytułów (`Sklep · Pokimoni`), tytuł każdej strony, opis, Open Graph i Twitter Card, obrazek do udostępniania 1200×630, `robots.txt`, `sitemap.xml`. Strony są komponentami klienckimi, więc tytuły leżą w małych plikach `layout.tsx`. Bez zmiany w `proxy.ts` `robots.txt` i `sitemap.xml` przekierowałyby na logowanie.
+
+**Ikona:** dodano `icon.svg` i `apple-icon.png` w stylu Holo. Stary `favicon.ico` (piksele 16×16) został w repo jako zapasowy, ale przeglądarki obsługujące SVG pokażą nową ikonę.
+
+**Symulacja ekonomii:** `tests/helpers/economy-simulation.ts` gra prawdziwymi regułami z `domain/` na prawdziwym katalogu. Gracz wydaje wszystko na wybraną klasę paczek, kupuje paczkę dnia, gdy ma pasującą klasę albo gdy wymaga tego zadanie, i odbiera nagrody. Pomiar: 20 graczy na profil, 365 dni, dni 61–180.
+
+| Profil | Monet dziennie | Paczek dziennie | Cel ze specyfikacji |
+|---|---|---|---|
+| Aktywny (2 odbiory skarbonki), klasa 3 | 1203 | 3,5 | 2–3 |
+| Aktywny, klasa 2 | 1216 | 5,7 | 3–5 |
+| Aktywny, klasa 1 | 1215 | 9,5 | 6–8 |
+| Okazjonalny (1 odbiór), klasa 1 | 875 | 6,8 | — |
+| Zapalony (4 odbiory), klasa 2 | 1348 | 6,3 | — |
+
+**Wnioski:**
+- Budżet aktywnego gracza to ok. 1200 monet, a nie ok. 1000 ze specyfikacji. Ilość paczek jest o ok. 20% wyższa od celu.
+- Szacunek „początkujący 8/h, środek gry 17/h” okazał się błędny. Dochód ok. 27/h jest już w dniach 1–3, bo piąty slot paczki daje co najmniej Rare, a ok. 30/h przez większość gry. Skarbonka napełnia się więc do limitu od drugiego dnia i lepsze karty prawie nie zwiększają dochodu.
+- Pierwszy set trwa 2–6 miesięcy (klasa 2: od 61 do 176 dni). Po roku gracz ma ok. 40–45% katalogu, czyli cel długoterminowy się utrzymuje.
+- Osiągnięcia dają jednorazowe skoki: najbardziej aktywne dni miały do 36 paczek klasy 1.
+- Próba: pojemność skarbonki 200 daje aktywnemu graczowi ok. 1000 monet oraz 7,9 / 4,7 / 3,0 paczki, czyli prawie dokładnie cele. Pojemność 250 daje ok. 1100 monet. **Liczby są uzgodnione, więc nic nie zmieniono: decyzja należy do właściciela (pytanie 15).** Pasma w teście opisują stan obecny i trzeba je zmienić razem z ewentualną decyzją.
+
+**Przegląd responsywności:** `tests/perf/responsive-screens.spec.ts` przechodzi 12 widoków przy 360, 768, 1280 i 1920 px. Nie ma poziomego przewijania na żadnym; przy 360 px jedyny element poniżej 44 px to ukryty link „Przejdź do treści”. Na zrzutach znalazłem i poprawiłem:
+- Dymek o osiągnięciu zasłaniał „Otwórz kolejną” przy 360 i 768 px. Teraz stoi wyżej.
+- Przy 1920 px otwarte karty były małe i przyklejone do góry. Teraz są większe i wyśrodkowane w pionie.
+
+**README:** napisane od nowa po angielsku, jak poprzednie: funkcje, stos, architektura, decyzje, testy, uruchomienie, zastrzeżenie o braku związku z właścicielami marki. Zrzuty w `docs/screens` (łącznie ok. 190 KB), widać na nich tylko konta testowe.
+
+**Błędy znalezione przez pomiary, a nie przez testy:**
+- Polityka CSP na każdym pliku `_next/static` dodała ok. 13 KB nagłówków do strony na lokalnym HTTP/1. Nagłówki obejmują teraz tylko strony i API.
+- Wspólny moduł z `export {z}` wyłączył usuwanie nieużywanego kodu zoda i dodał 60 KB do `/login`. Dlatego konfiguracja siedzi w osobnym module.
+
+**Bramka (na tym kodzie):** format, lint i typecheck OK; Vitest 517/517, w tym 10 nowych; build OK; E2E 107 przechodzi, 3 pominięte celowo; `npm audit --omit=dev` 0; `drizzle-kit generate` bez zmian. Test klawiatury w `pack-opening.spec.ts` raz nie przeszedł w biegu pod większym obciążeniem; potem 6/6 osobno i w dwóch pełnych biegach. Przyczyny nie ustaliłem, więc możliwa jest niestabilność.
+
+**Rozmiar:** JS bez zmian na każdej stronie względem poprawki bloczka (`/login` 208 KB, `/` 274 KB, `/minigame` 273 KB). FCP 844–928 ms, różnice w granicach rozrzutu pojedynczego pomiaru. Dokument HTML urósł o 1–2 KB przez metadane i nagłówki.
+
+**Nie sprawdzono:** CSP i nagłówków na produkcji (dopiero po wdrożeniu), wyglądu podglądu linku w prawdziwym komunikatorze, fizycznego telefonu, czytnika ekranu. Kontrast nad obrazkami tylko policzony. Przegląd przy 768 i 1920 px dotyczył motywu jasnego; motyw ciemny na tych szerokościach sprawdza tylko axe.

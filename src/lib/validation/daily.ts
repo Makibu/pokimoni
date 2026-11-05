@@ -1,3 +1,4 @@
+import "./zod-config";
 import {z} from "zod";
 
 const MAX_ANSWER_LENGTH = 60;

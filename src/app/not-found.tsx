@@ -1,5 +1,8 @@
+import type {Metadata} from "next";
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button";
+
+export const metadata: Metadata = {title: "Nie ma takiej strony"};
 
 export default function NotFound() {
     return (

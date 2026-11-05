@@ -17,9 +17,22 @@ const unbounded = Unbounded({
     display: "swap",
 });
 
+const DESCRIPTION =
+    "Otwieraj paczki, zbieraj karty i wymieniaj się nimi ze znajomymi. Gra kolekcjonerska w przeglądarce.";
+
 export const metadata: Metadata = {
-    title: "Pokimoni",
-    description: "Zbieraj karty, otwieraj paczki i zarabiaj monety.",
+    metadataBase: new URL("https://pokimoni.vercel.app"),
+    title: {default: "Pokimoni", template: "%s · Pokimoni"},
+    description: DESCRIPTION,
+    openGraph: {
+        type: "website",
+        siteName: "Pokimoni",
+        locale: "pl_PL",
+        title: "Pokimoni",
+        description: DESCRIPTION,
+        url: "/login",
+    },
+    twitter: {card: "summary_large_image"},
 };
 
 export const viewport: Viewport = {

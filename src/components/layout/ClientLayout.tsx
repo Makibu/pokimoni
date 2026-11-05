@@ -11,7 +11,14 @@ export default function ClientLayout({children}: {children: React.ReactNode}) {
             <ReactQueryClientProvider>
                 <SessionGuard />
                 {children}
-                <Toaster position="bottom-right" mobileOffset={{bottom: "88px"}} richColors expand />
+                {/* Above the bottom nav and above the pack window's buttons, which stack on a phone. */}
+                <Toaster
+                    position="bottom-right"
+                    offset={{bottom: "88px"}}
+                    mobileOffset={{bottom: "148px"}}
+                    richColors
+                    expand
+                />
             </ReactQueryClientProvider>
         </ThemeProvider>
     );

@@ -16,6 +16,6 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-    // Public files stay reachable: next/image fetches them without the session cookie.
-    matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpe?g|webp|svg|json)$).*)"],
+    // Public files stay reachable: next/image and crawlers fetch them without the session cookie.
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpe?g|webp|svg|json|txt|xml)$).*)"],
 };

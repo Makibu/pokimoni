@@ -67,6 +67,8 @@ Endpointy zwracają `error.message` z Postgresa, `api/achievements` cały obiekt
 
 `next.config.ts` nie ustawia CSP, `X-Frame-Options`, `Referrer-Policy` itp.
 
+**Stan:** naprawione w fazie 8, opis i ograniczenia CSP w `IMPLEMENTATION_LOG.md`.
+
 ## SEC-09 — INFO
 
 - `lib/supabaseClient.ts` (klucz anon) nie jest nigdzie importowany → klucz nie trafia do bundla.

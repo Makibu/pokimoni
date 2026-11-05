@@ -1,3 +1,4 @@
+import {like} from "drizzle-orm";
 import {type NextRequest, NextRequest as Request_} from "next/server";
 import {afterAll, afterEach, beforeAll, describe, expect, it, vi} from "vitest";
 import sharp from "sharp";
@@ -9,9 +10,10 @@ import {POST as start} from "@/app/api/minigame/start/route";
 import {POST as claim} from "@/app/api/quests/[slot]/claim/route";
 import {GET as quests} from "@/app/api/quests/route";
 import {gameDayOf} from "@/domain/game-day";
+import {LIMITS} from "@/server/auth/rate-limit";
 import {SESSION_COOKIE} from "@/server/auth/token";
 import {setDb} from "@/server/db/client";
-import {minigameDays} from "@/server/db/schema";
+import {authAttempts, minigameDays} from "@/server/db/schema";
 import {createTestDb, type TestDb} from "../helpers/db";
 
 let t: TestDb;
@@ -194,5 +196,24 @@ describe("the clue picture", () => {
         expect(res.status).toBe(502);
         expect((await res.json()).error.code).toBe("image_unavailable");
         quiet.mockRestore();
+    });
+
+    it("answers 429 without touching the image host once the limit is reached", async () => {
+        const cookie = await newCookie();
+        await start(request("POST", {cookie}), none);
+        const fetcher = vi.fn(async () => new Response(new Uint8Array(await fakeCard())));
+        vi.stubGlobal("fetch", fetcher);
+        expect((await picture(request("GET", {cookie}), none)).status).toBe(200);
+        fetcher.mockClear();
+
+        await t.db
+            .update(authAttempts)
+            .set({count: LIMITS.cluePicturesPerUser})
+            .where(like(authAttempts.key, "clue-picture:user:%"));
+
+        const res = await picture(request("GET", {cookie}), none);
+        expect(res.status).toBe(429);
+        expect((await res.json()).error.code).toBe("too_many_attempts");
+        expect(fetcher).not.toHaveBeenCalled();
     });
 });

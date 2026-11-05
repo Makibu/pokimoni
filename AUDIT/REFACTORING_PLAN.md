@@ -126,6 +126,8 @@ Końcowy przegląd responsywności (360/768/1280/1920) i dostępności; `lang="p
 strony logowania; nagłówki bezpieczeństwa; README (architektura, uruchomienie, decyzje, zrzuty);
 symulacja ekonomii jako test.
 
+Stan: zbudowane lokalnie na gałęzi `phase-8`, czeka na odbiór. Szczegóły w `IMPLEMENTATION_LOG.md`.
+
 ### Faza 9 — Audyt końcowy (P1)
 
 Ponowny audyt wg etapów I–VI, porównanie przed/po, `FINAL_REPORT.md`, `TEST_REPORT.md`.

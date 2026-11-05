@@ -11,6 +11,8 @@ export const LIMITS = {
     friendRequestsPerUser: 30,
     playerSearchPerUser: 60,
     tradeOffersPerUser: 30,
+    /** Five rounds a day, so this leaves plenty of room for reloads and retries. */
+    cluePicturesPerUser: 60,
 } as const;
 
 export async function isRateLimited(db: Db, key: string, max: number, now = new Date()): Promise<boolean> {

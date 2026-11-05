@@ -260,6 +260,8 @@ paczek (albo mix), nigdy więcej niż ~10; środek ciężkości ~5 paczek. Oznac
 Powrót po długiej przerwie = jedna pełna skarbonka (300). Wartości zweryfikuję symulacją w testach
 (rozkład kart z paczek × ceny × czas do ukończenia setów).
 
+**Wynik symulacji (faza 8):** aktywny gracz ma ok. 1200 monet dziennie, a dochód ok. 30/h już po kilku dniach, więc tabela wyżej zaniża początek gry. Szczegóły i wariant pojemności 200 w `IMPLEMENTATION_LOG.md`. **[DO DECYZJI WŁAŚCICIELA]**
+
 ## 5. Wymagania niefunkcjonalne
 
 - **Bezpieczeństwo:** uwierzytelnianie każdego żądania, walidacja wejścia, rate limit logowania,
