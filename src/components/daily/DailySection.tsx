@@ -3,17 +3,20 @@
 import {Check} from "lucide-react";
 import Link from "next/link";
 import {toast} from "sonner";
+import MinigameArt from "@/components/daily/MinigameArt";
 import {Button} from "@/components/ui/button";
 import {ProgressBar} from "@/components/ui/progress-bar";
 import {LoadingRegion, Skeleton} from "@/components/ui/skeleton";
 import {ErrorState} from "@/components/ui/states";
-import {DIFFICULTY_NAMES, GAME_NAMES, gameRules} from "@/features/daily/labels";
+import {DIFFICULTY_NAMES, GAME_NAMES} from "@/features/daily/labels";
 import {useClaimQuest, useMinigame, useQuests} from "@/features/daily/use-daily";
 import {coinsAccusative} from "@/lib/format";
 import type {QuestView} from "@/server/services/quests";
 
 const QUESTS_FRAME = "flex flex-col gap-4 rounded-section bg-card p-4 md:p-6";
-const MINIGAME_FRAME = "flex flex-col justify-between gap-4 rounded-section bg-aqua p-4 md:p-6";
+// Dark in both themes, with the dark theme's colours inside, because a picture stands out best on it.
+const MINIGAME_FRAME =
+    "dark relative isolate flex flex-col justify-between gap-4 overflow-hidden rounded-section bg-card p-4 text-foreground md:p-6";
 const GRID = "grid gap-4 lg:grid-cols-[3fr_2fr] lg:gap-5";
 
 function QuestRow({quest}: {quest: QuestView}) {
@@ -129,15 +132,13 @@ function MinigameCard() {
 
     return (
         <section aria-label="Minigra dnia" className={MINIGAME_FRAME}>
-            <div className="flex flex-col gap-1">
+            <MinigameArt game={today.game} />
+            <div className="flex max-w-[62%] flex-col gap-1">
                 <h2 className="font-display text-lg font-bold md:text-xl">Minigra dnia</h2>
                 <p className="font-bold">
                     {GAME_NAMES[today.game]} · poziom {DIFFICULTY_NAMES[today.difficulty]}
                 </p>
                 <p className="text-sm font-medium">{summary}</p>
-                {today.status === "not_started" && (
-                    <p className="hidden text-sm font-medium lg:block">{gameRules(today.game, today.difficulty)}</p>
-                )}
             </div>
             <Button asChild variant="ink" className="self-start">
                 <Link href="/minigame">{BUTTON_LABELS[today.status]}</Link>

@@ -184,6 +184,19 @@ for (const viewport of VIEWPORTS) {
             await page.getByRole("region", {name: "Minigra dnia"}).scrollIntoViewIfNeeded();
             await shot(page, `home-finished-${label}`);
 
+            // The home block's picture for each game.
+            for (const game of ["who_is_it", "memory", "sliding_puzzle"] as const) {
+                await page.unrouteAll();
+                await page.route("**/api/minigame", (route) =>
+                    route.fulfill({json: {game, difficulty: "medium", reward: 175, status: "not_started", view: null}}),
+                );
+                await page.goto("/");
+                const block = page.getByRole("region", {name: "Minigra dnia"});
+                await expect(block.getByRole("link", {name: "Zagraj"})).toBeVisible();
+                await page.waitForLoadState("networkidle").catch(() => undefined);
+                await block.screenshot({path: path.join(OUT, `art-${game}-${label}.png`)});
+            }
+
             await page.context().close();
         });
     }

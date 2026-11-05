@@ -502,3 +502,10 @@ Pomiar sprzed ostatniej poprawki blokady, która dotyczy tylko serwera. Różnic
 - Odpowiedzi w „Kto to Pokémon?” opierają się na obrazku, więc gra nie działa z czytnikiem ekranu. Memory też opiera się na obrazach, ale karty mają nazwy w etykietach.
 
 **Nie sprawdzono:** fizycznego telefonu, czytnika ekranu, działania na produkcji i na prawdziwej bazie, a przede wszystkim `sharp` na Linuksie Vercela. To da się potwierdzić dopiero po wdrożeniu, grając na koncie.
+
+**Poprawka w odbiorze: ilustracja w bloczku minigry.** Właściciel poprosił o obrazek zamiast samego tekstu na jednolitym tle.
+- Każda gra ma własną ilustrację w `components/daily/MinigameArt.tsx`: rozmyta karta ze znakiem zapytania, zakryte karty z odkrytą parą, karta pocięta na kafelki. Są stałe i ozdobne (`aria-hidden`), nie zależą od odpowiedzi dnia.
+- Bloczek jest ciemny w obu motywach, bo na ciemnym tle obrazek wyróżnia się najlepiej. Reguły gry zniknęły z bloczka na komputerze i zostały na ekranie gry.
+- Obrazki to pliki `small` z hosta katalogu, ładowane jako tło CSS. Gdy host nie odpowie, zostaje ciemny bloczek z tekstem. Każdy waży ok. 165–230 KB i ładuje się z sekcją na stronie głównej; pomiar pomija obrazy zewnętrzne, więc tego kosztu nie ma w tabeli wyżej.
+- Kontrast tekstu policzony, nie zmierzony, bo axe nie ocenia tekstu nad obrazkiem. Tekst kończy się najdalej przy ok. 61% szerokości, a zanik jest tam w ok. 74% kryjący, co nad białym obrazkiem daje ok. 7:1.
+- Bramka po zmianie: format, lint i typecheck OK; Vitest 507/507; build OK; E2E 99 przechodzi, 3 pominięte celowo. JS na `/` 274 KB, o 1 KB więcej niż wyżej. Zrzuty trzech gier obejrzane przy 360 i 1280 px; test zrzutów podstawia grę w odpowiedzi API.
