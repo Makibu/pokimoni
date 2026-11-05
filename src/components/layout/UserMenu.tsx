@@ -1,6 +1,6 @@
 "use client";
 
-import {LogOut, Settings, User} from "lucide-react";
+import {CircleUser, LogOut, Settings, User} from "lucide-react";
 import dynamic from "next/dynamic";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {Skeleton} from "@/components/ui/skeleton";
 import {useLogout, useSession} from "@/features/account/use-session";
+import {useSocialDialogs} from "@/features/social/social-dialogs";
 
 const AccountDialog = dynamic(() => import("@/components/account/AccountDialog"), {ssr: false});
 
@@ -25,6 +26,7 @@ export default function UserMenu() {
     const {data: account} = useSession();
     const logout = useLogout();
     const router = useRouter();
+    const {openProfile} = useSocialDialogs();
     const [openTab, setOpenTab] = useState<AccountTab | null>(null);
 
     function goToLogin() {
@@ -43,8 +45,11 @@ export default function UserMenu() {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Witaj, {account.username}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => openProfile(account.id)}>
+                        <CircleUser aria-hidden="true" /> Mój profil
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenTab("profile")}>
-                        <User aria-hidden="true" /> Profil
+                        <User aria-hidden="true" /> Konto
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenTab("settings")}>
                         <Settings aria-hidden="true" /> Ustawienia

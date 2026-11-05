@@ -4,7 +4,7 @@ import type {Account, LoginInput, RegisterInput, UpdateAccountInput} from "@/lib
 import {hashPassword, verifyAgainstDummy, verifyPassword} from "@/server/auth/password";
 import {clearAttempts, isRateLimited, LIMITS, recordAttempt} from "@/server/auth/rate-limit";
 import {violatedUniqueConstraint} from "@/server/db/errors";
-import {coinLedger, playerState, users} from "@/server/db/schema";
+import {coinLedger, notifications, playerState, users} from "@/server/db/schema";
 import type {Db} from "@/server/db/types";
 import {AppError} from "@/server/http/errors";
 
@@ -128,10 +128,16 @@ export async function updateAccount(db: Db, userId: string, input: UpdateAccount
     }
 }
 
-/** Deletes the account; foreign keys remove all player data, which also releases cards in open trades. */
+/**
+ * Deletes the account; foreign keys remove all player data, which also releases cards in open trades.
+ * Notifications other players received about this player refer to them only in their payload, so they go separately.
+ */
 export async function deleteAccount(db: Db, userId: string, password: string): Promise<void> {
     const [user] = await db.select().from(users).where(eq(users.id, userId));
     if (!user) throw new AppError(404, "not_found", "Nie znaleziono konta");
     if (!(await verifyPassword(password, user.passwordHash))) throw wrongPassword();
-    await db.delete(users).where(eq(users.id, userId));
+    await db.transaction(async (tx) => {
+        await tx.delete(notifications).where(sql`${notifications.payload}->>'actorId' = ${userId}`);
+        await tx.delete(users).where(eq(users.id, userId));
+    });
 }

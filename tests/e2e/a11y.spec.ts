@@ -1,19 +1,5 @@
-import AxeBuilder from "@axe-core/playwright";
-import {expect, test, type Page} from "@playwright/test";
-import {register, uniquePlayer} from "./helpers";
-
-async function expectNoViolations(page: Page, name: string) {
-    const results = await new AxeBuilder({page})
-        // Toasts are animating when the check runs, so their colours are caught halfway through a fade.
-        .exclude("[data-sonner-toaster]")
-        .withTags(["wcag2a", "wcag2aa"])
-        .analyze();
-    const summary = results.violations.map((violation) => ({
-        rule: violation.id,
-        nodes: violation.nodes.slice(0, 5).map((node) => `${node.target.join(" ")}: ${node.failureSummary ?? ""}`),
-    }));
-    expect(summary, `Accessibility problems on ${name}`).toEqual([]);
-}
+import {expect, test} from "@playwright/test";
+import {expectNoViolations, register, uniquePlayer} from "./helpers";
 
 for (const theme of ["light", "dark"] as const) {
     test(`pages pass the automated accessibility check in the ${theme} theme`, async ({page}, testInfo) => {
@@ -58,6 +44,7 @@ for (const theme of ["light", "dark"] as const) {
             ["/collection", "Twój indeks kart"],
             ["/achievements", "Odbierz nagrodę"],
             ["/statistics", "Unikatowe karty"],
+            ["/friends", "Twoi znajomi"],
         ];
         for (const [route, content] of pages) {
             await page.goto(route);

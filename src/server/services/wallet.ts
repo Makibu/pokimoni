@@ -7,6 +7,7 @@ import {
     piggyBankBalance,
 } from "@/domain/economy";
 import {gameDayOf} from "@/domain/game-day";
+import {freeCopies} from "@/domain/trades";
 import {playerState, trades, userCards} from "@/server/db/schema";
 import type {Db, Tx} from "@/server/db/types";
 import {AppError} from "@/server/http/errors";
@@ -18,6 +19,17 @@ async function lockState(tx: Tx, userId: string) {
     const [state] = await tx.select().from(playerState).where(eq(playerState.userId, userId)).for("update");
     if (!state) throw new AppError(404, "not_found", "Nie znaleziono gracza");
     return state;
+}
+
+/** Locks two players in a fixed order, so opposite trades cannot wait for each other. Results keep the argument order. */
+export async function lockPlayers(tx: Tx, a: string, b: string) {
+    if (a === b) {
+        const state = await lockState(tx, a);
+        return [state, state] as const;
+    }
+    const first = await lockState(tx, a < b ? a : b);
+    const second = await lockState(tx, a < b ? b : a);
+    return a < b ? ([first, second] as const) : ([second, first] as const);
 }
 
 export type PlayerSummary = {
@@ -105,7 +117,7 @@ export async function availableCopies(tx: Tx, userId: string, state: typeof play
         .select({escrowed: count()})
         .from(trades)
         .where(and(eq(trades.fromUserId, userId), eq(trades.offeredCardId, cardId), eq(trades.status, "pending")));
-    return owned.quantity - slotted - escrowed;
+    return freeCopies(owned.quantity, slotted, escrowed);
 }
 
 /** Puts a card in an income slot or empties it. Income earned so far is paid out at the old rate first. */

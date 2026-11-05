@@ -1,6 +1,6 @@
 # Postęp audytu
 
-Ostatnia aktualizacja: 2026-11-04
+Ostatnia aktualizacja: 2026-11-05
 
 | Etap | Status | Uwagi |
 |---|---|---|
@@ -21,7 +21,8 @@ Ostatnia aktualizacja: 2026-11-04
 | XI. Faza 4 — przełączenie produkcji | DONE | produkcja na `7272fef`, stare obiekty usunięte, połączenie z bazą poprawione; test i rotacja potwierdzone przez właściciela |
 | XI. Faza 4.5 — system designu i przebudowa widoków | DONE | kierunek B „Holo”; na produkcji `1a61348`, region `fra1`. Właściciel przeszedł do fazy 5, ale osobnego potwierdzenia testu na koncie nie ma (pytanie 9) |
 | XI. Faza 5 — nowe otwieranie paczek | DONE | na produkcji `d323fd3` i poprawka migania okien `b8a0199`; właściciel potwierdził na produkcji, że miganie zniknęło |
-| XI. Fazy 6–9 | NOT STARTED | |
+| XI. Faza 6 — funkcje społeczne | W ODBIORZE | gotowa lokalnie na gałęzi `phase-6`, bramka przechodzi; nie wdrożona, czeka na akceptację właściciela |
+| XI. Fazy 7–9 | NOT STARTED | |
 
 ## Ustalenia
 
@@ -63,6 +64,8 @@ Ostatnia aktualizacja: 2026-11-04
 - 2026-11-04: właściciel wybrał klimat „jasny i kolorowy” oraz kierunek B „Holo”; wszystkie podstrony w nowym stylu,
   szybkie ładowanie i placeholdery. Domyślny motyw jasny, do wyboru także ciemny i systemowy.
 
+- 2026-11-05: paczkę dnia można kupować bez limitu sztuk. Grafiki kafelków na stronie głównej zostają bez zmian (pastelowe, bez banerów Pokémonów). Start fazy 6.
+
 ## Otwarte pytania do właściciela
 
 1. ~~Liczby ekonomii~~ — zaakceptowane 2026-11-03 (bez wariantu „Premium”).
@@ -70,9 +73,11 @@ Ostatnia aktualizacja: 2026-11-04
 3. ~~RLS i dostęp anon~~ — zamknięte 2026-11-03 (`SECURITY_AUDIT.md`).
 4. ~~`DATABASE_URL`~~ — ustawiony 2026-11-03.
 5. ~~Faza 4: przełączenie i usunięcie starych obiektów~~ — wykonane 2026-11-04, rotacja kluczy zgłoszona przez właściciela.
-6. Czy ograniczyć paczkę dnia do 1 sztuki dziennie?
+6. ~~Czy ograniczyć paczkę dnia do 1 sztuki dziennie?~~ — nie, właściciel zdecydował 2026-11-05: bez limitu.
 7. ~~Faza 4.5: kierunek wizualny~~ — wybrany 2026-11-04: B „Holo”.
 8. ~~Faza 4.5: zgoda na wdrożenie i region `fra1`~~ — udzielona i wykonana 2026-11-04.
 9. Faza 4.5: test na produkcji na koncie właściciela (brak wyraźnego potwierdzenia).
 10. ~~Faza 5: zgoda na wdrożenie~~ — udzielona i wykonana 2026-11-05 (czasu polskiego).
-11. ~~Faza 5: test na produkcji~~ — właściciel otwierał paczki i potwierdził brak migania. Fizycznego czytnika ekranu nikt nie sprawdził.
+11. ~~Faza 5: test na produkcji~~ — właściciel otwierał paczki i potwierdził brak migania. Działania z czytnikiem ekranu nie sprawdzono.
+12. Faza 6: odbiór zrzutów, zgoda na wdrożenie i test na dwóch kontach.
+13. Faza 6: decyzje podjęte przy budowie, do potwierdzenia: wycofanie własnego zaproszenia, ciche odrzucenie zaproszenia, osobna zakładka „Znajomi” (`PRODUCT_SPECIFICATION.md`, F15–F18).

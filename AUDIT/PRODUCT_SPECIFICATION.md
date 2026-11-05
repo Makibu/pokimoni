@@ -68,7 +68,7 @@ do ustalenia symulacją ekonomii (rozdz. 4).
   z własną tabelą szans i ceną. Rezygnuję z osobnego wariantu „Premium” — trzy poziomy wystarczą,
   a mniej opcji to czytelniejszy sklep. **[ZAAKCEPTOWANE]**
 - **Paczka dnia** — jeden set dziennie ze zniżką, wybierany losowo z wagami (klasa, rzadkość powtórek);
-  naprawa wadliwego losowania (DB-09/DB-10).
+  naprawa wadliwego losowania (DB-09/DB-10). Bez limitu sztuk dziennie. **[USTALONE 2026-11-05]**
 - Paczka = 5 kart; wagi rzadkości per pozycja; **god pack 0,05%** (same karty illustration rare+). **[USTALONE]**
 - Darmowe paczki z osiągnięć (F12) leżą w ekwipunku do otwarcia w dowolnym momencie. **[ZAAKCEPTOWANE]**
 - Zakup to **jedna operacja serwera**: sprawdzenie salda → pobranie monet → losowanie → zapis kart
@@ -168,6 +168,7 @@ innych aplikacji).
 - Zaproszenie po nicku → odbiorca akceptuje / odrzuca (z inboxa).
 - Lista znajomych z linkami do profili; możliwość usunięcia znajomego. **[ZAAKCEPTOWANE]**
 - Usunięcie znajomego anuluje otwarte oferty między nimi (escrow wraca). **[ZAAKCEPTOWANE]**
+- Nadawca może wycofać zaproszenie przed odpowiedzią. Odrzucenie zaproszenia nie powiadamia nadawcy. Znajomi mają własną zakładkę w nawigacji. **[DO ODBIORU W FAZIE 6]**
 
 ### F16. Wymiany kart [USTALONE]
 
@@ -181,6 +182,7 @@ innych aplikacji).
 - Akceptacja: serwer sprawdza, czy odbiorca nadal ma wolny egzemplarz; jeśli nie — komunikat, oferta zostaje.
 - Zamiana jest atomowa. Gablota: karta znika z niej tylko, gdy gracz nie ma już żadnego egzemplarza.
 - Wymiany nie liczą się do „otwartych paczek”; liczą się do statystyki „liczba wymian”. **[ZAAKCEPTOWANE]**
+- Nie można wymienić karty na tę samą. Karty otrzymane w wymianie liczą się do osiągnięć, które przyznawane są jednorazowo. **[DO ODBIORU W FAZIE 6]**
 
 ### F17. Profil gracza [USTALONE]
 
@@ -192,6 +194,7 @@ innych aplikacji).
 - **Gablota: maks. 5 kart** wybranych z posiadanych; nie blokuje kart.
 - Na cudzym profilu przyciski: „Zaproś do znajomych” / „Zaproponuj wymianę” (gdy znajomy).
 - Na własnym profilu tryb edycji gabloty i statystyk.
+- Dopóki gracz nie wybierze, profil pokazuje unikatowe karty, otwarte paczki i osiągnięcia. Trzeba zostawić co najmniej 1 statystykę. **[DO ODBIORU W FAZIE 6]**
 
 ### F18. Inbox [USTALONE]
 
@@ -200,6 +203,7 @@ innych aplikacji).
 - Zawiera: zaproszenia (z akcjami), oferty wymian (z akcjami), wyniki ofert
   (zaakceptowana / odrzucona / anulowana), usunięcie ze znajomych **[ZAAKCEPTOWANE]**.
 - Odświeżanie: przy wejściu na stronę i co ~30 s (bez websocketów). **[ZAAKCEPTOWANE]**
+- Skrzynka pokazuje 30 ostatnich powiadomień. Otwarte zaproszenia i oferty są zawsze także na stronie „Znajomi”. **[DO ODBIORU W FAZIE 6]**
 
 ### F19. Changelog [USTALONE]
 

@@ -8,6 +8,7 @@ import {
     sets,
     userAchievements,
     userBadges,
+    trades,
     userCards,
 } from "@/server/db/schema";
 import type {Db} from "@/server/db/types";
@@ -52,6 +53,8 @@ export type CollectionCard = {
     imageSmall: string;
     imageLarge: string;
     quantity: number;
+    /** Copies held in the player's open trade offers. They still belong to the player but cannot be used. */
+    escrowed: number;
     firstAcquiredAt: string | null;
 };
 
@@ -65,15 +68,27 @@ const collectionCardFields = {
     firstAcquiredAt: userCards.firstAcquiredAt,
 };
 
-function toCollectionCard(row: {
-    id: string;
-    name: string;
-    rarity: Rarity;
-    income: number;
-    images: {small: string; large: string};
-    quantity: number | null;
-    firstAcquiredAt: Date | null;
-}): CollectionCard {
+async function loadEscrowedCopies(db: Db, userId: string): Promise<Map<string, number>> {
+    const rows = await db
+        .select({cardId: trades.offeredCardId, n: count()})
+        .from(trades)
+        .where(and(eq(trades.fromUserId, userId), eq(trades.status, "pending")))
+        .groupBy(trades.offeredCardId);
+    return new Map(rows.map((row) => [row.cardId, row.n]));
+}
+
+function toCollectionCard(
+    row: {
+        id: string;
+        name: string;
+        rarity: Rarity;
+        income: number;
+        images: {small: string; large: string};
+        quantity: number | null;
+        firstAcquiredAt: Date | null;
+    },
+    escrowed: Map<string, number>,
+): CollectionCard {
     return {
         id: row.id,
         name: row.name,
@@ -82,6 +97,7 @@ function toCollectionCard(row: {
         imageSmall: row.images.small,
         imageLarge: row.images.large,
         quantity: row.quantity ?? 0,
+        escrowed: escrowed.get(row.id) ?? 0,
         firstAcquiredAt: row.firstAcquiredAt?.toISOString() ?? null,
     };
 }
@@ -90,22 +106,30 @@ function toCollectionCard(row: {
 export async function getSetCollection(db: Db, userId: string, setId: string) {
     const [set] = await db.select().from(sets).where(eq(sets.id, setId));
     if (!set) throw new AppError(404, "set_not_found", "Nie znaleziono zestawu");
-    const rows = await db
-        .select(collectionCardFields)
-        .from(cards)
-        .leftJoin(userCards, and(eq(userCards.cardId, cards.id), eq(userCards.userId, userId)))
-        .where(eq(cards.setId, setId));
-    return {set: {id: set.id, name: set.name}, cards: rows.map(toCollectionCard)};
+    const [rows, escrowed] = await Promise.all([
+        db
+            .select(collectionCardFields)
+            .from(cards)
+            .leftJoin(userCards, and(eq(userCards.cardId, cards.id), eq(userCards.userId, userId)))
+            .where(eq(cards.setId, setId)),
+        loadEscrowedCopies(db, userId),
+    ]);
+    return {set: {id: set.id, name: set.name}, cards: rows.map((row) => toCollectionCard(row, escrowed))};
 }
 
 /** Every card the player owns, from the rarest. Used by the income slot picker. */
 export async function listOwnedCards(db: Db, userId: string): Promise<CollectionCard[]> {
-    const rows = await db
-        .select(collectionCardFields)
-        .from(userCards)
-        .innerJoin(cards, eq(cards.id, userCards.cardId))
-        .where(eq(userCards.userId, userId));
-    return rows.map(toCollectionCard).sort((a, b) => rarityRank(b.rarity) - rarityRank(a.rarity));
+    const [rows, escrowed] = await Promise.all([
+        db
+            .select(collectionCardFields)
+            .from(userCards)
+            .innerJoin(cards, eq(cards.id, userCards.cardId))
+            .where(eq(userCards.userId, userId)),
+        loadEscrowedCopies(db, userId),
+    ]);
+    return rows
+        .map((row) => toCollectionCard(row, escrowed))
+        .sort((a, b) => rarityRank(b.rarity) - rarityRank(a.rarity));
 }
 
 const MIN_ACTIVITY_RANK = rarityRank("special illustration rare");

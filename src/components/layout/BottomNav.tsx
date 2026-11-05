@@ -14,7 +14,7 @@ export default function BottomNav() {
     return (
         <nav
             aria-label="Główna"
-            className="fixed inset-x-4 bottom-3 z-40 mx-auto grid max-w-md grid-cols-5 rounded-full bg-nav p-1.5 text-nav-foreground shadow-(--lift) lg:hidden"
+            className="fixed inset-x-4 bottom-3 z-40 mx-auto grid max-w-md grid-cols-6 rounded-full bg-nav p-1.5 text-nav-foreground shadow-(--lift) lg:hidden"
         >
             {NAV_ITEMS.map((item) => {
                 const active = isActiveLink(pathname, item.href);

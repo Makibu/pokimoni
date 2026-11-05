@@ -104,6 +104,8 @@ Stan: zamknięta, na produkcji (`d323fd3`, poprawka migania okien `b8a0199`); sz
 | 6.3 | Profil pop-up: gablota 5, 3 statystyki, odznaki, edycja własnego | testy: karta spoza kolekcji nie wchodzi do gabloty |
 | 6.4 | Wymiany: escrow, limit 1 oferty na kierunek, akceptacja/odrzucenie/anulowanie, „LIMIT”, gabloty | testy integracyjne pełnego cyklu, wyścig akceptacja vs anulowanie, karta w slocie |
 
+Stan: gotowa lokalnie na `phase-6`, czeka na odbiór i zgodę na wdrożenie. Bez migracji bazy; szczegóły w `IMPLEMENTATION_LOG.md`.
+
 ### Faza 7 — Dzienne aktywności (P2) — F9, F10
 
 | # | Zmiana |

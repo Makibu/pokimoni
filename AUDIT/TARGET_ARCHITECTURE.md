@@ -72,8 +72,8 @@ src/
     http/handler.ts                  withUser(), parse(zod), AppError → JSON
     services/                        packs, economy, collection, achievements, quests, minigames,
                                      friends, trades, profile, notifications, feedback, account
-  features/                          UI per funkcja: pack-opening/, collection/, trades/, inbox/,
-                                     profile/, minigames/, shop/, daily/
+  features/                          UI per funkcja: pack-opening/, collection/, social/ (skrzynka,
+                                     znajomi, profil, wymiany), minigames/, shop/, daily/
   components/ui/                     shadcn
   lib/                               api-client.ts, query-keys.ts, utils.ts
 drizzle/                             migracje SQL (generowane)
@@ -113,6 +113,8 @@ Wszystkie znaczniki czasu `timestamptz`; „doba gry” zapisywana jako `date` (
 
 Escrow nie wymaga osobnej tabeli: egzemplarze w escrow = liczba ofert `pending` z danym
 `offered_card_id`; dostępne = `quantity − sloty − escrow` (liczone w transakcji z `FOR UPDATE`).
+
+Stan po fazie 6: `FOR UPDATE` zakładany jest na wierszach `player_state`, nie `user_cards`. Każda operacja zmieniająca karty lub sloty gracza najpierw blokuje jego wiersz, a wymiana blokuje obu graczy w stałej kolejności identyfikatorów, co wyklucza zakleszczenie między nimi. Wiersza `user_cards` może jeszcze nie być, a `player_state` jest zawsze.
 
 Wszystkie FK do `users` z `ON DELETE CASCADE`. **RLS włączony na każdej tabeli bez polityk** —
 publiczne API Supabase (PostgREST) nie ma dostępu do niczego; aplikacja łączy się bezpośrednio.

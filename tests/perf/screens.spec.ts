@@ -99,7 +99,7 @@ test("capture screens", async ({page, browser, baseURL}) => {
             await player.getByRole("button", {name: "Menu użytkownika"}).click();
             await settle();
             await shot("menu");
-            await player.getByRole("menuitem", {name: "Profil"}).click();
+            await player.getByRole("menuitem", {name: "Konto"}).click();
             await player.getByRole("dialog").waitFor();
             await settle();
             await shot("profile");

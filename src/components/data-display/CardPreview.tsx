@@ -11,6 +11,7 @@ export type PreviewedCard = {
     imageSmall: string;
     imageLarge: string;
     copies: number;
+    escrowed?: number;
     overLimit?: boolean;
 };
 
@@ -55,6 +56,7 @@ export default function CardPreview({
                             <Fact label="Twoje egzemplarze">
                                 {card.copies} z {MAX_CARD_COPIES}
                             </Fact>
+                            {(card.escrowed ?? 0) > 0 && <Fact label="W ofercie wymiany">{card.escrowed}</Fact>}
                         </dl>
                         {card.overLimit && (
                             <p className="rounded-[14px] bg-secondary p-3 text-sm font-medium">

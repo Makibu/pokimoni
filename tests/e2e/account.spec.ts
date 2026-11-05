@@ -51,7 +51,7 @@ test("player can delete the account after confirming the password", async ({page
     await register(page, player);
 
     await page.getByRole("button", {name: "Menu użytkownika"}).click();
-    await page.getByRole("menuitem", {name: "Profil"}).click();
+    await page.getByRole("menuitem", {name: "Konto"}).click();
     await page.getByRole("button", {name: "Usuń konto"}).click();
     await page.getByLabel("Hasło", {exact: true}).fill(PASSWORD);
     await page.getByRole("alertdialog").getByRole("button", {name: "Usuń konto"}).click();
@@ -74,12 +74,12 @@ test("changing the password signs out other sessions", async ({page, browser, ba
     await expect(otherPage).toHaveURL(/\/$/);
 
     await page.getByRole("button", {name: "Menu użytkownika"}).click();
-    await page.getByRole("menuitem", {name: "Profil"}).click();
+    await page.getByRole("menuitem", {name: "Konto"}).click();
     await page.getByLabel("Nowe hasło").fill("zupelnie-nowe-haslo");
     await page.getByLabel("Potwierdź hasło").fill("zupelnie-nowe-haslo");
     await page.getByLabel("Obecne hasło").fill(PASSWORD);
     await page.getByRole("button", {name: "Zapisz zmiany"}).click();
-    await expect(page.getByText("Profil zaktualizowany")).toBeVisible();
+    await expect(page.getByText("Konto zaktualizowane")).toBeVisible();
 
     await otherPage.reload();
     await expect(otherPage).toHaveURL(/\/login$/);

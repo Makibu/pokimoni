@@ -8,6 +8,9 @@ export const LIMITS = {
     loginPerEmail: 10,
     loginPerIp: 50,
     registerPerIp: 10,
+    friendRequestsPerUser: 30,
+    playerSearchPerUser: 60,
+    tradeOffersPerUser: 30,
 } as const;
 
 export async function isRateLimited(db: Db, key: string, max: number, now = new Date()): Promise<boolean> {

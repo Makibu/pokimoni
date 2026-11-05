@@ -393,3 +393,50 @@ Weryfikacja: `tests/e2e/lazy-dialogs.spec.ts` spowalnia pobieranie plików i co 
 **Nie sprawdzono:** braku migania na fizycznym telefonie i na koncie właściciela. Możliwe, że właściciel widział też inne miganie niż to z okien; zwykłe przejścia między stronami nadal celowo pokazują placeholdery z `loading.tsx`.
 
 **Wdrożenie poprawki:** za zgodą właściciela `b8a0199` trafił na `rebuild` (CI zielone) i na `master`, deployment `Production` = `success` (2026-11-04T23:51:14Z). Bez migracji bazy. Test produkcji bez konta przechodzi w całości; `x-vercel-id` nadal wskazuje `fra1`. Okien nie sprawdzałem na produkcji sam, bo wymagają zalogowania; właściciel potwierdził na produkcji, że miganie zniknęło, i faza 5 jest zamknięta.
+
+## Faza 6 — funkcje społeczne (2026-11-05, gałąź `phase-6`)
+
+**Decyzje właściciela na starcie:** paczka dnia bez limitu sztuk; grafiki kafelków na stronie głównej bez zmian.
+
+**Co powstało:**
+- Skrzynka przy każdej podstronie: dzwonek z czerwoną kropką, odświeżanie co 30 s i przy wejściu na stronę, oznaczanie jako przeczytane po otwarciu.
+- Znajomi: nowa zakładka `/friends`, wyszukiwanie po nicku bez względu na wielkość liter, zaproszenia, wycofanie, przyjęcie, odrzucenie, usunięcie znajomego.
+- Profil w oknie: nick, awatar, odznaki, do 3 wybranych statystyk spośród 11, gablota do 5 kart, edycja własnego profilu, przyciski zależne od relacji.
+- Wymiany: 1 egzemplarz za 1 egzemplarz, limit jednej oferty na kierunek, blokada egzemplarza nadawcy, ostrzeżenie `LIMIT` u odbiorcy, plakietka „W ofercie” w kolekcji, wykluczenie z wyboru do slotu.
+- Warstwy jak w reszcie gry: `domain/trades.ts` i `domain/profile.ts`, serwisy `friends`, `trades`, `notifications`, `profile`, `players`, cienkie trasy API, UI w `features/social` i `components/social`.
+- W menu użytkownika są teraz „Mój profil” (publiczny widok) i „Konto” (dotychczasowe okno z danymi logowania).
+
+**Baza:** bez migracji. `drizzle-kit generate` potwierdza brak zmian, wszystkie tabele powstały już w `drizzle/0000_init.sql`. Na produkcję idzie tylko kod.
+
+**Blokady:** każda operacja zmieniająca karty lub sloty gracza bierze najpierw blokadę jego `player_state`. Wymiana bierze oba wiersze w stałej kolejności (`lockPlayers`), potem blokuje ofertę i dopiero sprawdza jej stan oraz egzemplarze. Odrzucenie i wycofanie oferty blokują tylko jej wiersz. To odstępstwo od pierwotnego zapisu o blokowaniu `user_cards`; powód w `TARGET_ARCHITECTURE.md`.
+
+**Decyzje techniczne do odbioru:** wycofanie własnego zaproszenia (status `cancelled` już był w schemacie), ciche odrzucenie zaproszenia, zakaz wymiany karty na tę samą, 3 domyślne statystyki i minimum 1, 30 ostatnich powiadomień w skrzynce, nowa zakładka w nawigacji. Spisane w F15–F18. Teksty powiadomień unikają form zależnych od płci, bo nick jej nie zdradza.
+
+**Skutek dla ekonomii:** wymiana może odblokować osiągnięcia, a te dają prawdziwe nagrody. Przyznawane są raz, więc znajomi nie wyciągną ich w nieskończoność, ale mogą przyspieszyć sobie kolekcję. Ustalenia nie ograniczają liczby wymian; czy to problem, oceni symulacja ekonomii w fazie 8.
+
+**Błędy znalezione przy weryfikacji i poprawione:**
+- Edytor profilu otwarty tuż po zapisie pokazywał stare wybory. Odświeżanie wciąż trwało, a formularz bierze wartości startowe tylko raz. Teraz formularz czeka na świeże dane. Złapał to E2E, tylko na desktopie, bo to wyścig; po poprawce test przeszedł 10 razy na 10 w obu projektach.
+- Długi nick poszerzał jedyną kolumnę okna, przez co treść wchodziła na prawy margines. Dotyczyło to skrzynki i profilu, a poprawka w `ui/dialog.tsx` działa we wszystkich oknach. Wcześniejszy test mierzył tylko krawędź okna, więc jej nie widział. Zaostrzony test bez poprawki nie przechodzi, a z poprawką przechodzi.
+- Przyciski znikały na kolorowych wierszach (wariant `outline`), „Otrzymujesz” wychodziło poza okno na 360 px, a stopka edytora była ucinana (przyklejona stopka, niższa lista kart).
+
+**Bramka (na tym kodzie):** format, lint i typecheck OK; Vitest 385/385, w tym 61 testów `tests/integration/social.test.ts`; build OK; E2E 82/82 na desktopie i Pixel 7, w tym pełny cykl z dwoma graczami, kropka po 30 s na podstawionym zegarze, 360 px i axe WCAG A/AA w obu motywach; `npm audit --omit=dev` 0. Testy API obejmują odrzucenie żądania z obcej strony, nieujawnianie cudzych ofert i zaproszeń oraz brak e-maila w profilu.
+
+**Rozmiar (pierwsza wizyta, CPU ×4, łącze 1,6 Mb/s i 150 ms opóźnienia):**
+
+| Strona | JS przed | JS po | FCP przed | FCP po |
+|---|---|---|---|---|
+| `/login` | 208 KB | 208 KB | 816 ms | 880 ms |
+| `/` | 268 KB | 269 KB | 824 ms | 868 ms |
+| `/shop` | 268 KB | 269 KB | 820 ms | 872 ms |
+| `/collection` | 260 KB | 262 KB | 856 ms | 856 ms |
+| `/collection/[id]` | 266 KB | 267 KB | 816 ms | 868 ms |
+| `/friends` | — | 262 KB | — | 876 ms |
+
+JS przed to wartości po poprawce migania, FCP przed pochodzi z pomiaru fazy 5 sprzed tej poprawki. FCP wzrósł też na `/login`, gdzie JS się nie zmienił, więc różnice do ok. 60 ms traktuję jako rozrzut pojedynczego pomiaru, a nie wniosek. Dane na `/friends` pojawiają się po 2,8 s przy pierwszej wizycie, jak na innych stronach gry, a po 0,1–0,3 s przy przejściu w aplikacji.
+
+**Ograniczenia testów:**
+- PGlite ma jedno połączenie, więc testy wyścigów (akceptacja kontra wycofanie, dwie akceptacje) wykonują się po kolei. Dowodzą, że wygrywa dokładnie jedna operacja, ale nie sprawdzają blokad ani zakleszczeń na prawdziwym Postgresie. Kolejność blokad wynika z kodu, a nie z testu.
+- Limit zapytań (sprawdzenie, potem zapis) jest przybliżony przy równoległych żądaniach.
+- Widok `LIMIT` na zrzutach pochodzi z odpowiedzi udawanej; sama logika utraty karty jest w testach integracyjnych.
+
+**Nie sprawdzono:** fizycznego telefonu, czytnika ekranu, działania na produkcji i na prawdziwej bazie, bo faza nie jest wdrożona.

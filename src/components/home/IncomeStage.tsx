@@ -115,10 +115,10 @@ export default function IncomeStage() {
     };
     const {balance, capacity, incomePerHour} = player.data.piggyBank;
 
-    /** A card can go into a slot if a copy remains after the other slot took one. */
+    /** A card can go into a slot if a copy remains after the other slot and open trade offers took theirs. */
     function selectableCards(slot: SlotNumber): CollectionCard[] {
         const otherSlot = slot === 1 ? 2 : 1;
-        return ownedCards.filter((card) => card.quantity > (slottedIds[otherSlot] === card.id ? 1 : 0));
+        return ownedCards.filter((card) => card.quantity - card.escrowed > (slottedIds[otherSlot] === card.id ? 1 : 0));
     }
 
     function placeCard(slot: SlotNumber, cardId: string | null) {

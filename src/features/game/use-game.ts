@@ -2,6 +2,7 @@
 
 import {queryOptions, useMutation, useQuery, useQueryClient, type QueryClient} from "@tanstack/react-query";
 import {useCallback} from "react";
+import {friendsQuery, tradesQuery} from "@/features/social/queries";
 import {apiFetch} from "@/lib/api-client";
 import {queryKeys} from "@/lib/query-keys";
 import type {CollectionCard, CollectionSet, Statistics} from "@/server/services/collection";
@@ -96,6 +97,7 @@ const ROUTE_PREFETCHES: Record<string, (client: QueryClient) => unknown> = {
     "/collection": (client) => client.prefetchQuery(collectionQuery),
     "/achievements": (client) => client.prefetchQuery(achievementsQuery),
     "/statistics": (client) => client.prefetchQuery(statisticsQuery),
+    "/friends": (client) => Promise.all([client.prefetchQuery(friendsQuery), client.prefetchQuery(tradesQuery)]),
 };
 
 /** Loads a page's data when the player shows intent to open it, so the page appears without a skeleton. */
@@ -113,7 +115,7 @@ export function usePrefetchSet() {
  * Marks everything derived from the player's state as outdated. Not awaited by mutations: the response
  * has already updated what the player is looking at, and the rest refreshes in the background.
  */
-function useInvalidateGame() {
+export function useInvalidateGame() {
     const client = useQueryClient();
     return () => {
         for (const queryKey of [

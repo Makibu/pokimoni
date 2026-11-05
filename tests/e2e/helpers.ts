@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import {expect, type Page} from "@playwright/test";
 
 export const PASSWORD = "dowolne-haslo";
@@ -19,4 +20,17 @@ export async function register(page: Page, player: {username: string; email: str
     await page.getByLabel("Hasło").fill(PASSWORD);
     await page.getByRole("button", {name: "Zarejestruj", exact: true}).click();
     await expect(page).toHaveURL(/\/$/);
+}
+
+export async function expectNoViolations(page: Page, name: string) {
+    const results = await new AxeBuilder({page})
+        // Toasts are animating when the check runs, so their colours are caught halfway through a fade.
+        .exclude("[data-sonner-toaster]")
+        .withTags(["wcag2a", "wcag2aa"])
+        .analyze();
+    const summary = results.violations.map((violation) => ({
+        rule: violation.id,
+        nodes: violation.nodes.slice(0, 5).map((node) => `${node.target.join(" ")}: ${node.failureSummary ?? ""}`),
+    }));
+    expect(summary, `Accessibility problems on ${name}`).toEqual([]);
 }

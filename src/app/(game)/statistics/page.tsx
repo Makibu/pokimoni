@@ -2,7 +2,8 @@
 
 import {formatDistanceToNow} from "date-fns";
 import {pl} from "date-fns/locale";
-import {Award, Boxes, Coins, Crown, Gem, Package, Star, Trophy, type LucideIcon} from "lucide-react";
+import {Award, Star, Trophy} from "lucide-react";
+import {badgeIcons} from "@/components/data-display/badge-icons";
 import {StatisticsSkeleton} from "@/components/data-display/StatisticsSkeleton";
 import PageHeader from "@/components/layout/PageHeader";
 import {LoadedImage} from "@/components/ui/loaded-image";
@@ -17,17 +18,6 @@ const activityLabels = {
     card: {action: "Zdobyto kartę", icon: Star},
     achievement: {action: "Ukończono osiągnięcie", icon: Trophy},
     badge: {action: "Zdobyto odznakę", icon: Award},
-};
-
-const badgeIcons: Record<string, LucideIcon> = {
-    award: Award,
-    star: Star,
-    coins: Coins,
-    gem: Gem,
-    trophy: Trophy,
-    boxes: Boxes,
-    package: Package,
-    crown: Crown,
 };
 
 const PANEL = "flex flex-col gap-4 rounded-section bg-card p-5 md:p-6";

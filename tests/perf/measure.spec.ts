@@ -98,6 +98,7 @@ test("measure loading speed", async ({page}) => {
         {route: "/shop", content: fixture.setName},
         {route: "/collection", content: fixture.setName},
         {route: `/collection/${fixture.setId}`, content: fixture.cardName},
+        {route: "/friends", content: "Żadne zaproszenie"},
         {route: "/achievements", content: "Nagroda"},
         {route: "/statistics", content: "Unikatowe"},
     ];

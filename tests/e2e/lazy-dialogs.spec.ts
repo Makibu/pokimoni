@@ -103,6 +103,11 @@ test("the dialogs on the home page keep the page on screen", async ({page}, test
             await page.getByRole("button", {name: "Menu użytkownika"}).click();
             await page.getByRole("menuitem", {name: "Ustawienia"}).click();
         },
+        () => page.getByRole("button", {name: /^Skrzynka/}).click(),
+        async () => {
+            await page.getByRole("button", {name: "Menu użytkownika"}).click();
+            await page.getByRole("menuitem", {name: "Mój profil"}).click();
+        },
     ];
     await expect(page.getByRole("button", {name: /Slot na kartę 1/})).toBeVisible();
 

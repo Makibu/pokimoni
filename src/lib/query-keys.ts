@@ -8,4 +8,13 @@ export const queryKeys = {
     ownedCards: ["collection", "owned"] as const,
     achievements: ["achievements"] as const,
     statistics: ["statistics"] as const,
+    notifications: ["notifications"] as const,
+    unreadNotifications: ["notifications", "unread"] as const,
+    inbox: ["notifications", "inbox"] as const,
+    friends: ["friends"] as const,
+    trades: ["trades"] as const,
+    tradeOptions: (friendId: string) => ["trades", "options", friendId] as const,
+    profiles: ["profiles"] as const,
+    profile: (userId: string) => ["profiles", userId] as const,
+    profileChoices: ["profiles", "own-choices"] as const,
 };

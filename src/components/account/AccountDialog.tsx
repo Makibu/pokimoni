@@ -66,7 +66,7 @@ function ProfileTab({account, onDeleted}: {account: Account; onDeleted: () => vo
         }
         updateAccount.mutate(input.data, {
             onSuccess: () => {
-                toast.success("Profil zaktualizowany");
+                toast.success("Konto zaktualizowane");
                 setNewPassword("");
                 setConfirmPassword("");
                 setCurrentPassword("");
@@ -305,12 +305,12 @@ export default function AccountDialog({account, tab, onTabChange, onClose, onDel
         <Dialog open onOpenChange={(open) => !open && onClose()}>
             <DialogContent className="sm:max-w-[560px]" aria-describedby={undefined}>
                 <DialogHeader>
-                    <DialogTitle>{tab === "profile" ? "Profil użytkownika" : "Ustawienia"}</DialogTitle>
+                    <DialogTitle>{tab === "profile" ? "Konto" : "Ustawienia"}</DialogTitle>
                 </DialogHeader>
 
                 <Tabs value={tab} onValueChange={(value) => onTabChange(value as AccountTab)} className="w-full">
                     <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="profile">Profil</TabsTrigger>
+                        <TabsTrigger value="profile">Konto</TabsTrigger>
                         <TabsTrigger value="settings">Ustawienia</TabsTrigger>
                     </TabsList>
 

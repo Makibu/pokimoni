@@ -5,6 +5,7 @@ import {usePathname} from "next/navigation";
 import Balance from "@/components/data-display/Balance";
 import {isActiveLink, NAV_ITEMS} from "@/components/layout/nav-items";
 import UserMenu from "@/components/layout/UserMenu";
+import InboxButton from "@/components/social/InboxButton";
 import {usePlayer, usePrefetchRoute} from "@/features/game/use-game";
 import {cn} from "@/lib/utils";
 
@@ -54,7 +55,10 @@ export default function Header() {
 
                 <div className="flex flex-1 items-center justify-between gap-2 sm:flex-none">
                     <Balance />
-                    <UserMenu />
+                    <div className="flex items-center gap-1">
+                        <InboxButton />
+                        <UserMenu />
+                    </div>
                 </div>
             </header>
         </div>

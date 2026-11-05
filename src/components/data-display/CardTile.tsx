@@ -13,6 +13,8 @@ type CardTileProps = {
     imageLarge: string;
     income: number;
     quantity: number;
+    /** Copies held in the player's open trade offers. */
+    escrowed?: number;
     /** Without it the tile is only a picture, for places where the whole tile is already a control. */
     setName?: string;
     visibleNames?: boolean;
@@ -25,6 +27,7 @@ export default function CardTile({
     imageLarge,
     income,
     quantity,
+    escrowed = 0,
     setName,
     visibleNames,
 }: CardTileProps) {
@@ -65,6 +68,11 @@ export default function CardTile({
                         ×{quantity}
                     </span>
                 )}
+                {escrowed > 0 && (
+                    <span className="pointer-events-none absolute right-1.5 bottom-1.5 rounded-full bg-sun px-2 py-0.5 text-xs font-bold text-foreground">
+                        W ofercie
+                    </span>
+                )}
             </div>
             <div className="min-w-0 px-0.5">
                 <p className="truncate text-sm font-bold" title={showName ? name : undefined}>
@@ -74,7 +82,7 @@ export default function CardTile({
             </div>
             {previewing && setName && (
                 <CardPreview
-                    card={{name, rarity, income, imageSmall, imageLarge, copies: quantity}}
+                    card={{name, rarity, income, imageSmall, imageLarge, copies: quantity, escrowed}}
                     setName={setName}
                     onClose={() => setPreviewing(false)}
                 />
