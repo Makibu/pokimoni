@@ -520,7 +520,7 @@ Pomiar sprzed ostatniej poprawki blokady, która dotyczy tylko serwera. Różnic
 
 Właściciel uruchomił fazę słowami „Tak, zaczynaj faza 8”. Testu fazy 7 na koncie nie potwierdził, więc pytanie 14 zostaje otwarte.
 
-**Zakres:** nagłówki bezpieczeństwa, limit trasy obrazka, metadane i udostępnianie, symulacja ekonomii, przegląd responsywności, README. Stan: lokalnie, niewdrożone. Bez migracji.
+**Zakres:** nagłówki bezpieczeństwa, limit trasy obrazka, metadane i udostępnianie, symulacja ekonomii, przegląd responsywności, README. Stan: wdrożone 2026-11-05, opis na końcu sekcji. Bez migracji.
 
 **Bezpieczeństwo (SEC-08):**
 - `next.config.ts` ustawia `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy` i CSP (w produkcji). HSTS dodaje już Vercel.
@@ -563,4 +563,10 @@ Właściciel uruchomił fazę słowami „Tak, zaczynaj faza 8”. Testu fazy 7 
 
 **Rozmiar:** JS bez zmian na każdej stronie względem poprawki bloczka (`/login` 208 KB, `/` 274 KB, `/minigame` 273 KB). FCP 844–928 ms, różnice w granicach rozrzutu pojedynczego pomiaru. Dokument HTML urósł o 1–2 KB przez metadane i nagłówki.
 
-**Nie sprawdzono:** CSP i nagłówków na produkcji (dopiero po wdrożeniu), wyglądu podglądu linku w prawdziwym komunikatorze, fizycznego telefonu, czytnika ekranu. Kontrast nad obrazkami tylko policzony. Przegląd przy 768 i 1920 px dotyczył motywu jasnego; motyw ciemny na tych szerokościach sprawdza tylko axe.
+**Nie sprawdzono przed wdrożeniem:** CSP i nagłówków na produkcji, wyglądu podglądu linku w prawdziwym komunikatorze, fizycznego telefonu, czytnika ekranu. Kontrast nad obrazkami tylko policzony. Przegląd przy 768 i 1920 px dotyczył motywu jasnego; motyw ciemny na tych szerokościach sprawdza tylko axe.
+
+**Wdrożenie (2026-11-05, za zgodą właściciela „Tak, wdróż”):** `264c861` na `rebuild`, CI zielone, potem `master`, deploy Production bez błędu. Migracji nie było.
+
+**Sprawdzone na produkcji bez konta:** skrypty kontrolne faz 4 i 7 przechodzą, a region to `fra1`. Wszystkie nagłówki są na stronie logowania, a pliki `_next/static` nie mają CSP. Tytuł, obrazek podglądu, `robots.txt`, `sitemap.xml` i ikony odpowiadają poprawnie. W przeglądarce strona logowania działa z CSP: formularz się przełącza, czcionki się ładują, konsola bez naruszeń. Jedyny błąd w konsoli to oczekiwane 401 z `/api/auth/me` dla gościa.
+
+**Dalej niesprawdzone:** CSP na zalogowanych stronach produkcji (na buildzie lokalnym sprawdza to `security.spec.ts`), limit trasy obrazka na prawdziwej bazie, podgląd linku w komunikatorze, fizyczny telefon, czytnik ekranu.
