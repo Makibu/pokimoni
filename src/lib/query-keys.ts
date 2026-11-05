@@ -14,6 +14,8 @@ export const queryKeys = {
     friends: ["friends"] as const,
     trades: ["trades"] as const,
     tradeOptions: (friendId: string) => ["trades", "options", friendId] as const,
+    quests: ["quests"] as const,
+    minigame: ["minigame"] as const,
     profiles: ["profiles"] as const,
     profile: (userId: string) => ["profiles", userId] as const,
     profileChoices: ["profiles", "own-choices"] as const,

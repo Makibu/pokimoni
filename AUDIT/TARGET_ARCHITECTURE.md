@@ -64,7 +64,7 @@ src/
     economy.ts                       ceny, streak, skarbonka, nagrody
     achievements.ts  badges.ts       warunki
     quests.ts                        pula zadań i postęp
-    minigames/                       who-is-it.ts, memory.ts, sliding-puzzle.ts (generowanie + walidacja)
+    minigames/                       who-is-it.ts, memory.ts, sliding-puzzle.ts (generowanie + walidacja + widok bez odpowiedzi)
     trades.ts                        reguły dostępności egzemplarzy
   server/
     db/schema.ts  db/client.ts
@@ -73,7 +73,7 @@ src/
     services/                        packs, economy, collection, achievements, quests, minigames,
                                      friends, trades, profile, notifications, feedback, account
   features/                          UI per funkcja: pack-opening/, collection/, social/ (skrzynka,
-                                     znajomi, profil, wymiany), minigames/, shop/, daily/
+                                     znajomi, profil, wymiany), shop/, daily/ (zadania i minigra)
   components/ui/                     shadcn
   lib/                               api-client.ts, query-keys.ts, utils.ts
 drizzle/                             migracje SQL (generowane)
@@ -100,8 +100,8 @@ Wszystkie znaczniki czasu `timestamptz`; „doba gry” zapisywana jako `date` (
 | `achievements` / `user_achievements` | warunek (`type`, `amount`), nagroda (`reward_coins` lub `reward_pack_tier`+`qty`); `claimed_at` — odbiór raz |
 | `badges` / `user_badges` | jedno źródło definicji (seed) |
 | `daily_quests` | PK (`user_id`, `game_day`, `slot`), `quest_type`, `target`, `progress`, `claimed_at` |
-| `minigame_days` | `game_day PK`, `game`, `difficulty`, `payload jsonb` (odpowiedzi — nigdy nie wysyłane klientowi) |
-| `minigame_attempts` | PK (`user_id`, `game_day`), `state jsonb`, `status`, `reward`, `finished_at` |
+| `minigame_days` | `game_day PK`, `game`, `difficulty`, `payload jsonb` (obecnie puste: wariant jest wspólny, a karty są osobne dla każdego gracza i leżą w `minigame_attempts.state`) |
+| `minigame_attempts` | PK (`user_id`, `game_day`), `state jsonb` (z odpowiedziami, klient dostaje tylko widok bez nich), `status`, `reward`, `finished_at` |
 | `friend_requests` | `from_user`, `to_user`, `status`; częściowy UNIQUE na parę dla `pending` |
 | `friendships` | PK (`user_a`, `user_b`) z `CHECK user_a < user_b` |
 | `trades` | `from_user`, `to_user`, `offered_card_id`, `requested_card_id`, `status`, `created_at`, `resolved_at`; **częściowy UNIQUE (`from_user`, `to_user`) WHERE status = 'pending'** = limit 1 oferty na kierunek |

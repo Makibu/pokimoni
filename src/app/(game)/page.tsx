@@ -1,3 +1,4 @@
+import DailySection from "@/components/daily/DailySection";
 import HomeExtras from "@/components/home/HomeExtras";
 import HomeTiles from "@/components/home/HomeTiles";
 import IncomeStage from "@/components/home/IncomeStage";
@@ -15,6 +16,7 @@ export default function HomePage() {
                     <HomeTiles />
                 </div>
             </div>
+            <DailySection />
             <HomeExtras />
         </div>
     );

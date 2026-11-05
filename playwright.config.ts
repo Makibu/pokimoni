@@ -21,7 +21,7 @@ export default defineConfig({
         {
             command: "npx tsx scripts/e2e-db.ts",
             port: DB_PORT,
-            env: {E2E_DB_PORT: String(DB_PORT)},
+            env: {E2E_DB_PORT: String(DB_PORT), E2E_MINIGAME: process.env.E2E_MINIGAME ?? "who_is_it:easy"},
             reuseExistingServer: false,
         },
         {

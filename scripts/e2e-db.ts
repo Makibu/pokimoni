@@ -4,6 +4,9 @@ import {PGlite} from "@electric-sql/pglite";
 import {PGLiteSocketServer} from "@electric-sql/pglite-socket";
 import {drizzle} from "drizzle-orm/pglite";
 import {migrate} from "drizzle-orm/pglite/migrator";
+import {gameDayOf} from "@/domain/game-day";
+import type {MinigameDifficulty} from "@/domain/economy";
+import type {Minigame} from "@/domain/minigames";
 import * as schema from "@/server/db/schema";
 import {seedCatalog} from "@/server/db/seed";
 
@@ -14,6 +17,16 @@ async function main() {
     const db = drizzle(client, {schema});
     await migrate(db, {migrationsFolder: "drizzle"});
     await seedCatalog(db);
+    // Fixes the day's game, so tests can play a real one instead of whichever the day would draw.
+    const [game, difficulty] = (process.env.E2E_MINIGAME ?? "").split(":");
+    if (game) {
+        await db.insert(schema.minigameDays).values({
+            gameDay: gameDayOf(new Date()),
+            game: game as Minigame,
+            difficulty: difficulty as MinigameDifficulty,
+            payload: {},
+        });
+    }
     const server = new PGLiteSocketServer({db: client, port: PORT, host: "127.0.0.1"});
     await server.start();
     console.log(`E2E database listening on ${PORT}`);

@@ -2,6 +2,7 @@
 
 import {queryOptions, useMutation, useQuery, useQueryClient, type QueryClient} from "@tanstack/react-query";
 import {useCallback} from "react";
+import {minigameQuery, questsQuery} from "@/features/daily/queries";
 import {friendsQuery, tradesQuery} from "@/features/social/queries";
 import {apiFetch} from "@/lib/api-client";
 import {queryKeys} from "@/lib/query-keys";
@@ -92,6 +93,8 @@ const ROUTE_PREFETCHES: Record<string, (client: QueryClient) => unknown> = {
             client.prefetchQuery(playerQuery),
             client.prefetchQuery(ownedCardsQuery),
             client.prefetchQuery(shopQuery),
+            client.prefetchQuery(questsQuery),
+            client.prefetchQuery(minigameQuery),
         ]),
     "/shop": (client) => Promise.all([client.prefetchQuery(shopQuery), client.prefetchQuery(playerQuery)]),
     "/collection": (client) => client.prefetchQuery(collectionQuery),
@@ -124,6 +127,7 @@ export function useInvalidateGame() {
             queryKeys.collection,
             queryKeys.achievements,
             queryKeys.statistics,
+            queryKeys.quests,
         ]) {
             void client.invalidateQueries({queryKey});
         }

@@ -445,3 +445,60 @@ JS przed to wartości po poprawce migania, FCP przed pochodzi z pomiaru fazy 5 s
 Test produkcji bez konta przechodzi w całości. Nowe trasy `/api/friends`, `/api/notifications`, `/api/notifications/unread`, `/api/trades`, `/api/profile` i `/api/players/search` odpowiadają 401, a `/friends` przekierowuje na logowanie. `x-vercel-id` nadal wskazuje `fra1`.
 
 **Na produkcji nie sprawdzono:** samych funkcji społecznych, bo wymagają zalogowania na dwóch kontach, a test nie zakłada kont na produkcji. W szczególności blokady wymian nie pracowały jeszcze na prawdziwym Postgresie. Czeka na test właściciela.
+
+## Faza 7 — zadania i minigra dnia (2026-11-05, gałąź `phase-7`)
+
+Odbiór fazy 6: właściciel przeszedł dalej słowami „Spoko, lecimy dalej, faza 7”. Wyraźnego potwierdzenia testu na dwóch kontach nie ma, więc pytanie 12 zostaje częściowo otwarte.
+
+**Zakres:** F9 i F10. Stan: lokalnie, niewdrożone, nic nie zostało wypchnięte.
+
+**Migracja:** brak. Tabele `daily_quests`, `minigame_days`, `minigame_attempts` i wartości `coin_reason` są od `0000_init.sql`. `drizzle-kit generate` zgłasza brak zmian.
+
+**Nowa zależność:** `sharp` 0.35.5, jako bezpośrednia. Była już pośrednio przez Next. Wycina i przetwarza obrazki na serwerze.
+
+**Co powstało:**
+- Domena: `domain/quests.ts` oraz `domain/minigames/` (rotacja wariantów i trzy gry). Czyste funkcje: generowanie, walidacja ruchu, widok bez odpowiedzi.
+- Serwisy `quests.ts` i `minigames.ts`. Otwarcie paczki, odbiór skarbonki i koniec gry przesuwają zadania w tej samej transakcji. Zadania losują się przy pierwszej takiej akcji, więc postęp liczy się też wtedy, gdy gracz ich jeszcze nie widział.
+- Trasy: `GET /api/quests`, `POST /api/quests/[slot]/claim`, `GET /api/minigame`, `POST /api/minigame/start`, `POST /api/minigame/action`, `GET /api/minigame/picture`.
+- UI: sekcja na stronie głównej (`components/daily`), strona `/minigame` (`components/minigame`), `features/daily`.
+
+**Decyzje techniczne:**
+- Obrazek do „Kto to Pokémon?” powstaje na serwerze. Klient nie dostaje ani oryginału, ani jego adresu, bo oba zdradzają kartę. Wynik jest WebP bez metadanych, z `Cache-Control: no-store`.
+- Z karty wycinana jest sama ilustracja, bez nazwy i opisu. Na trudnym poziomie źródłem jest większy plik, żeby mały fragment nie był rozmazany.
+- W Memory widok opisuje tylko karty odkryte zgodnie z zasadami. Kolejne stuknięcia ustawiają się w kolejce, a pomyłka chowa się lokalnie po 1,4 s.
+- W puzzlach kafelki ruszają się od razu, a serwer odtwarza ruchy partiami i ma ostatnie słowo. Jeden nielegalny ruch odrzuca całą partię, a plansza wraca do stanu z serwera.
+- Podczas gry znika nagłówek strony, żeby na telefonie 360×640 odpowiedzi mieściły się bez przewijania. Dotyczy to „Kto to Pokémon?” i puzzli. Memory na poziomie trudnym wymaga przewinięcia o część rzędu.
+- Rewers karty to teraz jeden token `--card-back`, wspólny dla otwierania paczek i Memory.
+- Gry są na jednej gałęzi zamiast w osobnych PR-ach, jak zakładał plan, bo dzielą silnik i ekran, a właściciel odbiera je razem.
+
+**Odstępstwo od specyfikacji:** poziom średni pokazuje trzybarwny ciemny cień zamiast sylwetki. Progowanie i wycinanie tła po kolorze dawały na pełnych ilustracjach szum. Do decyzji właściciela (pytanie 14).
+
+**Błędy znalezione po drodze:**
+- Na zrzutach: rewers wyglądał jak cyfra 0 i w ciemnym motywie był biały; odpowiedzi chowały się pod dolnym paskiem na 360 px; duży obrazek na komputerze spychał odpowiedzi poniżej ekranu; nagroda zadania zajmowała osobną pustą linię; plansza 4×4 wchodziła pod dolny pasek przy 360×640. Wszystko poprawione.
+- Przy czytaniu kodu: `claimQuest` blokował wiersz zadania przed stanem gracza, odwrotnie niż otwieranie paczki, co groziło zakleszczeniem. Teraz najpierw blokuje stan gracza. **Żaden test tego nie sprawdza**, bo PGlite ma jedno połączenie.
+- Własny test rozwiązywalności puzzli przekraczał limit czasu przy pełnym zestawie. Przeszukiwanie liczy się teraz raz, od planszy ułożonej (181 440 układów), i sprawdza 200 ustawień zamiast 25.
+
+**Bramka (na tym kodzie):** format, lint i typecheck OK; Vitest 507/507, w tym 122 nowe testy: domena, obrazki, serwisy i API (bez sesji 401, złe dane 400, obca strona 403, brak obrazka 404, awaria hosta 502); build OK; E2E 99 przechodzi, 3 pominięte celowo (sprawdzane w jednym projekcie, desktop), w tym prawdziwa gra do końca, odświeżenie w trakcie, 360 px i axe WCAG A/AA w obu motywach; `npm audit --omit=dev` 0; `drizzle-kit generate` bez zmian.
+
+**Rozmiar (pierwsza wizyta, CPU ×4, łącze 1,6 Mb/s i 150 ms opóźnienia):**
+
+| Strona | JS przed | JS po | FCP przed | FCP po |
+|---|---|---|---|---|
+| `/login` | 208 KB | 208 KB | 880 ms | 856 ms |
+| `/` | 269 KB | 273 KB | 868 ms | 876 ms |
+| `/shop` | 269 KB | 273 KB | 872 ms | 860 ms |
+| `/collection` | 262 KB | 265 KB | 856 ms | 844 ms |
+| `/collection/[id]` | 267 KB | 270 KB | 868 ms | 868 ms |
+| `/friends` | 262 KB | 265 KB | 876 ms | 848 ms |
+| `/minigame` | — | 271 KB | — | 848 ms |
+
+Pomiar sprzed ostatniej poprawki blokady, która dotyczy tylko serwera. Różnice FCP do ok. 60 ms traktuję jako rozrzut pojedynczego pomiaru. Dane na `/minigame` pojawiają się po 2,8 s przy pierwszej wizycie, jak na innych stronach gry, i po ok. 0,14 s przy przejściu w aplikacji.
+
+**Ograniczenia:**
+- PGlite ma jedno połączenie, więc testy wyścigów (dwa odbiory) wykonują się po kolei. Dowodzą, że wygrywa jeden, ale nie sprawdzają blokad na prawdziwym Postgresie.
+- E2E gra naprawdę tylko w łatwy wariant „Kto to Pokémon?”, ustawiony w bazie testowej. Memory, puzzle i pozostałe poziomy idą przez prawdziwe reguły z `domain/`, ale odpowiedzi serwera są podstawiane w teście. Te warianty przez serwer sprawdzają testy integracyjne, a obrazki na wszystkich poziomach testy `clue-image` i zrzuty.
+- Test E2E obrazka akceptuje też 502, bo zależy od zewnętrznego hosta. Wtedy sprawdza ekran ponownej próby i zostawia ostrzeżenie w raporcie. 500 oznacza błąd. Zwykła odpowiedź 200 w tym biegu potwierdziła działanie `sharp` w buildzie produkcyjnym, ale tylko na Windowsie.
+- Trasa obrazka nie ma limitu zapytań. Wymaga zalogowania, ale każde żądanie pobiera i przetwarza obrazek. Dla projektu tej skali ryzyko jest małe; do przeglądu w fazie 8.
+- Odpowiedzi w „Kto to Pokémon?” opierają się na obrazku, więc gra nie działa z czytnikiem ekranu. Memory też opiera się na obrazach, ale karty mają nazwy w etykietach.
+
+**Nie sprawdzono:** fizycznego telefonu, czytnika ekranu, działania na produkcji i na prawdziwej bazie, a przede wszystkim `sharp` na Linuksie Vercela. To da się potwierdzić dopiero po wdrożeniu, grając na koncie.

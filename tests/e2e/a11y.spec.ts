@@ -45,6 +45,7 @@ for (const theme of ["light", "dark"] as const) {
             ["/achievements", "Odbierz nagrodę"],
             ["/statistics", "Unikatowe karty"],
             ["/friends", "Twoi znajomi"],
+            ["/minigame", "Zacznij"],
         ];
         for (const [route, content] of pages) {
             await page.goto(route);

@@ -140,9 +140,7 @@
     justify-content: center;
     border: 5px solid #3b24b8;
     border-radius: 18px;
-    background:
-        radial-gradient(circle at 50% 50%, #5b3df5 0 24%, transparent 25%),
-        repeating-conic-gradient(from 0deg at 50% 50%, #2c2460 0 15deg, #221b4b 15deg 30deg);
+    background: var(--card-back);
 }
 
 .reveal-deck {

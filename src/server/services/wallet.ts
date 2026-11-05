@@ -13,6 +13,7 @@ import type {Db, Tx} from "@/server/db/types";
 import {AppError} from "@/server/http/errors";
 import {changeCoins} from "./coins";
 import {evaluateProgress, hasUnclaimedAchievements, incomePerHour} from "./progress";
+import {recordQuestEvent} from "./quests";
 
 /** Locks the player's row, so concurrent operations of one player run one after another. */
 async function lockState(tx: Tx, userId: string) {
@@ -99,6 +100,7 @@ export async function collectPiggyBank(db: Db, userId: string, now = new Date())
         const state = await lockState(tx, userId);
         const collected = await settlePiggyBank(tx, userId, state, now);
         if (collected === 0) throw new AppError(409, "piggy_bank_empty", "Skarbonka jest pusta");
+        await recordQuestEvent(tx, userId, gameDayOf(now), {kind: "piggy_collected"});
         return {collected};
     });
 }

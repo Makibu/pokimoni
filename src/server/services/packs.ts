@@ -9,6 +9,7 @@ import {AppError} from "@/server/http/errors";
 import {secureRng} from "@/server/rng";
 import {evaluateProgress} from "./progress";
 import {changeCoins} from "./coins";
+import {recordQuestEvent} from "./quests";
 
 /** Set discounted on a game day, chosen once. Concurrent first requests all get the same result. */
 export async function ensureDailyPack(db: Db, day: string, rng: Rng = secureRng): Promise<string> {
@@ -170,6 +171,12 @@ export async function openPack(
             .insert(packOpenings)
             .values({userId, setId: set.id, source: input.source, price, cards: resolved, isGodPack: pack.isGodPack})
             .returning({id: packOpenings.id});
+
+        await recordQuestEvent(tx, userId, today, {
+            kind: "pack_opened",
+            source: input.source,
+            cards: pack.cards.map((card, index) => ({rarity: card.rarity, isNew: resolved[index].isNew})),
+        });
 
         const earned = await evaluateProgress(tx, userId);
         const [state] = await tx

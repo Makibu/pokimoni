@@ -118,6 +118,8 @@ Stan: na produkcji (`b87f13c`), czeka na test właściciela na dwóch kontach. B
 
 Każda gra: walidator w `domain/` z testami (wygrana, przegrana, próba oszustwa), osobny PR.
 
+Stan: zbudowane lokalnie na gałęzi `phase-7`, czeka na odbiór. Bez migracji bazy. Gry są na jednej gałęzi zamiast w osobnych PR-ach, bo dzielą silnik i ekran, a właściciel odbiera je razem. Szczegóły w `IMPLEMENTATION_LOG.md`.
+
 ### Faza 8 — Jakość produktu (P2/P3) — F2, F19
 
 Końcowy przegląd responsywności (360/768/1280/1920) i dostępności; `lang="pl"`, metadane i OG

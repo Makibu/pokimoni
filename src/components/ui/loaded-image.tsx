@@ -13,6 +13,8 @@ type LoadedImageProps = {
     fit?: "cover" | "contain";
     eager?: boolean;
     className?: string;
+    /** Replaces the fallback with the name, for callers that show their own way out. */
+    onError?: () => void;
 };
 
 /**
@@ -20,7 +22,7 @@ type LoadedImageProps = {
  * thousands of card images would exhaust. The box keeps its size and shows a placeholder until the image
  * arrives, so nothing jumps, and falls back to the image's name when the host does not answer.
  */
-export function LoadedImage({src, alt, width, height, fit = "cover", eager, className}: LoadedImageProps) {
+export function LoadedImage({src, alt, width, height, fit = "cover", eager, className, onError}: LoadedImageProps) {
     const [status, setStatus] = useState<"loading" | "loaded" | "failed">("loading");
 
     return (
@@ -38,7 +40,10 @@ export function LoadedImage({src, alt, width, height, fit = "cover", eager, clas
                     unoptimized
                     loading={eager ? "eager" : "lazy"}
                     onLoad={() => setStatus("loaded")}
-                    onError={() => setStatus("failed")}
+                    onError={() => {
+                        setStatus("failed");
+                        onError?.();
+                    }}
                     className={cn(
                         "size-full transition-opacity duration-200",
                         fit === "cover" ? "object-cover" : "object-contain",

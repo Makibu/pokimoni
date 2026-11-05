@@ -125,6 +125,14 @@ innych aplikacji).
 - Pula **[ZAAKCEPTOWANE]**: otwórz N paczek; otwórz paczkę dnia; zdobądź kartę rzadkości ≥ X;
   zdobądź nową kartę do kolekcji; ukończ minigrę dnia; odbierz skarbonkę.
 - Postęp liczony na serwerze przy odpowiednich akcjach; nagroda po ręcznym odebraniu.
+- Decyzje podjęte przy budowie **[DO ODBIORU W FAZIE 7]**:
+  - Na stronie głównej, w sekcji pod głównym układem. Bez nowej pozycji w menu, bo dolny pasek ma już 6 pozycji.
+  - Każde zadanie z innej rodziny, np. nie „otwórz 2 paczki” razem z „otwórz 3 paczki”.
+  - Cele: otwórz 2 lub 3 paczki; otwórz paczkę dnia; zdobądź kartę Double Rare lub Ultra Rare albo lepszą; zdobądź 3 lub 5 nowych kart; ukończ minigrę; odbierz skarbonkę.
+  - Karta Rare się nie liczy, bo piąte miejsce w paczce zawsze daje co najmniej Rare i zadanie robiłoby się samo. Double Rare wypada w ok. 76% paczek, Ultra Rare w ok. 45%.
+  - „Ukończ minigrę” liczy wygraną i przegraną. Paczka liczy się do zadania o rzadkości raz, niezależnie od liczby takich kart.
+  - „Odbierz skarbonkę” liczy tylko przycisk odbioru, nie wypłatę przy zmianie karty w slocie.
+  - Nieodebrana nagroda przepada o 10:00 razem z zadaniem.
 
 ### F10. Minigra dnia [USTALONE]
 
@@ -132,13 +140,21 @@ innych aplikacji).
 
   | Gra | Łatwy | Średni | Trudny |
   |---|---|---|---|
-  | „Kto to Pokémon?” | rozmyta karta, 4 odpowiedzi | sylwetka, 4 odpowiedzi | mały kadr, wpisanie nazwy |
+  | „Kto to Pokémon?” | rozmyta karta, 4 odpowiedzi | ciemny cień (patrz niżej), 4 odpowiedzi | mały kadr, wpisanie nazwy |
   | Memory z kartami | 6 par | 8 par | 12 par, limit pomyłek |
   | Puzzle przesuwne z obrazu karty | 3×3 | 4×4 | 5×5 |
 
 - Jedna nagradzana próba dziennie; nagroda rośnie z trudnością **[ZAAKCEPTOWANE, LICZBY w rozdz. 4]**.
 - Stan gry zapisany na serwerze — odświeżenie strony nie resetuje ani nie cofa postępu.
 - Wynik weryfikuje serwer (odpowiedzi / odsłanianie kart / odtworzenie ruchów).
+- **Odstępstwo od ustaleń [DO ODBIORU W FAZIE 7]:** poziom średni „Kto to Pokémon?” pokazuje trzybarwny ciemny cień, a nie prawdziwą sylwetkę. Karty mają pełne tła, a proste wycinanie dawało szum. Prawdziwa sylwetka wymagałaby modelu do usuwania tła.
+- Decyzje podjęte przy budowie **[DO ODBIORU W FAZIE 7]**:
+  - „Kto to Pokémon?”: 5 rund, wygrana przy 3 dobrych odpowiedziach. Tylko Pokémony, bez trenerów i energii. Wpisując nazwę, można zrobić jedną literówkę, a forma regionalna jest opcjonalna. Nazwy są angielskie, jak w katalogu.
+  - Memory: limit 15 pomyłek na poziomie trudnym. Na łatwym i średnim nie można przegrać.
+  - Puzzle: nie można przegrać, nie ma limitu czasu. Dla ułatwienia można włączyć podgląd całej karty i numery kafelków.
+  - Jedna próba dziennie. Po przegranej nie można zagrać drugi raz. Nagroda trafia na konto sama po wygranej, bez odbierania.
+  - Wariant jest wspólny, ale każdy gracz dostaje własne karty, żeby znajomi nie mogli podać sobie odpowiedzi.
+  - Ten sam wariant nie wypada dwa dni z rzędu.
 
 ### F11. Kolekcja
 
