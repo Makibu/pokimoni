@@ -392,4 +392,4 @@ Weryfikacja: `tests/e2e/lazy-dialogs.spec.ts` spowalnia pobieranie plików i co 
 
 **Nie sprawdzono:** braku migania na fizycznym telefonie i na koncie właściciela. Możliwe, że właściciel widział też inne miganie niż to z okien; zwykłe przejścia między stronami nadal celowo pokazują placeholdery z `loading.tsx`.
 
-**Wdrożenie poprawki:** za zgodą właściciela `b8a0199` trafił na `rebuild` (CI zielone) i na `master`, deployment `Production` = `success` (2026-11-04T23:51:14Z). Bez migracji bazy. Test produkcji bez konta przechodzi w całości; `x-vercel-id` nadal wskazuje `fra1`. Okien na produkcji nie sprawdzono, bo wymagają zalogowania: czeka na test właściciela na koncie.
+**Wdrożenie poprawki:** za zgodą właściciela `b8a0199` trafił na `rebuild` (CI zielone) i na `master`, deployment `Production` = `success` (2026-11-04T23:51:14Z). Bez migracji bazy. Test produkcji bez konta przechodzi w całości; `x-vercel-id` nadal wskazuje `fra1`. Okien nie sprawdzałem na produkcji sam, bo wymagają zalogowania; właściciel potwierdził na produkcji, że miganie zniknęło, i faza 5 jest zamknięta.
