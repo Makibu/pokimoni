@@ -23,7 +23,7 @@ Ostatnia aktualizacja: 2026-11-05
 | XI. Faza 5 — nowe otwieranie paczek | DONE | na produkcji `d323fd3` i poprawka migania okien `b8a0199`; właściciel potwierdził na produkcji, że miganie zniknęło |
 | XI. Faza 6 — funkcje społeczne | DONE | na produkcji `b87f13c`, bez migracji. Właściciel przeszedł do fazy 7 („Spoko”, 2026-11-05), ale wyraźnego potwierdzenia testu na dwóch kontach nie ma (pytanie 12) |
 | XI. Faza 7 — zadania i minigra dnia | WDROŻONE | na produkcji `aee5151`, bez migracji (zgoda właściciela 2026-11-05). Czeka na zagranie na koncie, bo tylko tak można potwierdzić `sharp` na Vercelu (pytanie 14) |
-| XI. Faza 8 — jakość produktu | W ODBIORZE | lokalnie na gałęzi `phase-8`, bez migracji, niewdrożone. Czeka na decyzję o ekonomii (pytanie 15) i zgodę na wdrożenie (pytanie 16) |
+| XI. Faza 8 — jakość produktu | W ODBIORZE | lokalnie na gałęzi `phase-8`, bez migracji, niewdrożone. Czeka na zgodę na wdrożenie (pytanie 16) |
 | XI. Faza 9 | NOT STARTED | |
 
 ## Ustalenia
@@ -84,5 +84,5 @@ Ostatnia aktualizacja: 2026-11-05
 12. Faza 6: zgoda na wdrożenie udzielona i wykonana 2026-11-05. Właściciel przeszedł dalej, ale test na dwóch kontach nie został wyraźnie potwierdzony.
 13. Faza 6: decyzje podjęte przy budowie, do potwierdzenia: wycofanie własnego zaproszenia, ciche odrzucenie zaproszenia, osobna zakładka „Znajomi” (`PRODUCT_SPECIFICATION.md`, F15–F18). Właściciel nie zgłosił uwag.
 14. Faza 7: czy po zagraniu na produkcji obrazki w „Kto to Pokémon?” się wyświetlają i nagroda trafia na konto? To jedyne potwierdzenie działania `sharp` na Vercelu. Ciemny cień i zasady gry zostały przyjęte przy zgodzie na wdrożenie, bo właściciel nie zgłosił uwag; można je jeszcze zmienić.
-15. Faza 8: symulacja pokazała ok. 1200 monet dziennie zamiast ok. 1000 i o ok. 20% więcej paczek od celu. Czy zmniejszyć pojemność skarbonki z 300 do 200 (prawie dokładnie cel), czy zostawić?
+15. ~~Faza 8: pojemność skarbonki~~ — właściciel zdecydował 2026-11-05: zostaje 300, mimo że symulacja pokazała ok. 1200 monet dziennie zamiast ok. 1000.
 16. Faza 8: zgoda na wdrożenie.

@@ -27,7 +27,8 @@ const average = (days: DayResult[], read: (day: DayResult) => number) =>
 
 // The bands hold the values measured with the agreed numbers (AUDIT/IMPLEMENTATION_LOG.md, phase 8). They are wider
 // than random noise and catch a change in prices, rewards or drop rates. Packs per day sit above the targets in the
-// specification's chapter 4, because cards reach about 30 coins/h within days, not the 8-17 it assumed.
+// specification's chapter 4, because cards reach about 30 coins/h within days, not the 8-17 it assumed. The owner
+// saw this and kept the piggy bank at 300.
 describe("economy simulation", {timeout: 60_000}, () => {
     const results = new Map<number, PlayerResult[]>();
     const active = (tier: Profile["tier"]) => {

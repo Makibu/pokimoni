@@ -547,7 +547,7 @@ Właściciel uruchomił fazę słowami „Tak, zaczynaj faza 8”. Testu fazy 7 
 - Szacunek „początkujący 8/h, środek gry 17/h” okazał się błędny. Dochód ok. 27/h jest już w dniach 1–3, bo piąty slot paczki daje co najmniej Rare, a ok. 30/h przez większość gry. Skarbonka napełnia się więc do limitu od drugiego dnia i lepsze karty prawie nie zwiększają dochodu.
 - Pierwszy set trwa 2–6 miesięcy (klasa 2: od 61 do 176 dni). Po roku gracz ma ok. 40–45% katalogu (kupując tylko klasę 3: ok. 30%), czyli cel długoterminowy się utrzymuje.
 - Osiągnięcia dają jednorazowe skoki: najbardziej aktywne dni miały do 36 paczek klasy 1.
-- Próba: pojemność skarbonki 200 daje aktywnemu graczowi ok. 1000 monet oraz 7,9 / 4,7 / 3,0 paczki, czyli prawie dokładnie cele. Pojemność 250 daje ok. 1100 monet. **Liczby są uzgodnione, więc nic nie zmieniono: decyzja należy do właściciela (pytanie 15).** Pasma w teście opisują stan obecny i trzeba je zmienić razem z ewentualną decyzją.
+- Próba: pojemność skarbonki 200 daje aktywnemu graczowi ok. 1000 monet oraz 7,9 / 4,7 / 3,0 paczki, czyli prawie dokładnie cele. Pojemność 250 daje ok. 1100 monet. **Decyzja właściciela: „Zostaw 300”.** Pojemność i pozostałe liczby bez zmian, a pasma w teście opisują ten stan.
 
 **Przegląd responsywności:** `tests/perf/responsive-screens.spec.ts` przechodzi 12 widoków przy 360, 768, 1280 i 1920 px. Nie ma poziomego przewijania na żadnym; przy 360 px jedyny element poniżej 44 px to ukryty link „Przejdź do treści”. Na zrzutach znalazłem i poprawiłem:
 - Dymek o osiągnięciu zasłaniał „Otwórz kolejną” przy 360 i 768 px. Teraz stoi wyżej.
