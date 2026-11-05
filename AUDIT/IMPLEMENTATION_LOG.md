@@ -439,4 +439,9 @@ JS przed to wartości po poprawce migania, FCP przed pochodzi z pomiaru fazy 5 s
 - Limit zapytań (sprawdzenie, potem zapis) jest przybliżony przy równoległych żądaniach.
 - Widok `LIMIT` na zrzutach pochodzi z odpowiedzi udawanej; sama logika utraty karty jest w testach integracyjnych.
 
-**Nie sprawdzono:** fizycznego telefonu, czytnika ekranu, działania na produkcji i na prawdziwej bazie, bo faza nie jest wdrożona.
+**Nie sprawdzono przed wdrożeniem:** fizycznego telefonu, czytnika ekranu, działania na produkcji i na prawdziwej bazie.
+
+**Wdrożenie:** za zgodą właściciela `b87f13c` trafił na `rebuild` (CI zielone) i na `master`, deployment `Production` = `success` (2026-11-05T11:49:17Z). Bez migracji bazy.
+Test produkcji bez konta przechodzi w całości. Nowe trasy `/api/friends`, `/api/notifications`, `/api/notifications/unread`, `/api/trades`, `/api/profile` i `/api/players/search` odpowiadają 401, a `/friends` przekierowuje na logowanie. `x-vercel-id` nadal wskazuje `fra1`.
+
+**Na produkcji nie sprawdzono:** samych funkcji społecznych, bo wymagają zalogowania na dwóch kontach, a test nie zakłada kont na produkcji. W szczególności blokady wymian nie pracowały jeszcze na prawdziwym Postgresie. Czeka na test właściciela.
