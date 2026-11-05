@@ -22,7 +22,7 @@ Ostatnia aktualizacja: 2026-11-05
 | XI. Faza 4.5 — system designu i przebudowa widoków | DONE | kierunek B „Holo”; na produkcji `1a61348`, region `fra1`. Właściciel przeszedł do fazy 5, ale osobnego potwierdzenia testu na koncie nie ma (pytanie 9) |
 | XI. Faza 5 — nowe otwieranie paczek | DONE | na produkcji `d323fd3` i poprawka migania okien `b8a0199`; właściciel potwierdził na produkcji, że miganie zniknęło |
 | XI. Faza 6 — funkcje społeczne | DONE | na produkcji `b87f13c`, bez migracji. Właściciel przeszedł do fazy 7 („Spoko”, 2026-11-05), ale wyraźnego potwierdzenia testu na dwóch kontach nie ma (pytanie 12) |
-| XI. Faza 7 — zadania i minigra dnia | W ODBIORZE | lokalnie na gałęzi `phase-7`, bez migracji, niewdrożone; czeka na odbiór właściciela i zgodę na wdrożenie |
+| XI. Faza 7 — zadania i minigra dnia | WDROŻONE | na produkcji `aee5151`, bez migracji (zgoda właściciela 2026-11-05). Czeka na zagranie na koncie, bo tylko tak można potwierdzić `sharp` na Vercelu (pytanie 14) |
 | XI. Fazy 8–9 | NOT STARTED | |
 
 ## Ustalenia
@@ -82,4 +82,4 @@ Ostatnia aktualizacja: 2026-11-05
 11. ~~Faza 5: test na produkcji~~ — właściciel otwierał paczki i potwierdził brak migania. Działania z czytnikiem ekranu nie sprawdzono.
 12. Faza 6: zgoda na wdrożenie udzielona i wykonana 2026-11-05. Właściciel przeszedł dalej, ale test na dwóch kontach nie został wyraźnie potwierdzony.
 13. Faza 6: decyzje podjęte przy budowie, do potwierdzenia: wycofanie własnego zaproszenia, ciche odrzucenie zaproszenia, osobna zakładka „Znajomi” (`PRODUCT_SPECIFICATION.md`, F15–F18). Właściciel nie zgłosił uwag.
-14. Faza 7: odbiór i zgoda na wdrożenie, w tym decyzja o ciemnym cieniu zamiast sylwetki oraz o 5 rundach, jednej próbie i automatycznej nagrodzie (`PRODUCT_SPECIFICATION.md`, F9–F10).
+14. Faza 7: czy po zagraniu na produkcji obrazki w „Kto to Pokémon?” się wyświetlają i nagroda trafia na konto? To jedyne potwierdzenie działania `sharp` na Vercelu. Ciemny cień i zasady gry zostały przyjęte przy zgodzie na wdrożenie, bo właściciel nie zgłosił uwag; można je jeszcze zmienić.

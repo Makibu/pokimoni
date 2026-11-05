@@ -450,7 +450,7 @@ Test produkcji bez konta przechodzi w całości. Nowe trasy `/api/friends`, `/ap
 
 Odbiór fazy 6: właściciel przeszedł dalej słowami „Spoko, lecimy dalej, faza 7”. Wyraźnego potwierdzenia testu na dwóch kontach nie ma, więc pytanie 12 zostaje częściowo otwarte.
 
-**Zakres:** F9 i F10. Stan: lokalnie, niewdrożone, nic nie zostało wypchnięte.
+**Zakres:** F9 i F10. Stan: wdrożone 2026-11-05, opis na końcu sekcji.
 
 **Migracja:** brak. Tabele `daily_quests`, `minigame_days`, `minigame_attempts` i wartości `coin_reason` są od `0000_init.sql`. `drizzle-kit generate` zgłasza brak zmian.
 
@@ -509,3 +509,9 @@ Pomiar sprzed ostatniej poprawki blokady, która dotyczy tylko serwera. Różnic
 - Obrazki to pliki `small` z hosta katalogu, ładowane jako tło CSS. Gdy host nie odpowie, zostaje ciemny bloczek z tekstem. Każdy waży ok. 165–230 KB i ładuje się z sekcją na stronie głównej; pomiar pomija obrazy zewnętrzne, więc tego kosztu nie ma w tabeli wyżej.
 - Kontrast tekstu policzony, nie zmierzony, bo axe nie ocenia tekstu nad obrazkiem. Tekst kończy się najdalej przy ok. 61% szerokości, a zanik jest tam w ok. 74% kryjący, co nad białym obrazkiem daje ok. 7:1.
 - Bramka po zmianie: format, lint i typecheck OK; Vitest 507/507; build OK; E2E 99 przechodzi, 3 pominięte celowo. JS na `/` 274 KB, o 1 KB więcej niż wyżej. Zrzuty trzech gier obejrzane przy 360 i 1280 px; test zrzutów podstawia grę w odpowiedzi API.
+
+**Wdrożenie (2026-11-05, za zgodą właściciela „Tak, wdróż”):** `aee5151` na `rebuild`, CI zielone, potem `master`, deploy Production bez błędu. Migracji nie było.
+
+**Sprawdzone na produkcji bez konta:** strony bez sesji przekierowują na logowanie, API wymaga sesji (401), także podrobione ciasteczko; 23/23 starych tras daje 404; złe dane 400, obcy Origin 403, logowanie na nieistniejące konto dochodzi do bazy i daje 401. Nowe trasy fazy 7 bez sesji dają 401, a `/minigame` przekierowuje. Trzy ilustracje bloczka odpowiadają 200. Region funkcji: `fra1`.
+
+**Dalej niesprawdzone:** gra na koncie na produkcji, w tym `sharp` na Linuksie Vercela (trasa obrazka wymaga sesji), a także zapis zadań i nagród w prawdziwej bazie i blokady na prawdziwym Postgresie. Właściciel przyjął ciemny cień i zasady gry, nie zgłaszając uwag przy zgodzie na wdrożenie.

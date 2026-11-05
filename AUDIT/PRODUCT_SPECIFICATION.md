@@ -125,7 +125,7 @@ innych aplikacji).
 - Pula **[ZAAKCEPTOWANE]**: otwórz N paczek; otwórz paczkę dnia; zdobądź kartę rzadkości ≥ X;
   zdobądź nową kartę do kolekcji; ukończ minigrę dnia; odbierz skarbonkę.
 - Postęp liczony na serwerze przy odpowiednich akcjach; nagroda po ręcznym odebraniu.
-- Decyzje podjęte przy budowie **[DO ODBIORU W FAZIE 7]**:
+- Decyzje podjęte przy budowie, przyjęte przy zgodzie na wdrożenie fazy 7:
   - Na stronie głównej, w sekcji pod głównym układem. Bez nowej pozycji w menu, bo dolny pasek ma już 6 pozycji.
   - Każde zadanie z innej rodziny, np. nie „otwórz 2 paczki” razem z „otwórz 3 paczki”.
   - Cele: otwórz 2 lub 3 paczki; otwórz paczkę dnia; zdobądź kartę Double Rare lub Ultra Rare albo lepszą; zdobądź 3 lub 5 nowych kart; ukończ minigrę; odbierz skarbonkę.
@@ -147,8 +147,8 @@ innych aplikacji).
 - Jedna nagradzana próba dziennie; nagroda rośnie z trudnością **[ZAAKCEPTOWANE, LICZBY w rozdz. 4]**.
 - Stan gry zapisany na serwerze — odświeżenie strony nie resetuje ani nie cofa postępu.
 - Wynik weryfikuje serwer (odpowiedzi / odsłanianie kart / odtworzenie ruchów).
-- **Odstępstwo od ustaleń [DO ODBIORU W FAZIE 7]:** poziom średni „Kto to Pokémon?” pokazuje trzybarwny ciemny cień, a nie prawdziwą sylwetkę. Karty mają pełne tła, a proste wycinanie dawało szum. Prawdziwa sylwetka wymagałaby modelu do usuwania tła.
-- Decyzje podjęte przy budowie **[DO ODBIORU W FAZIE 7]**:
+- **Odstępstwo od ustaleń, przyjęte przy zgodzie na wdrożenie fazy 7:** poziom średni „Kto to Pokémon?” pokazuje trzybarwny ciemny cień, a nie prawdziwą sylwetkę. Karty mają pełne tła, a proste wycinanie dawało szum. Prawdziwa sylwetka wymagałaby modelu do usuwania tła.
+- Decyzje podjęte przy budowie, przyjęte przy zgodzie na wdrożenie fazy 7:
   - „Kto to Pokémon?”: 5 rund, wygrana przy 3 dobrych odpowiedziach. Tylko Pokémony, bez trenerów i energii. Wpisując nazwę, można zrobić jedną literówkę, a forma regionalna jest opcjonalna. Nazwy są angielskie, jak w katalogu.
   - Memory: limit 15 pomyłek na poziomie trudnym. Na łatwym i średnim nie można przegrać.
   - Puzzle: nie można przegrać, nie ma limitu czasu. Dla ułatwienia można włączyć podgląd całej karty i numery kafelków.
